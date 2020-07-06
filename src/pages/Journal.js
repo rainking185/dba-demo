@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { arrowBack, trash, checkmark, create } from "ionicons/icons"
-import { setLocation } from "../features/navigation"
 import { currencyFilter } from "../features/profile/utils"
 import { deleteEntry } from "../features/profile"
 
@@ -10,7 +9,8 @@ import {
   IonButtons, IonButton, IonIcon, IonTitle, IonList, IonContent, IonListHeader, IonCol
 } from '@ionic/react'
 
-const Journal = () => {
+const Journal = (props) => {
+  const {closeHandler} = props
   const currency = useSelector(state => state.navigation.currency)
   const data = useSelector(state => state.profile.data)
   const fullJournal = useSelector(state => state.profile.journal)
@@ -27,7 +27,7 @@ const Journal = () => {
       <IonContent>
         <IonToolbar color="tertiary">
           <IonButtons slot="start">
-            <IonButton onClick={() => dispatch(setLocation("summary"))}>
+            <IonButton onClick={closeHandler}>
               <IonIcon icon={arrowBack} />
             </IonButton>
           </IonButtons>

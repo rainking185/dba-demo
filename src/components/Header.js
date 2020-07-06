@@ -1,22 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonList,
   IonItem, IonMenuButton, IonButtons, IonIcon, IonToast,
-  IonMenuToggle, IonRouterOutlet, IonButton
+  IonMenuToggle, IonRouterOutlet, IonButton, IonModal
 } from '@ionic/react';
-import { setLocation } from '../features/navigation'
 import { changeCurrency } from '../features/profile'
 import { logoUsd, book, calendar } from 'ionicons/icons'
 import "./Styles.css"
+import Currencies from '../pages/Currencies';
+import Journal from '../pages/Journal';
+import Schedules from '../pages/Schedules';
 
-const Header = (props) => {
-
-  const currency = useSelector(state => state.navigation.currency)
+const Header = () => {
   const data = useSelector(state => state.profile.data)
   const currencyInUse = useSelector(state => state.profile.data.profile.currencyInUse)
   const currencyToUse = useSelector(state => state.profile.data.profile.currencyToUse)
+  const currency = useSelector(state => state.navigation.currency)
+
   const [checked, setChecked] = useState((currency === currencyToUse && currencyInUse !== currencyToUse) || (currency === currencyInUse && currencyInUse === currencyToUse));
+
+  useEffect(() => {
+    setChecked((currency === currencyToUse && currencyInUse !== currencyToUse) || (currency === currencyInUse && currencyInUse === currencyToUse))
+  }, [currency, currencyInUse, currencyToUse])
+
   let message = "Use this currency"
   if (checked) {
     if (currencyToUse === currencyInUse) message = "Using this currency"
@@ -36,6 +43,11 @@ const Header = (props) => {
 
   const dispatch = useDispatch()
 
+  const [modal, setModal] = useState({
+    shown: false,
+    content: null
+  });
+
   return (
     <>
       <IonToolbar color={checked ? "primary" : "secondary"}>
@@ -48,7 +60,6 @@ const Header = (props) => {
             <IonButton
               disabled={checked}
               onClick={handleChangeCurrency}
-
             >
               {message}
             </IonButton>
@@ -67,19 +78,19 @@ const Header = (props) => {
         <IonContent>
           <IonList>
             <IonMenuToggle menu="menu" >
-              <IonItem button onClick={() => dispatch(setLocation("currencies"))}>
+              <IonItem button onClick={() => setModal({ shown: true, content: <Currencies closeHandler={() => setModal({ shown: false })} /> })}>
                 <IonIcon slot="start" icon={logoUsd} />
                 Currencies
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
-              <IonItem button onClick={() => dispatch(setLocation("journal"))}>
+              <IonItem button onClick={() => setModal({ shown: true, content: <Journal closeHandler={() => setModal({ shown: false })} /> })}>
                 <IonIcon slot="start" icon={book} />
                 Journal
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
-              <IonItem button onClick={() => dispatch(setLocation("schedules"))}>
+              <IonItem button onClick={() => setModal({ shown: true, content: <Schedules closeHandler={() => setModal({ shown: false })} /> })}>
                 <IonIcon slot="start" icon={calendar} />
                 Schedules
               </IonItem>
@@ -88,6 +99,9 @@ const Header = (props) => {
         </IonContent>
       </IonMenu>
       <IonRouterOutlet id="main"></IonRouterOutlet>
+      <IonModal isOpen={modal.shown} onDidDismiss={() => setModal({ shown: false })}>
+        {modal.content}
+      </IonModal>
       <IonToast
         isOpen={toast.shown}
         onDidDismiss={() => setToast({ shown: false, message: "" })}

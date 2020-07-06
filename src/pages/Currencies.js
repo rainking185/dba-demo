@@ -8,13 +8,13 @@ import {
   IonList
 } from '@ionic/react'
 import { arrowBack, trash, checkmark, create, time, eye } from "ionicons/icons"
-import { setLocation, setCurrency } from "../features/navigation"
+import { setCurrency } from "../features/navigation"
 import { deleteCurrency } from "../features/profile"
 import { getCurrenciesSummary } from "../features/profile/utils"
 import CurrencyForm from '../components/CurrencyForm'
 
-const Currencies = () => {
-
+const Currencies = (props) => {
+  const {closeHandler} = props
   const dispatch = useDispatch()
   const profile = useSelector(state => state.profile)
   const [editing, setEditing] = useState(false);
@@ -31,7 +31,7 @@ const Currencies = () => {
 
   const handleChangeCurrency = (currency) => {
     dispatch(setCurrency(currency))
-    dispatch(setLocation("summary"))
+    closeHandler()
   }
 
   const handleDeleteCurrency = () => {
@@ -50,7 +50,7 @@ const Currencies = () => {
     if (!Object.keys(currenciesInProfile).includes(currencyDisplaying)) {
       dispatch(setCurrency(profile.data.profile.currencyToUse))
     }
-    dispatch(setLocation("summary"))
+    closeHandler()
   }
 
   const Icons = (props) => {

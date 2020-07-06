@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { arrowBack, trash, checkmark, create } from "ionicons/icons"
-import { setLocation } from "../features/navigation"
 import { currencyFilter } from "../features/profile/utils"
 import {
   IonPage, IonItem, IonToolbar, IonListHeader, IonCol,
@@ -10,8 +9,8 @@ import {
 import ScheduleForm from '../components/ScheduleForm'
 import { deleteSchedule } from "../features/profile"
 
-const Schedules = () => {
-
+const Schedules = (props) => {
+  const { closeHandler } = props
   const currency = useSelector(state => state.navigation.currency)
   const data = useSelector(state => state.profile.data)
   const fullSchedules = useSelector(state => state.profile.schedules)
@@ -25,7 +24,7 @@ const Schedules = () => {
       <IonContent>
         <IonToolbar color="tertiary">
           <IonButtons slot="start">
-            <IonButton onClick={() => dispatch(setLocation("summary"))}>
+            <IonButton onClick={closeHandler}>
               <IonIcon icon={arrowBack} />
             </IonButton>
           </IonButtons>

@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { IonLoading } from '@ionic/react';
 import Summary from './pages/Summary';
-import Currencies from './pages/Currencies';
-import Journal from './pages/Journal';
-import Schedules from './pages/Schedules';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAll, update } from './features/profile'
 import { setCurrency } from './features/navigation'
@@ -50,8 +47,6 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
-  const location = useSelector(state => state.navigation.location)
-
   if (!loaded) return <IonLoading message={'Loading your profile...'} />
   else if (data === null) return <FirstForm />
   else if (data !== null && loaded && currency === "") {
@@ -59,18 +54,7 @@ const App = () => {
     return <IonLoading message={'Loading your profile...'} />
   }
 
-  switch (location) {
-    case "summary":
-      return <Summary />
-    case "currencies":
-      return <Currencies />
-    case "journal":
-      return <Journal />
-    case "schedules":
-      return <Schedules />
-    default:
-      return <div />
-  }
+  return <Summary />
 }
 
 export default App;
