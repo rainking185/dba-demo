@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import {
-  IonToast, IonToolbar, IonSelect,
+  IonToast, IonToolbar,
   IonButton, IonButtons, IonItem, IonInput,
-  IonSelectOption
+  IonContent, IonLabel,
+  IonPage,
+  IonTitle
 } from '@ionic/react'
 import { initProfile } from "../features/profile"
 import { setCurrency } from "../features/navigation"
 import { useDispatch } from "react-redux"
 const FirstForm = (props) => {
-  const {
-    currencyList = ['CNY', 'AUD', 'JPY', 'SGD']
-  } = props
 
   const defaultFormValue = {
     currency: null,
@@ -35,14 +34,15 @@ const FirstForm = (props) => {
 
   const handleSubmit = () => {
     let err = ""
-    if (formValue.currency === null) err += "Please select currency. "
+    if (formValue.currency === null) err += "What is the new currency? "
+    else if (formValue.currency.length !== 3) err += "Currency with 3 letters only. "
     if (formValue.savings === '') err += "Please add your savings. "
     if (formValue.dailyBudget === '') err += "Please set your daily budget."
     else if (Number(formValue.dailyBudget) < 0) err += "Daily budget cannot be negative."
 
     if (err !== "") setToast({ shown: true, message: err })
     else {
-      dispatch(setCurrency(formValue.currency))
+      dispatch(setCurrency(formValue.currency.toUpperCase()))
       dispatch(initProfile({
         currency: formValue.currency,
         savings: Number(formValue.savings),
@@ -52,39 +52,39 @@ const FirstForm = (props) => {
   }
 
   return (
-    <>
-      <IonToolbar>
-        <IonButtons slot="end">
-          <IonButton onClick={handleSubmit}>Start DBA</IonButton>
-        </IonButtons>
-      </IonToolbar>
-      <IonItem>
-        <IonSelect
-          name="currency"
-          value={formValue.currency}
-          placeholder="Select New Currency"
-          onIonChange={e => handleChange("currency", e.detail.value)}
-        >
-          {currencyList.map((currency, index) =>
-            <IonSelectOption key={index} value={currency}>
-              {currency}
-            </IonSelectOption>
-          )}
-        </IonSelect>
-      </IonItem>
-      <IonItem>
-        <IonInput type="number" value={formValue.savings} placeholder="Savings to Start" onIonChange={e => handleChange("savings", e.detail.value)}></IonInput>
-      </IonItem>
-      <IonItem>
-        <IonInput type="number" value={formValue.dailyBudget} placeholder="Daily Budget" onIonChange={e => handleChange("dailyBudget", e.detail.value)}></IonInput>
-      </IonItem>
+    <IonPage>
+      <IonContent>
+        <IonToolbar color="primary">
+          <IonTitle>Welcome to DBA!</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={handleSubmit}>Start DBA</IonButton>
+          </IonButtons>
+        </IonToolbar>
+        <IonItem>
+          <IonLabel position="floating">Currency</IonLabel>
+          <IonInput
+            type="text"
+            maxlength={3}
+            minlength={3}
+            onIonChange={e => handleChange("currency", e.detail.value)}
+          />
+        </IonItem>
+        <IonItem>
+          <IonLabel position="floating">Savings</IonLabel>
+          <IonInput type="number" value={formValue.savings} placeholder="Savings to Start" onIonChange={e => handleChange("savings", e.detail.value)}></IonInput>
+        </IonItem>
+        <IonItem>
+          <IonLabel position="floating">Daily Budget</IonLabel>
+          <IonInput type="number" value={formValue.dailyBudget} placeholder="Daily Budget" onIonChange={e => handleChange("dailyBudget", e.detail.value)}></IonInput>
+        </IonItem>
+      </IonContent>
       <IonToast
         isOpen={toast.shown}
         onDidDismiss={() => setToast({ shown: false, message: "" })}
         message={toast.message}
         duration={1000}
       />
-    </>
+    </IonPage>
   )
 }
 

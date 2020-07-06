@@ -1,20 +1,17 @@
 import React, { useState } from 'react'
 import {
-  IonToast, IonFab, IonFabButton, IonIcon, IonToolbar, IonSelect,
+  IonToast, IonFab, IonFabButton, IonIcon, IonToolbar,
   IonButton, IonItem, IonInput, IonModal,
-  IonSelectOption,
   IonContent,
   IonLabel
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
 import { useSelector, useDispatch } from 'react-redux'
-import { getUnregisteredCurrencies } from '../features/profile/utils'
 import { addCurrency } from '../features/profile'
 
 const CurrencyForm = () => {
   const data = useSelector(state => state.profile.data)
   const journal = useSelector(state => state.profile.journal)
-  const currencyList = getUnregisteredCurrencies(data)
   const dispatch = useDispatch()
 
   const defaultFormValue = {
@@ -44,15 +41,19 @@ const CurrencyForm = () => {
 
   const handleSubmit = () => {
     let err = ""
-    if (formValue.currency === null) err += "Please select currency. "
+    if (formValue.currency === null) err += "What is the new currency? "
+    else if (formValue.currency.length !== 3) err += "Currency with 3 letters only. "
+    else if (Object.keys(data.profile.currencies).includes(formValue.currency.toUpperCase())) err += "You already have this currency. "
     if (formValue.savings === '') err += "Please add your savings. "
     if (formValue.dailyBudget === '') err += "Please set your daily budget. "
     else if (Number(formValue.dailyBudget) < 0) err += "Daily budget cannot be negative. "
+    
 
     if (err !== "") setToast({ shown: true, message: err })
     else {
+      let currency = formValue.currency.toUpperCase()
       dispatch(addCurrency({
-        currency: formValue.currency,
+        currency: currency,
         dailyBudget: Number(formValue.dailyBudget),
         savings: Number(formValue.savings)
       }, data, journal))
@@ -84,18 +85,12 @@ const CurrencyForm = () => {
           </IonToolbar>
           <IonItem>
             <IonLabel position="floating">Currency</IonLabel>
-            <IonSelect
-              name="currency"
-              value={formValue.currency}
-              placeholder="Select New Currency"
+            <IonInput
+              type="text"
+              maxlength={3}
+              minlength={3}
               onIonChange={e => handleChange("currency", e.detail.value)}
-            >
-              {currencyList.map((currency, index) =>
-                <IonSelectOption key={index} value={currency}>
-                  {currency}
-                </IonSelectOption>
-              )}
-            </IonSelect>
+            />
           </IonItem>
           <IonItem>
             <IonLabel position="floating">Savings</IonLabel>

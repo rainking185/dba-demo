@@ -4,7 +4,7 @@ import { arrowBack, trash, checkmark, create } from "ionicons/icons"
 import { setLocation } from "../features/navigation"
 import { currencyFilter } from "../features/profile/utils"
 import {
-  IonPage, IonItem, IonLabel, IonToolbar, IonListHeader, IonCol,
+  IonPage, IonItem, IonToolbar, IonListHeader, IonCol,
   IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonList, IonText,
 } from '@ionic/react'
 import ScheduleForm from '../components/ScheduleForm'
@@ -36,21 +36,22 @@ const Schedules = () => {
             </IonButton>
           </IonButtons>
         </IonToolbar>
-
-        <IonListHeader>
-          <IonCol>Description</IonCol>
-          <IonCol size="1.5">Type</IonCol>
-          <IonCol size="1" />
-          <IonCol size="2">Day/Date</IonCol>
-          <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
-          {editing ? <IonCol size="1.5" /> : null}
-        </IonListHeader>
+        {schedules.length === 0
+          ? <IonText>No schedules.</IonText>
+          : <IonListHeader>
+            <IonCol>Description</IonCol>
+            <IonCol size="2">Type</IonCol>
+            <IonCol size="1" />
+            <IonCol size="2">Day/Date</IonCol>
+            <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
+            {editing ? <IonCol size="1.5" /> : null}
+          </IonListHeader>}
         <IonList>
           {schedules.map((schedule, index) => {
             return (
               <IonItem key={index}>
                 <IonCol>{schedule.description}</IonCol>
-                <IonCol size="1.5">{schedule.type}</IonCol>
+                <IonCol size="2">{schedule.type}</IonCol>
                 <IonCol size="1">on</IonCol>
                 <IonCol size="2">{schedule.index}</IonCol>
                 <IonCol class="ion-text-right">

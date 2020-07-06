@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   IonToast, IonFab, IonFabButton, IonIcon, IonToolbar, IonSelect,
-  IonButton, IonButtons, IonItem, IonInput, IonModal, IonLabel,
+  IonButton, IonItem, IonInput, IonModal, IonLabel,
   IonSelectOption, IonToggle, IonContent
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
@@ -113,7 +113,8 @@ const ScheduleForm = () => {
           <IonItem>
             <IonLabel position="floating">Type</IonLabel>
             <IonSelect
-              name="type"
+              interface="action-sheet"
+              cancelText="Monthly or Weekly"
               value={formValue.type}
               placeholder="Monthly or Weekly"
               onIonChange={e => handleChange("type", e.detail.value)}
@@ -129,7 +130,8 @@ const ScheduleForm = () => {
             ? <IonItem>
               <IonLabel position="floating">Day/Date</IonLabel>
               <IonSelect
-                name="index"
+                interface="action-sheet"
+                cancelText="Select the day/date"
                 value={formValue.index}
                 placeholder="When"
                 onIonChange={e => handleChange("index", e.detail.value)}

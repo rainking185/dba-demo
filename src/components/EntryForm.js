@@ -37,8 +37,8 @@ const EntryForm = () => {
 
   const clearForm = () => {
     setFormValue({
-      ...defaultFormValue,
-      isEarning: formValue.isEarning
+      ...formValue,
+      amount: ''
     })
   }
 
@@ -95,7 +95,7 @@ const EntryForm = () => {
           </IonItem>
           <IonItem>
             <IonLabel position="floating">Description</IonLabel>
-            <IonInput value={formValue.description} placeholder="For What" onIonChange={e => handleChange("description", e.detail.value)} />
+            <IonInput value={formValue.description} placeholder="For What" onIonChange={e => handleChange("description", e.detail.value)} autoCorrect={true} />
           </IonItem>
         </IonContent>
       </IonModal>
