@@ -1,0 +1,11 @@
+.default-modal .modal-wrapper {
+    max-height: 40%;
+    position: absolute;
+    bottom: 0px;
+}
+
+.schedule-modal .modal-wrapper {
+    max-height: 55%;
+    position: absolute;
+    bottom: 0px;
+}
