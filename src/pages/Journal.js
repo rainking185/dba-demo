@@ -11,7 +11,7 @@ import {
 
 const Journal = (props) => {
   const {closeHandler} = props
-  const currency = useSelector(state => state.navigation.currency)
+  const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const fullJournal = useSelector(state => state.profile.journal)
   const journal = currencyFilter(

@@ -11,7 +11,7 @@ import { changDailyBudget } from "../features/profile"
 import "./Styles.css"
 
 const Summary = () => {
-  const currency = useSelector(state => state.navigation.currency)
+  const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const summary = useSelector(state => state.profile.data.profile.currencies[currency])
   const {

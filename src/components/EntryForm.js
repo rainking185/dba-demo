@@ -9,7 +9,7 @@ import { addEntry } from '../features/profile'
 
 const EntryForm = () => {
 
-  const currency = useSelector(state => state.navigation.currency)
+  const currency = useSelector(state => state.app.currency)
   const journal = useSelector(state => state.profile.journal)
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()

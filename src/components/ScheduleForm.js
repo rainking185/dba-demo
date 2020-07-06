@@ -20,7 +20,7 @@ const weeklyIndices = [
 
 const ScheduleForm = () => {
 
-  const currency = useSelector(state => state.navigation.currency)
+  const currency = useSelector(state => state.app.currency)
   const schedules = useSelector(state => state.profile.schedules)
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()

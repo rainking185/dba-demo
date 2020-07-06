@@ -11,7 +11,7 @@ import { deleteSchedule } from "../features/profile"
 
 const Schedules = (props) => {
   const { closeHandler } = props
-  const currency = useSelector(state => state.navigation.currency)
+  const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const fullSchedules = useSelector(state => state.profile.schedules)
   const schedules = currencyFilter(fullSchedules, currency)

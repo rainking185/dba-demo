@@ -8,7 +8,7 @@ import {
   IonList
 } from '@ionic/react'
 import { arrowBack, trash, checkmark, create, time, eye } from "ionicons/icons"
-import { setCurrency } from "../features/navigation"
+import { setCurrency } from "../features/app"
 import { deleteCurrency } from "../features/profile"
 import { getCurrenciesSummary } from "../features/profile/utils"
 import CurrencyForm from '../components/CurrencyForm'
@@ -20,7 +20,7 @@ const Currencies = (props) => {
   const [editing, setEditing] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [currencySelected, setCurrencySelected] = useState("");
-  const currencyDisplaying = useSelector(state => state.navigation.currency)
+  const currencyDisplaying = useSelector(state => state.app.currency)
   const currenciesInProfile = useSelector(state => state.profile.data.profile.currencies)
   const currencies = getCurrenciesSummary(currenciesInProfile)
 

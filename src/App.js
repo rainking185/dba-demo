@@ -3,7 +3,7 @@ import { IonLoading } from '@ionic/react';
 import Summary from './pages/Summary';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAll, update } from './features/profile'
-import { setCurrency } from './features/navigation'
+import { setCurrency } from './features/app'
 import FirstForm from './pages/FirstForm'
 
 /* Core CSS required for Ionic components to work properly */
@@ -33,7 +33,7 @@ const App = () => {
   const data = useSelector(state => state.profile.data)
   const journal = useSelector(state => state.profile.journal)
   const schedules = useSelector(state => state.profile.schedules)
-  const currency = useSelector(state => state.navigation.currency)
+  const currency = useSelector(state => state.app.currency)
 
   useEffect(() => {
     dispatch(fetchAll())

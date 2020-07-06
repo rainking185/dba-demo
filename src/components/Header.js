@@ -16,7 +16,7 @@ const Header = () => {
   const data = useSelector(state => state.profile.data)
   const currencyInUse = useSelector(state => state.profile.data.profile.currencyInUse)
   const currencyToUse = useSelector(state => state.profile.data.profile.currencyToUse)
-  const currency = useSelector(state => state.navigation.currency)
+  const currency = useSelector(state => state.app.currency)
 
   const [checked, setChecked] = useState((currency === currencyToUse && currencyInUse !== currencyToUse) || (currency === currencyInUse && currencyInUse === currencyToUse));
 

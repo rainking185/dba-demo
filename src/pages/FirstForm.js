@@ -7,7 +7,7 @@ import {
   IonTitle
 } from '@ionic/react'
 import { initProfile } from "../features/profile"
-import { setCurrency } from "../features/navigation"
+import { setCurrency } from "../features/app"
 import { useDispatch } from "react-redux"
 const FirstForm = (props) => {
 
