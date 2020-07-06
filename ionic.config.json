@@ -1,0 +1,7 @@
+{
+  "name": "dba",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
