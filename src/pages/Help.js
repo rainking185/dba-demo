@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   IonPage, IonToolbar,
   IonButtons, IonButton, IonIcon, IonTitle, IonContent
 } from '@ionic/react'
-import { arrowBack } from "ionicons/icons"
+import { useDispatch } from 'react-redux'
+import { arrowBack, walk } from "ionicons/icons"
+import { reset } from '../features/profile'
 
 const Help = (props) => {
+  const dispatch = useDispatch()
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (count === 38) dispatch(reset())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
   const { closeHandler } = props
 
   return (
@@ -88,6 +96,35 @@ const Help = (props) => {
           You can setup monthly or weekly payments and DBA Application will deduct the amount for your automatically.
           Deleting of existing schedules is also possible from the page.
         </p>
+        <IonButtons>
+          <IonButton onClick={() => setCount(0)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(999)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(count - 1)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(999)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(count * 2)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(999)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(999)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(count + 1)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+          <IonButton onClick={() => setCount(999)}>
+            <IonIcon icon={walk} />
+          </IonButton>
+        </IonButtons>
       </IonContent>
     </IonPage>
   )
