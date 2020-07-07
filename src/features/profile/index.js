@@ -112,7 +112,7 @@ const profileSlice = createSlice({
         }
       }
     },
-    changDailyBudget: {
+    changeDailyBudget: {
       reducer(state, action) {
         return {
           ...state,
@@ -548,7 +548,7 @@ export { fetchAll }
 export const {
   addEntry, deleteEntry, addSchedule, addCurrency, setData, setJournal,
   setSchedules, setLoaded, initProfile, changeCurrency, deleteCurrency,
-  changDailyBudget, deleteSchedule, update, reset, reorderCurrency
+  changeDailyBudget, deleteSchedule, update, reset, reorderCurrency
 } = profileSlice.actions
 
 export default profileSlice.reducer

@@ -7,7 +7,7 @@ import EntryForm from '../components/EntryForm'
 import Header from '../components/Header'
 import { useSelector, useDispatch } from 'react-redux'
 import { create } from "ionicons/icons"
-import { changDailyBudget } from "../features/profile"
+import { changeDailyBudget } from "../features/profile"
 import "./Styles.css"
 import { showToast } from '../features/app';
 
@@ -31,7 +31,7 @@ const Summary = () => {
   const [dailyBudget, setDailyBudget] = useState(summary.dailyBudget);
   const dispatch = useDispatch()
 
-  const changeDailyBudget = () => {
+  const handleClick = () => {
     let err = ""
     if (dailyBudget === "") err += "Please enter your daily budget. "
     else if (Number(dailyBudget) < 0)
@@ -40,7 +40,7 @@ const Summary = () => {
     if (err !== "") dispatch(showToast(err))
     else {
       let newBudget = Number(dailyBudget)
-      dispatch(changDailyBudget({
+      dispatch(changeDailyBudget({
         currency: currency,
         amount: newBudget
       }, data))
@@ -137,7 +137,7 @@ const Summary = () => {
                 placeholder="Set your daily budget."
                 onIonChange={e => setDailyBudget(e.detail.value)} />
             </IonItem>
-            <IonButton slot="end" onClick={changeDailyBudget}>SAVE</IonButton>
+            <IonButton slot="end" onClick={handleClick}>SAVE</IonButton>
           </IonItem>
         </IonCard>
       </IonPopover>
