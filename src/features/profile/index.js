@@ -481,9 +481,52 @@ const profileSlice = createSlice({
         setData2Storage()
         setJournal2Storage([])
         setSchedules2Storage([])
+        return { payload: null }
+      }
+    },
+    reorderCurrency: {
+      reducer(state, action) {
         return {
-          payload: null
+          ...state,
+          data: action.payload
         }
+      },
+      prepare(from, to, data) {
+        let currencies = { ...data.profile.currencies }
+        let newCurrencies = {}
+        let currencyNames = Object.keys(data.profile.currencies)
+        let movingCurrencyName = currencyNames[from]
+        let movingCurrency = { ...currencies[movingCurrencyName] }
+        if (from > to) {
+          for (let i = 0; i < currencyNames.length; i++) {
+            if (i < to || i > from)
+              newCurrencies[currencyNames[i]] = currencies[currencyNames[i]]
+            else if (i === to)
+              newCurrencies[movingCurrencyName] = movingCurrency
+            else if (i <= from)
+              newCurrencies[currencyNames[i - 1]]
+                = currencies[currencyNames[i - 1]]
+          }
+        } else {
+          for (let i = 0; i < currencyNames.length; i++) {
+            if (i > to || i < from)
+              newCurrencies[currencyNames[i]] = currencies[currencyNames[i]]
+            else if (i === to)
+              newCurrencies[movingCurrencyName] = movingCurrency
+            else if (i >= from)
+              newCurrencies[currencyNames[i + 1]]
+                = currencies[currencyNames[i + 1]]
+          }
+        }
+        let newData = {
+          ...data,
+          profile: {
+            ...data.profile,
+            currencies: newCurrencies
+          }
+        }
+        setData2Storage(newData)
+        return { payload: newData }
       }
     }
   },
@@ -505,7 +548,7 @@ export { fetchAll }
 export const {
   addEntry, deleteEntry, addSchedule, addCurrency, setData, setJournal,
   setSchedules, setLoaded, initProfile, changeCurrency, deleteCurrency,
-  changDailyBudget, deleteSchedule, update, reset
+  changDailyBudget, deleteSchedule, update, reset, reorderCurrency
 } = profileSlice.actions
 
 export default profileSlice.reducer

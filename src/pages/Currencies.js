@@ -6,11 +6,15 @@ import {
   IonPopover,
   IonContent,
   IonList,
-  IonCard
+  IonCard,
+  IonReorderGroup,
+  IonReorder
 } from '@ionic/react'
-import { arrowBack, trash, checkmark, create, time, eye } from "ionicons/icons"
+import {
+  arrowBack, trash, checkmark, create, time, eye, menu
+} from "ionicons/icons"
 import { setCurrency, showToast } from "../features/app"
-import { deleteCurrency } from "../features/profile"
+import { deleteCurrency, reorderCurrency } from "../features/profile"
 import { getCurrenciesSummary } from "../features/profile/utils"
 import CurrencyForm from '../components/CurrencyForm'
 
@@ -18,6 +22,7 @@ const Currencies = (props) => {
   const { closeHandler } = props
   const dispatch = useDispatch()
   const profile = useSelector(state => state.profile)
+  const data = profile.data
   const [editing, setEditing] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [currencySelected, setCurrencySelected] = useState("");
@@ -95,38 +100,51 @@ const Currencies = (props) => {
 
       <IonContent>
         <IonList>
-          {currencies.map(currency => {
-            return (
-              <IonItem
-                button={!editing}
-                key={currency.name}
-                onClick={editing
-                  ? null
-                  : () => handleChangeCurrency(currency.name)}
-              >
-                <Icons currency={currency.name} />
-                <IonLabel>
-                  {currency.name}
-                </IonLabel>
-                {currency.name === currencyDisplaying
-                  ? <IonIcon icon={eye} />
-                  : null}
-                <IonText slot="end" color={currency.savings < 0
-                  ? "danger"
-                  : undefined}>
-                  {currency.savings}
-                </IonText>
-                {editing
-                  ? <IonButton slot="end" onClick={() => {
-                    setShowPopover(true)
-                    setCurrencySelected(currency.name)
-                  }}>
-                    <IonIcon icon={trash} />
-                  </IonButton>
-                  : null}
-              </IonItem>
-            )
-          })}
+          <IonReorderGroup
+            disabled={!editing}
+            onIonItemReorder={
+              (e) => {
+                e.detail.complete(true)
+                dispatch(reorderCurrency(e.detail.from, e.detail.to, data))
+              }}>
+            {currencies.map(currency => {
+              return (
+                <IonItem
+                  button={!editing}
+                  key={currency.name}
+                  onClick={editing
+                    ? null
+                    : () => handleChangeCurrency(currency.name)}
+                >
+                  <Icons currency={currency.name} />
+                  <IonLabel>
+                    {currency.name}
+                  </IonLabel>
+                  {currency.name === currencyDisplaying
+                    ? <IonIcon icon={eye} />
+                    : null}
+                  <IonText slot="end" color={currency.savings < 0
+                    ? "danger"
+                    : undefined}>
+                    {currency.savings}
+                  </IonText>
+                  {editing
+                    ? <IonButton slot="end" onClick={() => {
+                      setShowPopover(true)
+                      setCurrencySelected(currency.name)
+                    }}>
+                      <IonIcon icon={trash} />
+                    </IonButton>
+                    : null}
+                  {editing
+                    ? <IonReorder slot="end">
+                      <IonIcon icon={menu} />
+                    </IonReorder>
+                    : null}
+                </IonItem>
+              )
+            })}
+          </IonReorderGroup>
         </IonList>
       </IonContent>
       <IonPopover

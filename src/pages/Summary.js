@@ -68,7 +68,7 @@ const Summary = () => {
               <IonText class="xx-large" color={selectColor(remainingToday)}>
                 {remainingToday.toFixed(2)}
               </IonText>
-              <IonText class="small">
+              <IonText class="small" color={selectColor(budgetToday)}>
                 {" "}/{budgetToday.toFixed(2)}
               </IonText>
             </IonLabel>
@@ -86,7 +86,7 @@ const Summary = () => {
               <IonText class="x-large" color={selectColor(remainingMonth)}>
                 {remainingMonth.toFixed()}
               </IonText>
-              <IonText>
+              <IonText color={selectColor(budgetMonth)}>
                 {" "}/{budgetMonth.toFixed()}
               </IonText>
             </IonLabel>
