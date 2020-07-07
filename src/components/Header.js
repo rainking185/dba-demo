@@ -6,12 +6,13 @@ import {
   IonMenuToggle, IonRouterOutlet, IonButton, IonModal
 } from '@ionic/react';
 import { changeCurrency } from '../features/profile'
-import { logoUsd, book, calendar } from 'ionicons/icons'
+import { logoUsd, book, calendar, informationCircle } from 'ionicons/icons'
 import "./Styles.css"
 import Currencies from '../pages/Currencies';
 import Journal from '../pages/Journal';
 import Schedules from '../pages/Schedules';
 import { showToast } from '../features/app';
+import Help from '../pages/Help';
 
 const Header = () => {
   const data = useSelector(state => state.profile.data)
@@ -117,6 +118,19 @@ const Header = () => {
                 })}>
                 <IonIcon slot="start" icon={calendar} />
                 Schedules
+              </IonItem>
+            </IonMenuToggle>
+            <IonMenuToggle menu="menu" >
+              <IonItem
+                button
+                onClick={() => setModal({
+                  shown: true,
+                  content: <Help closeHandler={
+                    () => setModal({ shown: false })
+                  } />
+                })}>
+                <IonIcon slot="start" icon={informationCircle} />
+                Help
               </IonItem>
             </IonMenuToggle>
           </IonList>

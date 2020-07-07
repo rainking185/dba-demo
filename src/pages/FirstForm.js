@@ -4,11 +4,15 @@ import {
   IonButton, IonButtons, IonItem, IonInput,
   IonContent, IonLabel,
   IonPage,
-  IonTitle
+  IonTitle,
+  IonIcon,
+  IonModal
 } from '@ionic/react'
 import { initProfile } from "../features/profile"
 import { setCurrency, showToast } from "../features/app"
 import { useDispatch } from "react-redux"
+import { informationCircle } from 'ionicons/icons'
+import Help from './Help'
 const FirstForm = (props) => {
 
   const defaultFormValue = {
@@ -47,9 +51,14 @@ const FirstForm = (props) => {
     }
   }
 
+  const [shown, setShown] = useState(false);
+
   return (
     <IonPage>
       <IonToolbar color="primary">
+        <IonButton slot="start" onClick={() => setShown(true)}>
+          <IonIcon icon={informationCircle} />
+        </IonButton>
         <IonTitle>Welcome to DBA!</IonTitle>
         <IonButtons slot="end">
           <IonButton onClick={handleSubmit}>Start DBA</IonButton>
@@ -82,6 +91,11 @@ const FirstForm = (props) => {
             onIonChange={e => handleChange("dailyBudget", e.detail.value)} />
         </IonItem>
       </IonContent>
+      <IonModal
+        isOpen={shown}
+        onDidDismiss={() => setShown(false)}>
+        <Help closeHandler={() => setShown(false)} />
+      </IonModal>
     </IonPage>
   )
 }
