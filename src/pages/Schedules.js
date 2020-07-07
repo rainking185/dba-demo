@@ -15,49 +15,55 @@ const Schedules = (props) => {
   const data = useSelector(state => state.profile.data)
   const fullSchedules = useSelector(state => state.profile.schedules)
   const schedules = currencyFilter(fullSchedules, currency)
+  schedules.reverse()
   const dispatch = useDispatch()
 
   const [editing, setEditing] = useState(false);
 
   return (
     <IonPage>
+      <IonToolbar color="tertiary">
+        <IonButtons slot="start">
+          <IonButton onClick={closeHandler}>
+            <IonIcon icon={arrowBack} />
+          </IonButton>
+        </IonButtons>
+        <IonTitle>Schedules for {currency} </IonTitle>
+        <IonButtons slot="end">
+          <IonButton onClick={() => setEditing(!editing)}>
+            <IonIcon icon={editing ? checkmark : create} />
+          </IonButton>
+        </IonButtons>
+      </IonToolbar>
+
       <IonContent>
-        <IonToolbar color="tertiary">
-          <IonButtons slot="start">
-            <IonButton onClick={closeHandler}>
-              <IonIcon icon={arrowBack} />
-            </IonButton>
-          </IonButtons>
-          <IonTitle>Schedules for {currency} </IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={() => setEditing(!editing)}>
-              <IonIcon icon={editing ? checkmark : create} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
         {schedules.length === 0
           ? <IonText>No schedules.</IonText>
           : <IonListHeader>
             <IonCol>Description</IonCol>
-            <IonCol size="2">Type</IonCol>
+            <IonCol size="2.4">Type</IonCol>
             <IonCol size="1" />
-            <IonCol size="2">Day/Date</IonCol>
+            <IonCol size="1.7">Day</IonCol>
             <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
-            {editing ? <IonCol size="1.5" /> : null}
+            {editing ? <IonCol size="2" /> : null}
           </IonListHeader>}
         <IonList>
           {schedules.map((schedule, index) => {
             return (
               <IonItem key={index}>
                 <IonCol>{schedule.description}</IonCol>
-                <IonCol size="2">{schedule.type}</IonCol>
+                <IonCol size="2.4">{schedule.type}</IonCol>
                 <IonCol size="1">on</IonCol>
-                <IonCol size="2">{schedule.index}</IonCol>
+                <IonCol size="1.7">
+                  {schedule.index.length > 3
+                    ? schedule.index.slice(0, 3) :
+                    schedule.index}
+                </IonCol>
                 <IonCol class="ion-text-right">
                   {schedule.amount.toFixed(2)}
                 </IonCol>
                 {editing
-                  ? <IonCol size="1.5" class="ion-text-center">
+                  ? <IonCol size="2" class="ion-text-center">
                     <IonButton onClick={() => dispatch(deleteSchedule(
                       schedule, data, fullSchedules
                     ))}>

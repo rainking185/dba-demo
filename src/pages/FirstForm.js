@@ -49,13 +49,14 @@ const FirstForm = (props) => {
 
   return (
     <IonPage>
+      <IonToolbar color="primary">
+        <IonTitle>Welcome to DBA!</IonTitle>
+        <IonButtons slot="end">
+          <IonButton onClick={handleSubmit}>Start DBA</IonButton>
+        </IonButtons>
+      </IonToolbar>
+
       <IonContent>
-        <IonToolbar color="primary">
-          <IonTitle>Welcome to DBA!</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={handleSubmit}>Start DBA</IonButton>
-          </IonButtons>
-        </IonToolbar>
         <IonItem>
           <IonLabel position="floating">Currency</IonLabel>
           <IonInput

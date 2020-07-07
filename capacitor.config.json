@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "dba",
+  "appName": "DBA",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

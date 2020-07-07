@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   IonPage, IonItemGroup, IonPopover, IonText, IonIcon, IonInput, IonContent,
   IonItemDivider, IonLabel, IonItem, IonButton, IonCol, IonCard
@@ -12,6 +12,7 @@ import "./Styles.css"
 import { showToast } from '../features/app';
 
 const Summary = () => {
+  const pageRef = useRef()
   const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const summary = useSelector(
@@ -55,9 +56,9 @@ const Summary = () => {
   }
 
   return (
-    <IonPage>
+    <IonPage ref={pageRef}>
+      <Header pageRef={pageRef} />
       <IonContent>
-        <Header />
         <IonItemGroup>
           <IonItemDivider>
             <IonLabel>Today</IonLabel>
@@ -67,7 +68,7 @@ const Summary = () => {
               <IonText class="xx-large" color={selectColor(remainingToday)}>
                 {remainingToday.toFixed(2)}
               </IonText>
-              <IonText color={selectColor(remainingToday)}>
+              <IonText class="small">
                 {" "}/{budgetToday.toFixed(2)}
               </IonText>
             </IonLabel>
@@ -85,7 +86,7 @@ const Summary = () => {
               <IonText class="x-large" color={selectColor(remainingMonth)}>
                 {remainingMonth.toFixed()}
               </IonText>
-              <IonText class="small">
+              <IonText>
                 {" "}/{budgetMonth.toFixed()}
               </IonText>
             </IonLabel>

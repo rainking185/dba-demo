@@ -93,29 +93,29 @@ const ScheduleForm = () => {
         onDidDismiss={() => setShown(false)}
         class="schedule-modal">
         <Fab />
-        <IonContent>
-          <IonToolbar>
-            <IonButton
-              class="ion-padding-start"
-              slot="start"
-              onClick={clearForm}>
-              CLEAR
+        <IonToolbar color="medium">
+          <IonButton
+            class="ion-padding-start"
+            slot="start"
+            onClick={clearForm}>
+            CLEAR
               </IonButton>
-            <IonButton
-              class="ion-padding-end"
-              slot="end"
-              onClick={handleSubmit}>
-              ADD
+          <IonButton
+            class="ion-padding-end"
+            slot="end"
+            onClick={handleSubmit}>
+            ADD
             </IonButton>
-          </IonToolbar>
-          <IonItem>
+        </IonToolbar>
+        <IonContent color="light">
+          <IonItem color="inherit">
             Payment
             <IonToggle
               checked={formValue.isIncome}
               onIonChange={e => handleChange("isIncome", e.detail.checked)} />
             Income
           </IonItem>
-          <IonItem>
+          <IonItem color="inherit">
             <IonLabel position="floating">Amount</IonLabel>
             <IonInput
               type="number"
@@ -123,7 +123,7 @@ const ScheduleForm = () => {
               placeholder="How Much"
               onIonChange={e => handleChange("amount", e.detail.value)} />
           </IonItem>
-          <IonItem>
+          <IonItem color="inherit">
             <IonLabel position="floating">Type</IonLabel>
             <IonSelect
               interface="action-sheet"
@@ -139,7 +139,7 @@ const ScheduleForm = () => {
             </IonSelect>
           </IonItem>
           {formValue.type !== null
-            ? <IonItem>
+            ? <IonItem color="inherit">
               <IonLabel position="floating">Day/Date</IonLabel>
               <IonSelect
                 interface="action-sheet"
@@ -159,7 +159,7 @@ const ScheduleForm = () => {
               </IonSelect>
             </IonItem>
             : null}
-          <IonItem>
+          <IonItem color="inherit">
             <IonLabel position="floating">Description</IonLabel>
             <IonInput
               value={formValue.description}

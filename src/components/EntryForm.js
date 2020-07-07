@@ -80,30 +80,30 @@ const EntryForm = () => {
         onDidDismiss={() => setShown(false)}
         class="default-modal">
         <Fab />
-        <IonContent>
-          <IonToolbar>
-            <IonButton
-              class="ion-padding-start"
-              slot="start"
-              onClick={clearForm}>
-              CLEAR
+        <IonToolbar color="medium">
+          <IonButton
+            class="ion-padding-start"
+            slot="start"
+            onClick={clearForm}>
+            CLEAR
               </IonButton>
-            <IonButton
-              class="ion-padding-end"
-              slot="end"
-              onClick={handleSubmit}>
-              ADD
+          <IonButton
+            class="ion-padding-end"
+            slot="end"
+            onClick={handleSubmit}>
+            ADD
             </IonButton>
-          </IonToolbar>
+        </IonToolbar>
 
-          <IonItem>
+        <IonContent color="light">
+          <IonItem color="inherit">
             Spending
             <IonToggle
               checked={formValue.isEarning}
               onIonChange={e => handleChange("isEarning", e.detail.checked)} />
             Earning
           </IonItem>
-          <IonItem>
+          <IonItem color="inherit">
             <IonLabel position="floating">Amount</IonLabel>
             <IonInput
               type="number"
@@ -111,7 +111,7 @@ const EntryForm = () => {
               placeholder="How Much"
               onIonChange={e => handleChange("amount", e.detail.value)} />
           </IonItem>
-          <IonItem>
+          <IonItem color="inherit">
             <IonLabel position="floating">Description</IonLabel>
             <IonInput
               value={formValue.description}

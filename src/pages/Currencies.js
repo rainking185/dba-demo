@@ -79,21 +79,21 @@ const Currencies = (props) => {
 
   return (
     <IonPage>
-      <IonContent>
-        <IonToolbar color="tertiary">
-          <IonButtons slot="start">
-            <IonButton onClick={handleBack2Summary}>
-              <IonIcon icon={arrowBack} />
-            </IonButton>
-          </IonButtons>
-          <IonTitle>Currencies</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={() => setEditing(!editing)}>
-              <IonIcon icon={editing ? checkmark : create} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
+      <IonToolbar color="tertiary">
+        <IonButtons slot="start">
+          <IonButton onClick={handleBack2Summary}>
+            <IonIcon icon={arrowBack} />
+          </IonButton>
+        </IonButtons>
+        <IonTitle>Currencies</IonTitle>
+        <IonButtons slot="end">
+          <IonButton onClick={() => setEditing(!editing)}>
+            <IonIcon icon={editing ? checkmark : create} />
+          </IonButton>
+        </IonButtons>
+      </IonToolbar>
 
+      <IonContent>
         <IonList>
           {currencies.map(currency => {
             return (

@@ -75,25 +75,26 @@ const CurrencyForm = () => {
       <Fab />
       <IonModal
         isOpen={shown}
-        onDidDismiss={() => setShown(false)}>
+        onDidDismiss={() => setShown(false)}
+        class="default-modal">
         <Fab />
-        <IonContent>
-          <IonToolbar>
-            <IonButton
-              class="ion-padding-start"
-              slot="start"
-              onClick={clearForm}>
-              CLEAR
+        <IonToolbar color="medium">
+          <IonButton
+            class="ion-padding-start"
+            slot="start"
+            onClick={clearForm}>
+            CLEAR
             </IonButton>
-            <IonButton
-              class="ion-padding-end"
-              slot="end"
-              onClick={handleSubmit}>
-              ADD
+          <IonButton
+            class="ion-padding-end"
+            slot="end"
+            onClick={handleSubmit}>
+            ADD
             </IonButton>
-          </IonToolbar>
+        </IonToolbar>
 
-          <IonItem>
+        <IonContent color="light">
+          <IonItem color="inherit">
             <IonLabel position="floating">Currency</IonLabel>
             <IonInput
               type="text"
@@ -101,7 +102,7 @@ const CurrencyForm = () => {
               minlength={3}
               onIonChange={e => handleChange("currency", e.detail.value)} />
           </IonItem>
-          <IonItem>
+          <IonItem color="inherit">
             <IonLabel position="floating">Savings</IonLabel>
             <IonInput
               type="number"
@@ -109,7 +110,7 @@ const CurrencyForm = () => {
               placeholder="Savings to Start"
               onIonChange={e => handleChange("savings", e.detail.value)} />
           </IonItem>
-          <IonItem>
+          <IonItem color="inherit">
             <IonLabel position="floating">Daily Budget</IonLabel>
             <IonInput
               type="number"

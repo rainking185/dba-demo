@@ -63,7 +63,7 @@ const App = () => {
         isOpen={toast.shown}
         onDidDismiss={() => dispatch(hideToast())}
         message={toast.message}
-        duration={2000}/>
+        duration={1000}/>
     </>
   )
 }

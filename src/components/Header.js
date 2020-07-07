@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
-  IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonList,
+  IonMenu, IonTitle, IonToolbar, IonContent, IonList,
   IonItem, IonMenuButton, IonButtons, IonIcon,
   IonMenuToggle, IonRouterOutlet, IonButton, IonModal
 } from '@ionic/react';
@@ -72,14 +72,12 @@ const Header = () => {
         </IonButtons>
       </IonToolbar>
       <IonMenu menuId="menu" contentId="main">
-        <IonHeader>
-          <IonToolbar color={checked ? "primary" : "warning"}>
-            <IonButtons slot="start">
-              <IonMenuButton menu="menu" />
-            </IonButtons>
-            <IonTitle>{currency}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <IonToolbar color={checked ? "primary" : "warning"}>
+          <IonButtons slot="start">
+            <IonMenuButton menu="menu" />
+          </IonButtons>
+          <IonTitle>{currency}</IonTitle>
+        </IonToolbar>
         <IonContent>
           <IonList>
             <IonMenuToggle menu="menu" >

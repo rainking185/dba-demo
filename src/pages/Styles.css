@@ -1,13 +1,13 @@
 .xx-large {
-  font-size: xx-large;
+  font-size: 4em;
 }
 
 .x-large {
-  font-size: x-large;
+  font-size: 3em;
 }
 
 .small {
-  font-size: small;
+  font-size: 1.5em;
 }
 
 .popover .popover-content {
