@@ -107,7 +107,8 @@ export const update = (data, journal, schedules) => {
     let currencyInUse = newData.profile.currencyInUse
     let currencyToUse = newData.profile.currencyToUse
 
-    let budgetMonth = currencies[currencyInUse].budgetMonth - currencies[currencyInUse].budgetToday * getDaysRemaining(lastEdited)
+    let budgetMonth = currencies[currencyInUse].budgetMonth
+      - currencies[currencyInUse].budgetToday * getDaysRemaining(lastEdited)
     let budgetToday = 0
     currencies[currencyInUse] = {
       ...currencies[currencyInUse],
@@ -115,7 +116,8 @@ export const update = (data, journal, schedules) => {
       budgetToday: budgetToday
     }
     budgetToday = currencies[currencyToUse].dailyBudget
-    budgetMonth = currencies[currencyToUse].budgetMonth + budgetToday * getDaysRemaining(lastEdited)
+    budgetMonth = currencies[currencyToUse].budgetMonth
+      + budgetToday * getDaysRemaining(lastEdited)
     currencies[currencyToUse] = {
       ...currencies[currencyToUse],
       budgetMonth: budgetMonth,
@@ -125,8 +127,13 @@ export const update = (data, journal, schedules) => {
   }
 
   let currencyInUse = newData.profile.currencyInUse
-  if (currencies[currencyInUse].budgetToday !== currencies[currencyInUse].dailyBudget) {
-    let budgetMonth = currencies[currencyInUse].budgetMonth + getDaysRemaining(lastEdited) * (currencies[currencyInUse].dailyBudget - currencies[currencyInUse].budgetToday)
+  if (currencies[currencyInUse].budgetToday
+    !== currencies[currencyInUse].dailyBudget) {
+    let budgetMonth = currencies[currencyInUse].budgetMonth
+      + getDaysRemaining(lastEdited) * (
+        currencies[currencyInUse].dailyBudget
+        - currencies[currencyInUse].budgetToday
+      )
     let budgetToday = currencies[currencyInUse].dailyBudget
     currencies[currencyInUse] = {
       ...currencies[currencyInUse],
@@ -138,7 +145,8 @@ export const update = (data, journal, schedules) => {
   for (let i = 0; i < diff; i++) {
     if (lastlastEdited.getMonth() !== lastEdited.getMonth()) {
       Object.keys(currencies).forEach(currency => {
-        let budgetMonth = currencies[currencyInUse].budgetToday * getDaysInCurrentMonth(lastEdited)
+        let budgetMonth = currencies[currencyInUse].budgetToday
+          * getDaysInCurrentMonth(lastEdited)
         currencies[currency] = {
           ...currencies[currency],
           budgetMonth: budgetMonth,
@@ -154,7 +162,8 @@ export const update = (data, journal, schedules) => {
     })
 
     let remainingToday = currencies[currencyInUse].budgetToday
-    let savings = currencies[currencyInUse].savings + currencies[currencyInUse].budgetToday
+    let savings = currencies[currencyInUse].savings
+      + currencies[currencyInUse].budgetToday
     let allowance = getAllowance(savings)
     currencies[currencyInUse] = {
       ...currencies[currencyInUse],
@@ -164,8 +173,10 @@ export const update = (data, journal, schedules) => {
     }
 
     newSchedules.forEach(schedule => {
-      if ((schedule.type === "Monthly" && schedule.index === lastEdited.getDate())
-        || (schedule.type === "Weely" && weeklyIndices.indexOf(schedule.index) === todayDate.getDay())) {
+      if ((schedule.type === "Monthly"
+        && schedule.index === lastEdited.getDate())
+        || (schedule.type === "Weely" &&
+          weeklyIndices.indexOf(schedule.index) === todayDate.getDay())) {
         newJournal.push({
           currency: schedule.currency,
           amount: schedule.amount,
@@ -173,7 +184,8 @@ export const update = (data, journal, schedules) => {
           date: lastEdited.toDateString()
         })
         let savings = currencies[schedule.currency].savings + schedule.amount
-        let remainingMonth = currencies[schedule.currency].remainingMonth + schedule.amount
+        let remainingMonth =
+          currencies[schedule.currency].remainingMonth + schedule.amount
         currencies[schedule.currency] = {
           ...currencies[schedule.currency],
           savings: savings,

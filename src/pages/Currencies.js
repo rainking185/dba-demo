@@ -2,32 +2,33 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   IonPage, IonItem, IonLabel, IonToolbar,
-  IonButtons, IonButton, IonIcon, IonTitle, IonText, IonToast,
+  IonButtons, IonButton, IonIcon, IonTitle, IonText,
   IonPopover,
   IonContent,
-  IonList
+  IonList,
+  IonCard
 } from '@ionic/react'
 import { arrowBack, trash, checkmark, create, time, eye } from "ionicons/icons"
-import { setCurrency } from "../features/app"
+import { setCurrency, showToast } from "../features/app"
 import { deleteCurrency } from "../features/profile"
 import { getCurrenciesSummary } from "../features/profile/utils"
 import CurrencyForm from '../components/CurrencyForm'
 
 const Currencies = (props) => {
-  const {closeHandler} = props
+  const { closeHandler } = props
   const dispatch = useDispatch()
   const profile = useSelector(state => state.profile)
   const [editing, setEditing] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [currencySelected, setCurrencySelected] = useState("");
   const currencyDisplaying = useSelector(state => state.app.currency)
-  const currenciesInProfile = useSelector(state => state.profile.data.profile.currencies)
+  const currenciesInProfile = useSelector(
+    state => state.profile.data.profile.currencies
+  )
+  const currencyToUse = useSelector(
+    state => state.profile.data.profile.currencyToUse
+  )
   const currencies = getCurrenciesSummary(currenciesInProfile)
-
-  const [toast, setToast] = useState({
-    shown: false,
-    message: ""
-  });
 
   const handleChangeCurrency = (currency) => {
     dispatch(setCurrency(currency))
@@ -36,12 +37,13 @@ const Currencies = (props) => {
 
   const handleDeleteCurrency = () => {
     if (Object.keys(currencies).length <= 1) {
-      setToast({ shown: true, message: "You cannot delete the last currency you have." })
+      dispatch(showToast("You cannot delete the last currency you have."))
     } else if (currencySelected === profile.data.profile.currencyToUse) {
-      setToast({ shown: true, message: "You cannot delete the currency you are using." })
+      dispatch(showToast("You cannot delete the currency you are using."))
     } else {
+      dispatch(setCurrency(currencyToUse))
       dispatch(deleteCurrency(currencySelected, profile))
-      setToast({ shown: true, message: "Currency deleted." })
+      dispatch(showToast("Currency deleted."))
     }
     setShowPopover(false)
   }
@@ -58,11 +60,13 @@ const Currencies = (props) => {
 
     var icon = undefined
 
-    if (profile.data.profile.currencyInUse === profile.data.profile.currencyToUse) {
+    if (profile.data.profile.currencyInUse
+      === profile.data.profile.currencyToUse) {
       if (currency === profile.data.profile.currencyInUse) icon = checkmark
     } else {
       if (currency === profile.data.profile.currencyInUse) icon = time
-      else if (currency === profile.data.profile.currencyToUse) icon = checkmark
+      else if (currency === profile.data.profile.currencyToUse)
+        icon = checkmark
     }
 
     var color = undefined
@@ -96,14 +100,20 @@ const Currencies = (props) => {
               <IonItem
                 button={!editing}
                 key={currency.name}
-                onClick={editing ? null : () => handleChangeCurrency(currency.name)}
+                onClick={editing
+                  ? null
+                  : () => handleChangeCurrency(currency.name)}
               >
                 <Icons currency={currency.name} />
                 <IonLabel>
                   {currency.name}
                 </IonLabel>
-                {currency.name === currencyDisplaying ? <IonIcon icon={eye} /> : null}
-                <IonText slot="end" color={currency.savings < 0 ? "danger" : undefined}>
+                {currency.name === currencyDisplaying
+                  ? <IonIcon icon={eye} />
+                  : null}
+                <IonText slot="end" color={currency.savings < 0
+                  ? "danger"
+                  : undefined}>
                   {currency.savings}
                 </IonText>
                 {editing
@@ -122,20 +132,29 @@ const Currencies = (props) => {
       <IonPopover
         isOpen={showPopover}
         onDidDismiss={e => setShowPopover(false)}
+        class="popover"
       >
-        <IonText>Are you sure you want to delete {currencySelected}? This action is not reversible.</IonText>
-        <IonButtons>
-          <IonButton onClick={handleDeleteCurrency}>Yes</IonButton>
-          <IonButton onClick={() => setShowPopover(false)}>No</IonButton>
-        </IonButtons>
+        <IonCard class="ion-padding">
+          <IonText>
+            Are you sure you want to delete {currencySelected}?
+          <br />
+          This action is not reversible.
+          </IonText>
+          <IonItem lines="none">
+            <IonButton
+              slot="end"
+              onClick={handleDeleteCurrency}>
+              Yes
+             </IonButton>
+            <IonButton
+              slot="end"
+              onClick={() => setShowPopover(false)}>
+              No
+            </IonButton>
+          </IonItem>
+        </IonCard>
       </IonPopover>
       <CurrencyForm />
-      <IonToast
-        isOpen={toast.shown}
-        onDidDismiss={() => setToast({ shown: false, message: "" })}
-        message={toast.message}
-        duration={1000}
-      />
     </IonPage>
   )
 }

@@ -20,7 +20,10 @@ export const updateSchedules = createAsyncThunk(
   'profile/updateSchedules',
   async (schedules, thunkAPI) => {
     try {
-      await Storage.set({ key: 'DBAschedules', value: JSON.stringify(schedules) })
+      await Storage.set({
+        key: 'DBAschedules',
+        value: JSON.stringify(schedules)
+      })
     } catch (e) {
       console.log(e)
     }

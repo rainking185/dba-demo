@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { fetchAll } from './thunks'
-import { setData as setData2Storage, setJournal as setJournal2Storage, setSchedules as setSchedules2Storage } from './storage'
+import {
+  setData as setData2Storage,
+  setJournal as setJournal2Storage,
+  setSchedules as setSchedules2Storage
+} from './storage'
 import { getAllowance, getBudgetMonth, update as updateAsync } from './utils'
 
 const profileSlice = createSlice({
@@ -154,9 +158,12 @@ const profileSlice = createSlice({
           description: description
         }])
 
-        let remainingToday = data.profile.currencies[currency].remainingToday + amount
-        let remainingMonth = data.profile.currencies[currency].remainingMonth + amount
-        let savings = data.profile.currencies[currency].savings + amount
+        let remainingToday =
+          data.profile.currencies[currency].remainingToday + amount
+        let remainingMonth =
+          data.profile.currencies[currency].remainingMonth + amount
+        let savings =
+          data.profile.currencies[currency].savings + amount
 
         let newData = {
           ...data,
@@ -196,10 +203,12 @@ const profileSlice = createSlice({
       },
       prepare(entry, data, journal) {
         const { currency, amount, date } = entry
-        let remainingToday = data.profile.currencies[currency].remainingToday
+        let remainingToday =
+          data.profile.currencies[currency].remainingToday
         if (date === new Date().toDateString()) remainingToday -= amount
         let remainingMonth = data.profile.currencies[currency].remainingMonth
-        if (new Date(date).getMonth() === new Date().getMonth()) remainingMonth -= amount
+        if (new Date(date).getMonth() === new Date().getMonth())
+          remainingMonth -= amount
         let savings = data.profile.currencies[currency].savings - amount
         let newData = {
           ...data,
@@ -250,7 +259,8 @@ const profileSlice = createSlice({
 
         let monthlyAmount = amount
         if (type === "Weekly") monthlyAmount *= 4
-        let monthlyIncome = data.profile.currencies[currency].monthlyIncome + monthlyAmount
+        let monthlyIncome =
+          data.profile.currencies[currency].monthlyIncome + monthlyAmount
 
         let newData = {
           ...data,
@@ -289,7 +299,8 @@ const profileSlice = createSlice({
         const { currency, amount, type } = schedule
         let monthlyAmount = amount
         if (type === "Weekly") monthlyAmount *= 4
-        let monthlyIncome = data.profile.currencies[currency].monthlyIncome - monthlyAmount
+        let monthlyIncome =
+          data.profile.currencies[currency].monthlyIncome - monthlyAmount
         let newData = {
           ...data,
           profile: {
@@ -408,9 +419,9 @@ const profileSlice = createSlice({
                 profileCreated: new Date().toDateString(),
                 initSavings: savings,
                 dailyBudget: dailyBudget,
-                budgetToday: 0,
+                budgetToday: dailyBudget,
                 budgetMonth: budgetMonth,
-                remainingToday: 0,
+                remainingToday: dailyBudget,
                 remainingMonth: budgetMonth,
                 savings: savings,
                 monthlyIncome: 0,
@@ -456,6 +467,24 @@ const profileSlice = createSlice({
           }
         }
       }
+    },
+    reset: {
+      reducer(state) {
+        return {
+          ...state,
+          data: null,
+          journal: [],
+          schedules: []
+        }
+      },
+      prepare() {
+        setData2Storage()
+        setJournal2Storage([])
+        setSchedules2Storage([])
+        return {
+          payload: null
+        }
+      }
     }
   },
   extraReducers: {
@@ -476,7 +505,7 @@ export { fetchAll }
 export const {
   addEntry, deleteEntry, addSchedule, addCurrency, setData, setJournal,
   setSchedules, setLoaded, initProfile, changeCurrency, deleteCurrency,
-  changDailyBudget, deleteSchedule, update
+  changDailyBudget, deleteSchedule, update, reset
 } = profileSlice.actions
 
 export default profileSlice.reducer

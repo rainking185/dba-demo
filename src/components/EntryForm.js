@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
-  IonToast, IonFab, IonFabButton, IonIcon, IonToolbar,
+  IonFab, IonFabButton, IonIcon, IonToolbar,
   IonButton, IonItem, IonLabel, IonToggle, IonInput, IonModal, IonContent
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
 import { addEntry } from '../features/profile'
+import { showToast } from '../features/app'
 
 const EntryForm = () => {
 
@@ -23,10 +24,6 @@ const EntryForm = () => {
   const [formValue, setFormValue] = useState(defaultFormValue)
 
   const [shown, setShown] = useState(false);
-  const [toast, setToast] = useState({
-    shown: false,
-    message: ""
-  });
 
   const handleChange = (name, value) => {
     setFormValue({
@@ -45,10 +42,11 @@ const EntryForm = () => {
   const handleSubmit = () => {
     let err = ""
     if (formValue.amount === '') err += "How much did you spend? "
-    else if (Number(formValue.amount) <= 0) err += "Positive amount only please. "
+    else if (Number(formValue.amount) <= 0)
+      err += "Positive amount only please. "
     if (formValue.description === '') err += "What did you use this for? "
 
-    if (err !== "") setToast({ shown: true, message: err })
+    if (err !== "") dispatch(showToast(err))
     else {
       let amount = Number(formValue.amount)
       if (!formValue.isEarning) {
@@ -60,7 +58,7 @@ const EntryForm = () => {
         description: formValue.description
       }, data, journal))
       clearForm()
-      setToast({ shown: true, message: "Entry added." })
+      dispatch(showToast("Entry added."))
     }
   }
 
@@ -77,34 +75,52 @@ const EntryForm = () => {
   return (
     <>
       <Fab />
-      <IonModal isOpen={shown} onDidDismiss={() => setShown(false)} class="default-modal">
+      <IonModal
+        isOpen={shown}
+        onDidDismiss={() => setShown(false)}
+        class="default-modal">
         <Fab />
         <IonContent>
           <IonToolbar>
-            <IonButton class="ion-padding-start" slot="start" onClick={clearForm}>CLEAR</IonButton>
-            <IonButton class="ion-padding-end" slot="end" onClick={handleSubmit}>ADD</IonButton>
+            <IonButton
+              class="ion-padding-start"
+              slot="start"
+              onClick={clearForm}>
+              CLEAR
+              </IonButton>
+            <IonButton
+              class="ion-padding-end"
+              slot="end"
+              onClick={handleSubmit}>
+              ADD
+            </IonButton>
           </IonToolbar>
+
           <IonItem>
             Spending
-            <IonToggle checked={formValue.isEarning} onIonChange={e => handleChange("isEarning", e.detail.checked)} />
+            <IonToggle
+              checked={formValue.isEarning}
+              onIonChange={e => handleChange("isEarning", e.detail.checked)} />
             Earning
           </IonItem>
           <IonItem>
             <IonLabel position="floating">Amount</IonLabel>
-            <IonInput type="number" value={formValue.amount} placeholder="How Much" onIonChange={e => handleChange("amount", e.detail.value)} />
+            <IonInput
+              type="number"
+              value={formValue.amount}
+              placeholder="How Much"
+              onIonChange={e => handleChange("amount", e.detail.value)} />
           </IonItem>
           <IonItem>
             <IonLabel position="floating">Description</IonLabel>
-            <IonInput value={formValue.description} placeholder="For What" onIonChange={e => handleChange("description", e.detail.value)} autoCorrect={true} />
+            <IonInput
+              value={formValue.description}
+              placeholder="For What"
+              onIonChange={e => handleChange("description", e.detail.value)}
+              autoCorrect={true} />
           </IonItem>
         </IonContent>
       </IonModal>
-      <IonToast
-        isOpen={toast.shown}
-        onDidDismiss={() => setToast({ shown: false, message: "" })}
-        message={toast.message}
-        duration={1000}
-      />
     </>
   )
 }

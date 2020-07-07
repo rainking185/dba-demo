@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import {
-  IonToast, IonFab, IonFabButton, IonIcon, IonToolbar, IonSelect,
+  IonFab, IonFabButton, IonIcon, IonToolbar, IonSelect,
   IonButton, IonItem, IonInput, IonModal, IonLabel,
   IonSelectOption, IonToggle, IonContent
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
 import { addSchedule } from '../features/profile'
 import { useSelector, useDispatch } from 'react-redux'
+import { showToast } from '../features/app'
 
 const types = ["Monthly", "Weekly"]
 const monthlyIndices = [
@@ -36,10 +37,6 @@ const ScheduleForm = () => {
   const [formValue, setFormValue] = useState(defaultFormValue)
 
   const [shown, setShown] = useState(false);
-  const [toast, setToast] = useState({
-    shown: false,
-    message: ""
-  });
 
   const clearForm = () => setFormValue(defaultFormValue)
 
@@ -53,12 +50,13 @@ const ScheduleForm = () => {
   const handleSubmit = () => {
     let err = ""
     if (formValue.amount === '') err += "Please select currency. "
-    else if (Number(formValue.amount) <= 0) err += "Positive amount only please. "
+    else if (Number(formValue.amount) <= 0)
+      err += "Positive amount only please. "
     if (formValue.type === null) err += "Please select a type. "
     else if (formValue.index === null) err += "Please select a day. "
     if (formValue.description === '') err += "What did you use this for? "
 
-    if (err !== "") setToast({ shown: true, message: err })
+    if (err !== "") dispatch(showToast(err))
     else {
       let amount = Number(formValue.amount)
       if (!formValue.isIncome) {
@@ -72,7 +70,7 @@ const ScheduleForm = () => {
         description: formValue.description
       }, data, schedules))
       clearForm()
-      setToast({ shown: true, message: "Schedule added." })
+      dispatch(showToast("Schedule added."))
       setShown(false)
     }
   }
@@ -90,16 +88,31 @@ const ScheduleForm = () => {
   return (
     <>
       <Fab />
-      <IonModal isOpen={shown} onDidDismiss={() => setShown(false)} class="schedule-modal">
+      <IonModal
+        isOpen={shown}
+        onDidDismiss={() => setShown(false)}
+        class="schedule-modal">
         <Fab />
         <IonContent>
           <IonToolbar>
-            <IonButton class="ion-padding-start" slot="start" onClick={clearForm}>CLEAR</IonButton>
-            <IonButton class="ion-padding-end" slot="end" onClick={handleSubmit}>ADD</IonButton>
+            <IonButton
+              class="ion-padding-start"
+              slot="start"
+              onClick={clearForm}>
+              CLEAR
+              </IonButton>
+            <IonButton
+              class="ion-padding-end"
+              slot="end"
+              onClick={handleSubmit}>
+              ADD
+            </IonButton>
           </IonToolbar>
           <IonItem>
             Payment
-            <IonToggle checked={formValue.isIncome} onIonChange={e => handleChange("isIncome", e.detail.checked)} />
+            <IonToggle
+              checked={formValue.isIncome}
+              onIonChange={e => handleChange("isIncome", e.detail.checked)} />
             Income
           </IonItem>
           <IonItem>
@@ -117,8 +130,7 @@ const ScheduleForm = () => {
               cancelText="Monthly or Weekly"
               value={formValue.type}
               placeholder="Monthly or Weekly"
-              onIonChange={e => handleChange("type", e.detail.value)}
-            >
+              onIonChange={e => handleChange("type", e.detail.value)}>
               {types.map((type, index) =>
                 <IonSelectOption key={index} value={type}>
                   {type}
@@ -134,8 +146,7 @@ const ScheduleForm = () => {
                 cancelText="Select the day/date"
                 value={formValue.index}
                 placeholder="When"
-                onIonChange={e => handleChange("index", e.detail.value)}
-              >
+                onIonChange={e => handleChange("index", e.detail.value)}>
                 {formValue.type === "Monthly"
                   ? monthlyIndices.map(index =>
                     <IonSelectOption key={index} value={index}>
@@ -157,12 +168,6 @@ const ScheduleForm = () => {
           </IonItem>
         </IonContent>
       </IonModal>
-      <IonToast
-        isOpen={toast.shown}
-        onDidDismiss={() => setToast({ shown: false, message: "" })}
-        message={toast.message}
-        duration={1000}
-      />
     </>
   )
 }

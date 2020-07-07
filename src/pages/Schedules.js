@@ -58,7 +58,9 @@ const Schedules = (props) => {
                 </IonCol>
                 {editing
                   ? <IonCol size="1.5" class="ion-text-center">
-                    <IonButton onClick={() => dispatch(deleteSchedule(schedule, data, fullSchedules))} >
+                    <IonButton onClick={() => dispatch(deleteSchedule(
+                      schedule, data, fullSchedules
+                    ))}>
                       <IonIcon icon={trash} />
                     </IonButton>
                   </IonCol>

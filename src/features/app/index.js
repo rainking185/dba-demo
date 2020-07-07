@@ -3,7 +3,11 @@ import { createSlice } from "@reduxjs/toolkit"
 const appSlice = createSlice({
   name: 'app',
   initialState: {
-    currency: ""
+    currency: "",
+    toast: {
+      shown: false,
+      message: ""
+    }
   },
   reducers: {
     setCurrency(state, action) {
@@ -11,10 +15,28 @@ const appSlice = createSlice({
         ...state,
         currency: action.payload
       }
+    },
+    hideToast(state) {
+      return {
+        ...state,
+        toast: {
+          shown: false,
+          message: ""
+        }
+      }
+    },
+    showToast(state, action) {
+      return {
+        ...state,
+        toast: {
+          shown: true,
+          message: action.payload
+        }
+      }
     }
   }
 })
 
-export const { setCurrency } = appSlice.actions
+export const { hideToast, showToast, setCurrency } = appSlice.actions
 
 export default appSlice.reducer

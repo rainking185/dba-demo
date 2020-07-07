@@ -9,3 +9,7 @@
 .small {
   font-size: small;
 }
+
+.popover .popover-content {
+  min-width: 60%;
+}

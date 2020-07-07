@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { IonLoading } from '@ionic/react';
+import { IonLoading, IonToast } from '@ionic/react';
 import Summary from './pages/Summary';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAll, update } from './features/profile'
-import { setCurrency } from './features/app'
+import { setCurrency, hideToast } from './features/app'
 import FirstForm from './pages/FirstForm'
 
 /* Core CSS required for Ionic components to work properly */
@@ -24,7 +24,6 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-// import { clearStorage } from './features/profile/storage';
 
 const App = () => {
 
@@ -34,6 +33,7 @@ const App = () => {
   const journal = useSelector(state => state.profile.journal)
   const schedules = useSelector(state => state.profile.schedules)
   const currency = useSelector(state => state.app.currency)
+  const toast = useSelector(state => state.app.toast)
 
   useEffect(() => {
     dispatch(fetchAll())
@@ -42,19 +42,30 @@ const App = () => {
 
   useEffect(() => {
     if (loaded && data !== null) {
-      if (data.profile.lastEdited !== new Date().toDateString()) dispatch(update(data, journal, schedules))
+      if (data.profile.lastEdited !== new Date().toDateString())
+       dispatch(update(data, journal, schedules))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
-  if (!loaded) return <IonLoading message={'Loading your profile...'} />
-  else if (data === null) return <FirstForm />
+  let main = null
+  if (!loaded) main = <IonLoading message={'Loading your profile...'} />
+  else if (data === null) main = <FirstForm />
   else if (data !== null && loaded && currency === "") {
-    dispatch(setCurrency(data.profile.currencyInUse))
-    return <IonLoading message={'Loading your profile...'} />
-  }
+    dispatch(setCurrency(data.profile.currencyToUse))
+    main = <IonLoading message={'Loading your profile...'} />
+  } else main = <Summary />
 
-  return <Summary />
+  return (
+    <>
+      {main}
+      <IonToast
+        isOpen={toast.shown}
+        onDidDismiss={() => dispatch(hideToast())}
+        message={toast.message}
+        duration={2000}/>
+    </>
+  )
 }
 
 export default App;

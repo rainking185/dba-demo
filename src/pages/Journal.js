@@ -5,12 +5,12 @@ import { currencyFilter } from "../features/profile/utils"
 import { deleteEntry } from "../features/profile"
 
 import {
-  IonPage, IonItem, IonToolbar,
-  IonButtons, IonButton, IonIcon, IonTitle, IonList, IonContent, IonListHeader, IonCol
+  IonPage, IonItem, IonToolbar, IonContent, IonListHeader, IonCol,
+  IonButtons, IonButton, IonIcon, IonTitle, IonList
 } from '@ionic/react'
 
 const Journal = (props) => {
-  const {closeHandler} = props
+  const { closeHandler } = props
   const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const fullJournal = useSelector(state => state.profile.journal)
@@ -57,13 +57,14 @@ const Journal = (props) => {
                 {editing
                   ? <IonCol size="1.5" class="ion-text-center">
                     {editing && entry.description !== "Initial Savings"
-                      ? <IonButton onClick={() => dispatch(deleteEntry(entry, data, fullJournal))} >
+                      ? <IonButton onClick={() => dispatch(deleteEntry(
+                        entry, data, fullJournal
+                      ))} >
                         <IonIcon icon={trash} />
                       </IonButton>
                       : null}
                   </IonCol>
                   : null}
-
               </IonItem>
             )
           })}
