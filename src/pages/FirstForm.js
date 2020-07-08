@@ -60,8 +60,8 @@ const FirstForm = (props) => {
         </IonButtons>
       </IonToolbar>
 
-      <IonContent>
-        <IonItem>
+      <IonContent color="light">
+        <IonItem color="light">
           <IonLabel position="floating">Currency</IonLabel>
           <IonInput
             type="text"
@@ -69,7 +69,7 @@ const FirstForm = (props) => {
             minlength={3}
             onIonChange={e => handleChange("currency", e.detail.value)} />
         </IonItem>
-        <IonItem>
+        <IonItem color="light">
           <IonLabel position="floating">Savings</IonLabel>
           <IonInput
             type="number"
@@ -77,7 +77,7 @@ const FirstForm = (props) => {
             placeholder="Savings to Start"
             onIonChange={e => handleChange("savings", e.detail.value)} />
         </IonItem>
-        <IonItem>
+        <IonItem color="light">
           <IonLabel position="floating">Daily Budget</IonLabel>
           <IonInput
             type="number"

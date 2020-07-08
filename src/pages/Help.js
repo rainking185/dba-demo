@@ -27,7 +27,7 @@ const Help = (props) => {
         <IonTitle>Help</IonTitle>
       </IonToolbar>
 
-      <IonContent class="ion-padding">
+      <IonContent class="ion-padding" color="light">
         <h1>What is DBA?</h1>
         <p>
           DBA, Daily Budgeted Accounting, is a method of personal accounting highlighting the feature of a daily budget.

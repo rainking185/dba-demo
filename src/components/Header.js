@@ -79,10 +79,11 @@ const Header = () => {
           </IonButtons>
           <IonTitle>{currency}</IonTitle>
         </IonToolbar>
-        <IonContent>
+        <IonContent color="light">
           <IonList>
             <IonMenuToggle menu="menu" >
               <IonItem
+                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -96,6 +97,7 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
+                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -109,6 +111,7 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
+                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -122,6 +125,7 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
+                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,

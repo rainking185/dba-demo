@@ -36,21 +36,21 @@ const Schedules = (props) => {
         </IonButtons>
       </IonToolbar>
 
-      <IonContent>
-        {schedules.length === 0
-          ? <IonText>No schedules.</IonText>
-          : <IonListHeader>
-            <IonCol>Description</IonCol>
-            <IonCol size="2.4">Type</IonCol>
-            <IonCol size="1" />
-            <IonCol size="1.7">Day</IonCol>
-            <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
-            {editing ? <IonCol size="2" /> : null}
-          </IonListHeader>}
+      <IonContent color="light">
         <IonList>
+          {schedules.length === 0
+            ? <IonText>No schedules.</IonText>
+            : <IonListHeader color="light">
+              <IonCol>Description</IonCol>
+              <IonCol size="2.4">Type</IonCol>
+              <IonCol size="1" />
+              <IonCol size="1.7">Day</IonCol>
+              <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
+              {editing ? <IonCol size="2" /> : null}
+            </IonListHeader>}
           {schedules.map((schedule, index) => {
             return (
-              <IonItem key={index}>
+              <IonItem key={index} color="light">
                 <IonCol>{schedule.description}</IonCol>
                 <IonCol size="2.4">{schedule.type}</IonCol>
                 <IonCol size="1">on</IonCol>

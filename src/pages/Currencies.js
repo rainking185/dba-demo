@@ -98,7 +98,7 @@ const Currencies = (props) => {
         </IonButtons>
       </IonToolbar>
 
-      <IonContent>
+      <IonContent color="light">
         <IonList>
           <IonReorderGroup
             disabled={!editing}
@@ -110,6 +110,7 @@ const Currencies = (props) => {
             {currencies.map(currency => {
               return (
                 <IonItem
+                  color="light"
                   button={!editing}
                   key={currency.name}
                   onClick={editing

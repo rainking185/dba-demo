@@ -40,9 +40,9 @@ const Journal = (props) => {
         </IonButtons>
       </IonToolbar>
 
-      <IonContent>
+      <IonContent color="light">
         <IonList>
-          <IonListHeader>
+          <IonListHeader color="light">
             <IonCol size="4.5">Date</IonCol>
             <IonCol>Description</IonCol>
             <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
@@ -50,7 +50,7 @@ const Journal = (props) => {
           </IonListHeader>
           {journal.map((entry, index) => {
             return (
-              <IonItem key={index}>
+              <IonItem color="light" key={index}>
                 <IonCol size="4.5">{entry.date}</IonCol>
                 <IonCol>{entry.description}</IonCol>
                 <IonCol class="ion-text-right">

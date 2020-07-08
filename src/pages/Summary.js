@@ -56,14 +56,14 @@ const Summary = () => {
   }
 
   return (
-    <IonPage>
+    <IonPage color="light">
       <Header />
-      <IonContent>
+      <IonContent color="light">
         <IonItemGroup>
-          <IonItemDivider>
+          <IonItemDivider color="light" >
             <IonLabel>Today</IonLabel>
           </IonItemDivider>
-          <IonItem class="ion-text-center">
+          <IonItem color="light" class="ion-text-center">
             <IonLabel>
               <IonText class="xx-large" color={selectColor(remainingToday)}>
                 {remainingToday.toFixed(2)}
@@ -77,11 +77,11 @@ const Summary = () => {
             </IonButton>
           </IonItem>
         </IonItemGroup>
-        <IonItemGroup>
-          <IonItemDivider>
+        <IonItemGroup color="light">
+          <IonItemDivider color="light">
             <IonLabel>This Month</IonLabel>
           </IonItemDivider>
-          <IonItem class="ion-text-center">
+          <IonItem color="light" class="ion-text-center">
             <IonLabel>
               <IonText class="x-large" color={selectColor(remainingMonth)}>
                 {remainingMonth.toFixed()}
@@ -93,10 +93,10 @@ const Summary = () => {
           </IonItem>
         </IonItemGroup>
         <IonItemGroup>
-          <IonItemDivider>
+          <IonItemDivider color="light">
             <IonLabel>Overall</IonLabel>
           </IonItemDivider>
-          <IonItem>
+          <IonItem color="light">
             <IonCol>Savings:</IonCol>
             <IonCol class="ion-text-right">
               <IonText color={selectColor(savings)}>
@@ -104,7 +104,7 @@ const Summary = () => {
               </IonText>
             </IonCol>
           </IonItem>
-          <IonItem>
+          <IonItem color="light">
             <IonCol>
               Monthly {monthlyIncome >= 0 ? "Income" : "Payment"}:
             </IonCol>
@@ -114,7 +114,7 @@ const Summary = () => {
                 : monthlyIncome.toFixed(2)}
             </IonCol>
           </IonItem>
-          <IonItem>
+          <IonItem color="light">
             <IonCol>Allowance:</IonCol>
             <IonCol class="ion-text-right">
               <IonText color={selectColor(allowance)}>

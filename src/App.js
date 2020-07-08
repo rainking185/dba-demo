@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { IonLoading, IonToast } from '@ionic/react';
+import { IonLoading, IonToast, IonApp } from '@ionic/react';
 import Summary from './pages/Summary';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAll, update } from './features/profile'
@@ -43,7 +43,7 @@ const App = () => {
   useEffect(() => {
     if (loaded && data !== null) {
       if (data.profile.lastEdited !== new Date().toDateString())
-       dispatch(update(data, journal, schedules))
+        dispatch(update(data, journal, schedules))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
@@ -57,14 +57,15 @@ const App = () => {
   } else main = <Summary />
 
   return (
-    <>
+    <IonApp color="light">
       {main}
       <IonToast
+        color="dark"
         isOpen={toast.shown}
         onDidDismiss={() => dispatch(hideToast())}
         message={toast.message}
-        duration={1000}/>
-    </>
+        duration={1000} />
+    </IonApp>
   )
 }
 

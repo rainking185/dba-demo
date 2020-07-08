@@ -1,26 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import rootReducer from './features/index'
-import { IonApp } from "@ionic/react"
 
 const DEV_MODE = true
 const store = configureStore({
-    reducer: rootReducer,
-    devTools: DEV_MODE,
+  reducer: rootReducer,
+  devTools: DEV_MODE,
 })
 
 const Main = () => {
-    return (
-        <Provider store={store}>
-            <IonApp>
-                <App />
-            </IonApp>
-        </Provider>
-    )
+
+  // Use matchMedia to check the user preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const [dark, setDark] = useState(prefersDark.matches);
+
+  const toggleDarkTheme = (shouldAdd) => {
+    document.body.classList.toggle('dark', shouldAdd);
+  }
+
+  toggleDarkTheme(dark);
+
+  // Listen for changes to the prefers-color-scheme media query
+  prefersDark.addListener((mediaQuery) => setDark(mediaQuery.matches));
+
+  // Add or remove the "dark" class based on if the media query matches
+
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
 }
 
 ReactDOM.render(<Main />, document.getElementById('root'));

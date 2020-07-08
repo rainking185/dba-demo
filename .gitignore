@@ -8,9 +8,14 @@
 # testing
 /coverage
 /android
+/ios
 
 # production
 /build
+
+# resources
+/resources/android/icon
+/resources/android/splash
 
 # misc
 .DS_Store
