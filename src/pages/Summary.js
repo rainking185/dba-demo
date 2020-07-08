@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import {
   IonPage, IonItemGroup, IonPopover, IonText, IonIcon, IonInput, IonContent,
   IonItemDivider, IonLabel, IonItem, IonButton, IonCol, IonCard
@@ -12,7 +12,8 @@ import "./Styles.css"
 import { showToast } from '../features/app';
 
 const Summary = () => {
-  const pageRef = useRef()
+
+  const dispatch = useDispatch()
   const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const summary = useSelector(
@@ -29,7 +30,6 @@ const Summary = () => {
   } = summary
   const [showPopover, setShowPopover] = useState(false);
   const [dailyBudget, setDailyBudget] = useState(summary.dailyBudget);
-  const dispatch = useDispatch()
 
   const handleClick = () => {
     let err = ""
@@ -56,8 +56,8 @@ const Summary = () => {
   }
 
   return (
-    <IonPage ref={pageRef}>
-      <Header pageRef={pageRef} />
+    <IonPage>
+      <Header />
       <IonContent>
         <IonItemGroup>
           <IonItemDivider>

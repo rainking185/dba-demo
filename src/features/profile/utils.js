@@ -45,7 +45,7 @@ export const getSummary = (currency, data, journal, schedules = []) => {
 
   let journalExtract = currencyFilter(journal, currency)
   summary.remainingToday = journalExtract.filter(entry => {
-    return entry.date === new Date().toDateString()
+    return entry.date === new Date().toDateString() && entry.description !== "Initial Savings" && !entry.description.includes("Scheduled")
   }).reduce((prev, cur) => {
     return prev + cur.amount
   }, 0)

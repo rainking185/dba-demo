@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import {
-  IonToolbar,
-  IonButton, IonButtons, IonItem, IonInput,
-  IonContent, IonLabel,
-  IonPage,
-  IonTitle,
-  IonIcon,
-  IonModal
+  IonToolbar, IonButton, IonButtons, IonItem, IonInput,
+  IonContent, IonLabel, IonPage, IonTitle, IonIcon, IonModal
 } from '@ionic/react'
 import { initProfile } from "../features/profile"
 import { setCurrency, showToast } from "../features/app"
@@ -15,14 +10,16 @@ import { informationCircle } from 'ionicons/icons'
 import Help from './Help'
 const FirstForm = (props) => {
 
+  const dispatch = useDispatch()
+
+  const [shown, setShown] = useState(false) // For the help page displayed in Modal
+
   const defaultFormValue = {
     currency: null,
     savings: '',
     dailyBudget: ''
   }
-  const dispatch = useDispatch()
   const [formValue, setFormValue] = useState(defaultFormValue)
-
   const handleChange = (name, value) => {
     setFormValue({
       ...formValue,
@@ -50,8 +47,6 @@ const FirstForm = (props) => {
       }))
     }
   }
-
-  const [shown, setShown] = useState(false);
 
   return (
     <IonPage>
