@@ -129,7 +129,13 @@ export const update = (data, journal, schedules) => {
       remainingMonth: remainingMonth,
       budgetToday: budgetToday
     }
-    newData.profile.currencyInUse = currencyToUse
+    newData = {
+      ...newData,
+      profile: {
+        ...newData.profile,
+        currencyInUse: currencyToUse
+      }
+    }
   }
 
   let currencyInUse = newData.profile.currencyInUse
@@ -169,16 +175,18 @@ export const update = (data, journal, schedules) => {
       description: "Daily Budget"
     })
 
-    let remainingToday = currencies[currencyInUse].budgetToday
-    let savings = currencies[currencyInUse].savings
-      + currencies[currencyInUse].budgetToday
-    let allowance = getAllowance(savings)
-    currencies[currencyInUse] = {
-      ...currencies[currencyInUse],
-      remainingToday: remainingToday,
-      savings: savings,
-      allowance: allowance
-    }
+    Object.keys(currencies).forEach(currency => {
+      let remainingToday = currencies[currency].budgetToday
+      let savings = currencies[currency].savings
+        + currencies[currency].budgetToday
+      let allowance = getAllowance(savings)
+      currencies[currency] = {
+        ...currencies[currency],
+        remainingToday: remainingToday,
+        savings: savings,
+        allowance: allowance
+      }
+    })
 
     newSchedules.forEach(schedule => {
       if ((schedule.type === "Monthly"
