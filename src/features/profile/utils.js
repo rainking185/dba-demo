@@ -109,18 +109,24 @@ export const update = (data, journal, schedules) => {
 
     let budgetMonth = currencies[currencyInUse].budgetMonth
       - currencies[currencyInUse].budgetToday * getDaysRemaining(lastEdited)
+    let remainingMonth = currencies[currencyInUse].remainingMonth
+      - currencies[currencyInUse].budgetToday * getDaysRemaining(lastEdited)
     let budgetToday = 0
     currencies[currencyInUse] = {
       ...currencies[currencyInUse],
       budgetMonth: budgetMonth,
+      remainingMonth: remainingMonth,
       budgetToday: budgetToday
     }
     budgetToday = currencies[currencyToUse].dailyBudget
     budgetMonth = currencies[currencyToUse].budgetMonth
       + budgetToday * getDaysRemaining(lastEdited)
+    remainingMonth = currencies[currencyToUse].remainingMonth
+      + budgetToday * getDaysRemaining(lastEdited)
     currencies[currencyToUse] = {
       ...currencies[currencyToUse],
       budgetMonth: budgetMonth,
+      remainingMonth: remainingMonth,
       budgetToday: budgetToday
     }
     newData.profile.currencyInUse = currencyToUse
@@ -129,15 +135,17 @@ export const update = (data, journal, schedules) => {
   let currencyInUse = newData.profile.currencyInUse
   if (currencies[currencyInUse].budgetToday
     !== currencies[currencyInUse].dailyBudget) {
-    let budgetMonth = currencies[currencyInUse].budgetMonth
-      + getDaysRemaining(lastEdited) * (
-        currencies[currencyInUse].dailyBudget
-        - currencies[currencyInUse].budgetToday
-      )
+    let diffAmount = getDaysRemaining(lastEdited) * (
+      currencies[currencyInUse].dailyBudget
+      - currencies[currencyInUse].budgetToday
+    )
+    let budgetMonth = currencies[currencyInUse].budgetMonth + diffAmount
+    let remainingMonth = currencies[currencyInUse].remainingMonth + diffAmount
     let budgetToday = currencies[currencyInUse].dailyBudget
     currencies[currencyInUse] = {
       ...currencies[currencyInUse],
       budgetMonth: budgetMonth,
+      remainingMonth: remainingMonth,
       budgetToday: budgetToday
     }
   }
