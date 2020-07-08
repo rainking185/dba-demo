@@ -70,6 +70,7 @@ const profileSlice = createSlice({
           ...data,
           profile: {
             ...data.profile,
+            lastEdited: new Date().toDateString(),
             currencyToUse: currency
           }
         }
@@ -90,6 +91,7 @@ const profileSlice = createSlice({
           ...profile.data,
           profile: {
             ...profile.data.profile,
+            lastEdited: new Date().toDateString(),
             currencies: newCurrencies
           }
         }
@@ -125,6 +127,7 @@ const profileSlice = createSlice({
           ...data,
           profile: {
             ...data.profile,
+            lastEdited: new Date().toDateString(),
             currencies: {
               ...data.profile.currencies,
               [currency]: {
@@ -214,6 +217,7 @@ const profileSlice = createSlice({
           ...data,
           profile: {
             ...data.profile,
+            lastEdited: new Date().toDateString(),
             currencies: {
               ...data.profile.currencies,
               [currency]: {
@@ -305,6 +309,7 @@ const profileSlice = createSlice({
           ...data,
           profile: {
             ...data.profile,
+            lastEdited: new Date().toDateString(),
             currencies: {
               ...data.profile.currencies,
               [currency]: {
@@ -522,6 +527,7 @@ const profileSlice = createSlice({
           ...data,
           profile: {
             ...data.profile,
+            lastEdited: new Date().toDateString(),
             currencies: newCurrencies
           }
         }
