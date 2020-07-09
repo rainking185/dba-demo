@@ -14,6 +14,7 @@ export const getAllowance = (savings, percentage = 0.03) => {
   else return 0
 }
 
+// Date inclusive
 const getDaysInCurrentMonth = (date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
 }
@@ -192,4 +193,98 @@ export const update = (data, journal, schedules) => {
     data: newData,
     journal: newJournal
   }
+}
+
+
+export const audit = (data, journal, schedules) => {
+  let currencies = { ...data.profile.currencies }
+  let currencyInUse = data.profile.currencyInUse
+  const todayDate = new Date()
+  const today = todayDate.toDateString()
+  Object.keys(currencies).forEach(currency => {
+    let summary = { ...currencies[currency] }
+    let journalExtract = [...journal].filter(entry => {
+      return entry.currency === currency
+    })
+    let schedulesExtract = [...schedules].filter(schedule => {
+      return schedule.currency === currency
+    })
+
+    let remainingToday = journalExtract.filter(entry => {
+      return entry.date === today
+        && entry.description !== "Initial Savings"
+        && !entry.description.includes("Scheduled ")
+    }).reduce((prev, cur) => {
+      return prev + cur.amount
+    }, 0)
+
+    let savings = journalExtract.filter(entry => {
+      return entry.currency === currency
+    }).reduce((prev, cur) => {
+      return prev + cur.amount
+    }, 0)
+
+    let budgetToday = journalExtract.filter(entry => {
+      return entry.date === today && entry.description === "Daily Budget"
+    }).reduce((prev, cur) => {
+      return prev + cur.amount
+    }, 0)
+
+    let allownce = getAllowance(savings)
+
+    let monthlyIncome = schedulesExtract.reduce((prev, cur) => {
+      if (cur.type === "Weekly") return prev + cur.amount * 4
+      else return prev + cur.amount
+    }, 0)
+
+    let budgetMonth = journalExtract.filter(entry => {
+      return new Date(entry.date).getMonth() === todayDate.getMonth()
+        && entry.description === "Daily Budget"
+    }).reduce((prev, cur) => {
+      return prev + cur.amount
+    }, (getDaysRemaining() - 1)
+    * (currencyInUse === currency ? summary.dailyBudget : 0))
+
+    let remainingMonth = journalExtract.filter(entry => {
+      return new Date(entry.date).getMonth() === todayDate.getMonth()
+        && entry.description !== "Initial Savings"
+        && !entry.description.includes("Scheduled")
+    }).reduce((prev, cur) => {
+      return prev + cur.amount
+    }, (getDaysRemaining() - 1)
+    * (currencyInUse === currency ? summary.dailyBudget : 0))
+
+    let newSummary = {
+      ...summary,
+      remainingToday: remainingToday,
+      savings: savings,
+      budgetToday: budgetToday,
+      allowance: allownce,
+      monthlyIncome: monthlyIncome,
+      budgetMonth: budgetMonth,
+      remainingMonth: remainingMonth
+    }
+
+    Object.keys(newSummary).forEach(key => {
+      if (newSummary[key] !== summary[key])
+        console.log("For " + currency + ": "
+          + key + " " + summary[key] + " -> " + newSummary[key])
+    })
+
+    currencies = {
+      ...currencies,
+      [currency]: newSummary
+    }
+
+  })
+  let newData = {
+    ...data,
+    profile: {
+      ...data.profile,
+      lastEdited: new Date().toDateString(),
+      currencies: currencies
+    }
+  }
+  setData(newData)
+  return newData
 }

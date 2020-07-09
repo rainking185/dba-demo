@@ -3,12 +3,15 @@ import {
   IonPage, IonToolbar,
   IonButtons, IonButton, IonIcon, IonTitle, IonContent
 } from '@ionic/react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { arrowBack, walk } from "ionicons/icons"
-import { reset } from '../features/profile'
+import { reset, audit } from '../features/profile'
 
 const Help = (props) => {
   const dispatch = useDispatch()
+  const data = useSelector(state => state.profile.data)
+  const journal = useSelector(state => state.profile.journal)
+  const schedules = useSelector(state => state.profile.schedules)
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (count === 38) dispatch(reset())
@@ -120,7 +123,7 @@ const Help = (props) => {
           <IonButton onClick={() => setCount(999)}>
             <IonIcon icon={walk} />
           </IonButton>
-          <IonButton onClick={() => setCount(999)}>
+          <IonButton onClick={() => dispatch(audit(data, journal, schedules))}>
             <IonIcon icon={walk} />
           </IonButton>
           <IonButton onClick={() => setCount(count + 1)}>

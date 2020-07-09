@@ -5,7 +5,7 @@ import {
   setJournal as setJournal2Storage,
   setSchedules as setSchedules2Storage
 } from './storage'
-import { getAllowance, getBudgetMonth, update as updateAsync } from './utils'
+import { getAllowance, getBudgetMonth, update as updateAsync, audit as auditAsync } from './utils'
 
 const profileSlice = createSlice({
   name: 'profile',
@@ -441,6 +441,12 @@ const profileSlice = createSlice({
             date: new Date().toDateString(),
             amount: savings,
             description: "Initial Savings"
+          },
+          {
+            currency: currency,
+            date: new Date().toDateString(),
+            amount: dailyBudget,
+            description: "Daily Budget"
           }
         ]
         setData2Storage(data)
@@ -487,6 +493,20 @@ const profileSlice = createSlice({
         setJournal2Storage([])
         setSchedules2Storage([])
         return { payload: null }
+      }
+    },
+    audit: {
+      reducer(state, action) {
+        return {
+          ...state,
+          data: action.payload
+        }
+      },
+      prepare(oldData, journal, schedules) {
+        let data = auditAsync(oldData, journal, schedules)
+        return {
+          payload: data
+        }
       }
     },
     reorderCurrency: {
@@ -554,7 +574,7 @@ export { fetchAll }
 export const {
   addEntry, deleteEntry, addSchedule, addCurrency, setData, setJournal,
   setSchedules, setLoaded, initProfile, changeCurrency, deleteCurrency,
-  changeDailyBudget, deleteSchedule, update, reset, reorderCurrency
+  changeDailyBudget, deleteSchedule, update, reset, reorderCurrency, audit
 } = profileSlice.actions
 
 export default profileSlice.reducer
