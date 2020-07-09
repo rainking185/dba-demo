@@ -38,19 +38,19 @@ const Help = (props) => {
         <p>
           DBA is one of the best methods for raising the your financial awareness.
           The financial awareness refers to the following aspects:
-          <ol>
-            <li>
-              Knowing how much you are spending on average by doing DBA for a year.
-            </li>
-            <li>
-              Raising confidence of spending with visualizable savings.
-            </li>
-            <li>
-              Raising awareness about how much income you or your family is earning and whether it is reasonable for your spending habbits.
-            </li>
-          </ol>
         </p>
-        <h1>How to Use DBA?</h1>
+        <ol>
+          <li>
+            Knowing how much you are spending on average by doing DBA for a year.
+            </li>
+          <li>
+            Raising confidence of spending with visualizable savings.
+            </li>
+          <li>
+            Raising awareness about how much income you or your family is earning and whether it is reasonable for your spending habbits.
+            </li>
+        </ol>
+        <h1>How to use DBA?</h1>
         <p>
           This is the first version of DBA application. It focuses purely on spending and not earning.
           DBA Application is a fully offline application. So you don't have to worry about leakage of data.
@@ -67,6 +67,11 @@ const Help = (props) => {
         <p>
           DBA application will refresh your daily budget when a new day comes.
           It will also refresh your monthly budget when a new month comes.
+        </p>
+        <h3>How much should I set for Daily Budget?</h3>
+        <p>
+          If you haven't had an idea about your average daily spending, try setting a reasonable amount and test it for a year.
+          Watch the savings after a year and adjust the daily budget accordingly.
         </p>
         <h3>Changing Daily Budget</h3>
         <p>

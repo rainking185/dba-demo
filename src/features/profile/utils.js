@@ -32,41 +32,6 @@ export const currencyFilter = (array, currency) => {
   })
 }
 
-export const getSummary = (currency, data, journal, schedules = []) => {
-  let summary = {
-    remainingToday: 0,
-    budgetToday: 0,
-    remainingMonth: 0,
-    budgetMonth: 0,
-    savings: 0,
-    monthlyIncome: 0,
-    allowance: 0
-  }
-
-  let journalExtract = currencyFilter(journal, currency)
-  summary.remainingToday = journalExtract.filter(entry => {
-    return entry.date === new Date().toDateString() && entry.description !== "Initial Savings" && !entry.description.includes("Scheduled")
-  }).reduce((prev, cur) => {
-    return prev + cur.amount
-  }, 0)
-  summary.budgetToday = data.profile.currencies[currency].budgetToday
-  summary.remainingMonth = data.profile.currencies[currency].remainingMonth
-  summary.budgetMonth = data.profile.currencies[currency].budgetMonth
-  summary.savings = journalExtract.reduce((prev, cur) => {
-    return prev + cur.amount
-  }, 0)
-
-  summary.monthlyIncome = schedules.filter(schedule => {
-    return schedule.currency === currency
-  }).reduce((prev, cur) => {
-    if (cur.type === "Monthly") return prev + cur.amount
-    else return prev + cur.amount * 4
-  }, 0)
-
-  summary.allowance = getAllowance(summary.savings)
-  return summary
-}
-
 export const getCurrenciesSummary = (currencies) => {
   return Object.keys(currencies).reduce((prev, cur) => {
     return prev.concat({
@@ -84,7 +49,7 @@ export const getUnregisteredCurrencies = (data) => {
 }
 
 export const update = (data, journal, schedules) => {
-  console.log("in update")
+
   let today = new Date().toDateString()
   if (today === data.profile.lastEdited) return {
     data: data,
@@ -106,7 +71,6 @@ export const update = (data, journal, schedules) => {
   if (newData.profile.currencyInUse !== newData.profile.currencyToUse) {
     let currencyInUse = newData.profile.currencyInUse
     let currencyToUse = newData.profile.currencyToUse
-
     let budgetMonth = currencies[currencyInUse].budgetMonth
       - currencies[currencyInUse].budgetToday * getDaysRemaining(lastEdited)
     let remainingMonth = currencies[currencyInUse].remainingMonth
@@ -155,6 +119,7 @@ export const update = (data, journal, schedules) => {
       budgetToday: budgetToday
     }
   }
+
 
   for (let i = 0; i < diff; i++) {
     if (lastlastEdited.getMonth() !== lastEdited.getMonth()) {
@@ -209,6 +174,7 @@ export const update = (data, journal, schedules) => {
         }
       }
     })
+    lastlastEdited = lastEdited
     lastEdited.setDate(lastEdited.getDate() + 1)
   }
   newData = {
