@@ -72,7 +72,10 @@ const Summary = () => {
                 {" "}/{budgetToday.toFixed(2)}
               </IonText>
             </IonLabel>
-            <IonButton slot="end" onClick={() => setShowPopover(true)}>
+            <IonButton slot="end" onClick={() => {
+              setDailyBudget(summary.dailyBudget)
+              setShowPopover(true)
+            }}>
               <IonIcon icon={create} />
             </IonButton>
           </IonItem>
