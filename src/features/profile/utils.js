@@ -72,6 +72,24 @@ export const update = (data, journal, schedules) => {
   if (newData.profile.currencyInUse !== newData.profile.currencyToUse) {
     let currencyInUse = newData.profile.currencyInUse
     let currencyToUse = newData.profile.currencyToUse
+
+    if (currencies[currencyInUse].budgetToday
+      !== currencies[currencyInUse].dailyBudget) {
+      let diffAmount = getDaysRemaining(lastEdited) * (
+        currencies[currencyInUse].dailyBudget
+        - currencies[currencyInUse].budgetToday
+      )
+      let budgetMonth = currencies[currencyInUse].budgetMonth + diffAmount
+      let remainingMonth = currencies[currencyInUse].remainingMonth + diffAmount
+      let budgetToday = currencies[currencyInUse].dailyBudget
+      currencies[currencyInUse] = {
+        ...currencies[currencyInUse],
+        budgetMonth: budgetMonth,
+        remainingMonth: remainingMonth,
+        budgetToday: budgetToday
+      }
+    }
+
     let budgetMonth = currencies[currencyInUse].budgetMonth
       - currencies[currencyInUse].budgetToday * getDaysRemaining(lastEdited)
     let remainingMonth = currencies[currencyInUse].remainingMonth
@@ -188,7 +206,6 @@ export const update = (data, journal, schedules) => {
   }
   setData(newData)
   setJournal(newJournal)
-  console.log(newJournal)
   return {
     data: newData,
     journal: newJournal

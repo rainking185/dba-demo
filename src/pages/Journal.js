@@ -7,7 +7,7 @@ import './Styles.css'
 
 import {
   IonPage, IonItem, IonToolbar, IonContent, IonListHeader, IonCol,
-  IonButtons, IonButton, IonIcon, IonTitle, IonList
+  IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader
 } from '@ionic/react'
 
 const Journal = (props) => {
@@ -26,20 +26,22 @@ const Journal = (props) => {
 
   return (
     <IonPage>
-      <IonToolbar color="tertiary">
-        <IonButtons slot="start">
-          <IonButton onClick={closeHandler}>
-            <IonIcon icon={arrowBack} />
-          </IonButton>
-        </IonButtons>
-        <IonTitle>Journal for {currency}</IonTitle>
-        <IonButtons slot="end">
-          <IonButton onClick={() => setEditing(!editing)}>
-            <IonIcon icon={editing ? checkmark : create} />
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
-
+      <IonHeader>
+        <IonToolbar color="tertiary">
+          <IonButtons slot="start">
+            <IonButton onClick={closeHandler}>
+              <IonIcon icon={arrowBack} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle>Journal for {currency}</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => setEditing(!editing)}>
+              <IonIcon icon={editing ? checkmark : create} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      
       <IonContent color="light">
         <IonList>
           <IonListHeader color="light">

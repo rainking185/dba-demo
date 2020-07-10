@@ -205,13 +205,21 @@ const profileSlice = createSlice({
         }
       },
       prepare(entry, data, journal) {
-        const { currency, amount, date } = entry
+        const { currency, amount, date, description } = entry
         let remainingToday =
           data.profile.currencies[currency].remainingToday
-        if (date === new Date().toDateString()) remainingToday -= amount
+        let budgetToday =
+          data.profile.currencies[currency].budgetToday
+        if (date === new Date().toDateString()) {
+          remainingToday -= amount
+          if (description === "Daily Budget") budgetToday -= amount
+        }
         let remainingMonth = data.profile.currencies[currency].remainingMonth
-        if (new Date(date).getMonth() === new Date().getMonth())
+        let budgetMonth = data.profile.currencies[currency].budgetMonth
+        if (new Date(date).getMonth() === new Date().getMonth()) {
           remainingMonth -= amount
+          if (description === "Daily Budget") budgetMonth -= amount
+        }
         let savings = data.profile.currencies[currency].savings - amount
         let newData = {
           ...data,
@@ -222,7 +230,9 @@ const profileSlice = createSlice({
               ...data.profile.currencies,
               [currency]: {
                 ...data.profile.currencies[currency],
+                budgetToday: budgetToday,
                 remainingToday: remainingToday,
+                budgetMonth: budgetMonth,
                 remainingMonth: remainingMonth,
                 savings: savings,
                 allowance: getAllowance(savings)

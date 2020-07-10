@@ -4,7 +4,7 @@ import { arrowBack, trash, checkmark, create } from "ionicons/icons"
 import { currencyFilter } from "../features/profile/utils"
 import {
   IonPage, IonItem, IonToolbar, IonListHeader, IonCol,
-  IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonList, IonText,
+  IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonList, IonText, IonHeader,
 } from '@ionic/react'
 import ScheduleForm from '../components/ScheduleForm'
 import { deleteSchedule } from "../features/profile"
@@ -22,19 +22,21 @@ const Schedules = (props) => {
 
   return (
     <IonPage>
-      <IonToolbar color="tertiary">
-        <IonButtons slot="start">
-          <IonButton onClick={closeHandler}>
-            <IonIcon icon={arrowBack} />
-          </IonButton>
-        </IonButtons>
-        <IonTitle>Schedules for {currency} </IonTitle>
-        <IonButtons slot="end">
-          <IonButton onClick={() => setEditing(!editing)}>
-            <IonIcon icon={editing ? checkmark : create} />
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
+      <IonHeader>
+        <IonToolbar color="tertiary">
+          <IonButtons slot="start">
+            <IonButton onClick={closeHandler}>
+              <IonIcon icon={arrowBack} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle>Schedules for {currency} </IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => setEditing(!editing)}>
+              <IonIcon icon={editing ? checkmark : create} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent color="light">
         <IonList>

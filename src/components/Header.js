@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   IonMenu, IonTitle, IonToolbar, IonContent, IonList,
   IonItem, IonMenuButton, IonButtons, IonIcon,
-  IonMenuToggle, IonRouterOutlet, IonButton, IonModal
+  IonMenuToggle, IonRouterOutlet, IonButton, IonModal, IonHeader
 } from '@ionic/react';
 import { changeCurrency } from '../features/profile'
 import { logoUsd, book, calendar, informationCircle } from 'ionicons/icons'
@@ -57,21 +57,23 @@ const Header = () => {
 
   return (
     <>
-      <IonToolbar color={checked ? "primary" : "secondary"}>
-        <IonButtons slot="start">
-          <IonMenuButton menu="menu" />
-        </IonButtons>
-        <IonTitle>{currency}</IonTitle>
-        <IonButtons slot="end">
-          <IonItem color={checked ? "primary" : "warning"}>
-            <IonButton
-              disabled={checked}
-              onClick={handleChangeCurrency}>
-              {message}
-            </IonButton>
-          </IonItem>
-        </IonButtons>
-      </IonToolbar>
+      <IonHeader>
+        <IonToolbar color={checked ? "primary" : "secondary"}>
+          <IonButtons slot="start">
+            <IonMenuButton menu="menu" />
+          </IonButtons>
+          <IonTitle>{currency}</IonTitle>
+          <IonButtons slot="end">
+            <IonItem color={checked ? "primary" : "warning"}>
+              <IonButton
+                disabled={checked}
+                onClick={handleChangeCurrency}>
+                {message}
+              </IonButton>
+            </IonItem>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
       <IonMenu menuId="menu" contentId="main">
         <IonToolbar color={checked ? "primary" : "warning"}>
           <IonButtons slot="start">

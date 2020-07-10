@@ -99,7 +99,7 @@ const ScheduleForm = () => {
             slot="start"
             onClick={clearForm}>
             CLEAR
-              </IonButton>
+            </IonButton>
           <IonButton
             class="ion-padding-end"
             slot="end"
@@ -107,6 +107,7 @@ const ScheduleForm = () => {
             ADD
             </IonButton>
         </IonToolbar>
+
         <IonContent color="light">
           <IonItem color="inherit">
             Payment

@@ -8,7 +8,8 @@ import {
   IonList,
   IonCard,
   IonReorderGroup,
-  IonReorder
+  IonReorder,
+  IonHeader
 } from '@ionic/react'
 import {
   arrowBack, trash, checkmark, create, time, eye, menu
@@ -84,19 +85,21 @@ const Currencies = (props) => {
 
   return (
     <IonPage>
-      <IonToolbar color="tertiary">
-        <IonButtons slot="start">
-          <IonButton onClick={handleBack2Summary}>
-            <IonIcon icon={arrowBack} />
-          </IonButton>
-        </IonButtons>
-        <IonTitle>Currencies</IonTitle>
-        <IonButtons slot="end">
-          <IonButton onClick={() => setEditing(!editing)}>
-            <IonIcon icon={editing ? checkmark : create} />
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
+      <IonHeader>
+        <IonToolbar color="tertiary">
+          <IonButtons slot="start">
+            <IonButton onClick={handleBack2Summary}>
+              <IonIcon icon={arrowBack} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle>Currencies</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => setEditing(!editing)}>
+              <IonIcon icon={editing ? checkmark : create} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent color="light">
         <IonList>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {
   IonPage, IonToolbar,
-  IonButtons, IonButton, IonIcon, IonTitle, IonContent
+  IonButtons, IonButton, IonIcon, IonTitle, IonContent, IonHeader
 } from '@ionic/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { arrowBack, walk } from "ionicons/icons"
@@ -21,14 +21,16 @@ const Help = (props) => {
 
   return (
     <IonPage>
-      <IonToolbar color="success">
-        <IonButtons slot="start">
-          <IonButton onClick={closeHandler}>
-            <IonIcon icon={arrowBack} />
-          </IonButton>
-        </IonButtons>
-        <IonTitle>Help</IonTitle>
-      </IonToolbar>
+      <IonHeader>
+        <IonToolbar color="success">
+          <IonButtons slot="start">
+            <IonButton onClick={closeHandler}>
+              <IonIcon icon={arrowBack} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle>Help</IonTitle>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent class="ion-padding" color="light">
         <h1>What is DBA?</h1>

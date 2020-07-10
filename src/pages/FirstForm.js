@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   IonToolbar, IonButton, IonButtons, IonItem, IonInput,
-  IonContent, IonLabel, IonPage, IonTitle, IonIcon, IonModal
+  IonContent, IonLabel, IonPage, IonTitle, IonIcon, IonModal, IonHeader
 } from '@ionic/react'
 import { initProfile } from "../features/profile"
 import { setCurrency, showToast } from "../features/app"
@@ -50,15 +50,17 @@ const FirstForm = (props) => {
 
   return (
     <IonPage>
-      <IonToolbar color="primary">
-        <IonButton slot="start" onClick={() => setShown(true)}>
-          <IonIcon icon={informationCircle} />
-        </IonButton>
-        <IonTitle>Welcome to DBA!</IonTitle>
-        <IonButtons slot="end">
-          <IonButton onClick={handleSubmit}>Start DBA</IonButton>
-        </IonButtons>
-      </IonToolbar>
+      <IonHeader>
+        <IonToolbar color="primary">
+          <IonButton slot="start" onClick={() => setShown(true)}>
+            <IonIcon icon={informationCircle} />
+          </IonButton>
+          <IonTitle>Welcome to DBA!</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={handleSubmit}>Start DBA</IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent color="light">
         <IonItem color="light">
