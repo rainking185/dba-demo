@@ -9,6 +9,7 @@ import {
   IonPage, IonItem, IonToolbar, IonContent, IonListHeader, IonCol,
   IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader
 } from '@ionic/react'
+import { showToast } from '../features/app'
 
 const Journal = (props) => {
   const { closeHandler } = props
@@ -30,18 +31,18 @@ const Journal = (props) => {
         <IonToolbar color="tertiary">
           <IonButtons slot="start">
             <IonButton onClick={closeHandler}>
-              <IonIcon icon={arrowBack} />
+              <IonIcon slot="icon-only" icon={arrowBack} />
             </IonButton>
           </IonButtons>
           <IonTitle>Journal for {currency}</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditing(!editing)}>
-              <IonIcon icon={editing ? checkmark : create} />
+              <IonIcon slot="icon-only" icon={editing ? checkmark : create} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      
+
       <IonContent color="light">
         <IonList>
           <IonListHeader color="light">
@@ -51,26 +52,27 @@ const Journal = (props) => {
             {editing ? <IonCol size="1.7" /> : null}
           </IonListHeader>
           {journal.map((entry, index) => {
-            return (
-              <IonItem color="light" key={index}>
-                <IonCol size="4.5">{entry.date}</IonCol>
-                <IonCol>{entry.description}</IonCol>
-                <IonCol class="ion-text-right">
-                  {entry.amount.toFixed(2)}
-                </IonCol>
-                {editing
-                  ? <IonCol size="1.7" class="ion-text-center">
-                    {editing && entry.description !== "Initial Savings"
-                      ? <IonButton onClick={() => dispatch(deleteEntry(
-                        entry, data, fullJournal
-                      ))} >
-                        <IonIcon icon={trash} />
+            return <IonItem color="light" key={index}>
+              <IonCol size="4.5">{entry.date}</IonCol>
+              <IonCol>{entry.description}</IonCol>
+              <IonCol class="ion-text-right">
+                {entry.amount.toFixed(2)}
+              </IonCol>
+              {editing
+                ? <IonCol size="1.5" class="ion-text-center">
+                  {editing && entry.description !== "Initial Savings"
+                    ? <IonButtons>
+                      <IonButton onClick={() => {
+                        dispatch(deleteEntry(entry, data, fullJournal))
+                        dispatch(showToast("Entry deleted"))
+                      }} >
+                        <IonIcon slot="icon-only" color="danger" icon={trash} />
                       </IonButton>
-                      : null}
-                  </IonCol>
-                  : null}
-              </IonItem>
-            )
+                    </IonButtons>
+                    : null}
+                </IonCol>
+                : null}
+            </IonItem>
           })}
         </IonList>
       </IonContent>

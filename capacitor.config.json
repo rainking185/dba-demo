@@ -1,5 +1,5 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "io.ionic.sylon.dba",
   "appName": "DBA",
   "bundledWebRuntime": false,
   "npmClient": "npm",

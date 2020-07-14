@@ -438,7 +438,7 @@ const profileSlice = createSlice({
                 budgetMonth: budgetMonth,
                 remainingToday: dailyBudget,
                 remainingMonth: budgetMonth,
-                savings: savings,
+                savings: savings + dailyBudget,
                 monthlyIncome: 0,
                 allowance: getAllowance(savings)
               }

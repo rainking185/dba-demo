@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   IonFab, IonFabButton, IonIcon, IonToolbar, IonSelect,
   IonButton, IonItem, IonInput, IonModal, IonLabel,
@@ -26,6 +26,11 @@ const ScheduleForm = () => {
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()
 
+  const amountRef = useRef(null)
+  const typeRef = useRef(null)
+  const indexRef = useRef(null)
+  const descriptionRef = useRef(null)
+
   const defaultFormValue = {
     isIncome: false,
     amount: '',
@@ -38,7 +43,10 @@ const ScheduleForm = () => {
 
   const [shown, setShown] = useState(false);
 
-  const clearForm = () => setFormValue(defaultFormValue)
+  const clearForm = () => {
+    setFormValue(defaultFormValue)
+    amountRef.current.setFocus()
+  }
 
   const handleChange = (name, value) => {
     setFormValue({
@@ -121,17 +129,25 @@ const ScheduleForm = () => {
             <IonInput
               type="number"
               value={formValue.amount}
+              ref={amountRef}
+              onKeyPress={e => {
+                if (e.key === "Enter") typeRef.current.open()
+              }}
               placeholder="How Much"
               onIonChange={e => handleChange("amount", e.detail.value)} />
           </IonItem>
           <IonItem color="inherit">
             <IonLabel position="floating">Type</IonLabel>
             <IonSelect
+              ref={typeRef}
               interface="action-sheet"
-              cancelText="Monthly or Weekly"
+              cancelText="Select Monthly or Weekly"
               value={formValue.type}
               placeholder="Monthly or Weekly"
-              onIonChange={e => handleChange("type", e.detail.value)}>
+              onIonChange={e => {
+                handleChange("type", e.detail.value)
+                if (e.detail.value !== null) indexRef.current.open()
+              }}>
               {types.map((type, index) =>
                 <IonSelectOption key={index} value={type}>
                   {type}
@@ -143,11 +159,15 @@ const ScheduleForm = () => {
             ? <IonItem color="inherit">
               <IonLabel position="floating">Day/Date</IonLabel>
               <IonSelect
+                ref={indexRef}
                 interface="action-sheet"
                 cancelText="Select the day/date"
                 value={formValue.index}
                 placeholder="When"
-                onIonChange={e => handleChange("index", e.detail.value)}>
+                onIonChange={e => {
+                  handleChange("index", e.detail.value)
+                  if(e.detail.value !== null) descriptionRef.current.setFocus()
+                }}>
                 {formValue.type === "Monthly"
                   ? monthlyIndices.map(index =>
                     <IonSelectOption key={index} value={index}>
@@ -163,8 +183,12 @@ const ScheduleForm = () => {
           <IonItem color="inherit">
             <IonLabel position="floating">Description</IonLabel>
             <IonInput
+              ref={descriptionRef}
               value={formValue.description}
               placeholder="For What"
+              onKeyPress={e => {
+                if (e.key === "Enter") handleSubmit()
+              }}
               onIonChange={e => handleChange("description", e.detail.value)} />
           </IonItem>
         </IonContent>

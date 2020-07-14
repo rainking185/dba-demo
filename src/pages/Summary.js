@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
-  IonPage, IonItemGroup, IonPopover, IonText, IonIcon, IonInput, IonContent,
-  IonItemDivider, IonLabel, IonItem, IonButton, IonCol, IonCard
+  IonPage, IonPopover, IonText, IonIcon, IonInput, IonContent,
+  IonItemDivider, IonLabel, IonItem, IonButton, IonCol, IonCard, IonButtons
 } from '@ionic/react';
 import EntryForm from '../components/EntryForm'
 import Header from '../components/Header'
@@ -59,73 +59,69 @@ const Summary = () => {
     <IonPage color="light">
       <Header />
       <IonContent color="light">
-        <IonItemGroup>
-          <IonItemDivider color="light" >
-            <IonLabel>Today</IonLabel>
-          </IonItemDivider>
-          <IonItem color="light" class="ion-text-center">
-            <IonLabel>
-              <IonText class="xx-large" color={selectColor(remainingToday)}>
-                {remainingToday.toFixed(2)}
-              </IonText>
-              <IonText class="small" color={selectColor(budgetToday)}>
-                {" "}/{budgetToday.toFixed(2)}
-              </IonText>
-            </IonLabel>
-            <IonButton slot="end" onClick={() => {
+        <IonItemDivider color="light" >
+          <IonLabel>Today</IonLabel>
+        </IonItemDivider>
+        <IonItem color="light" class="ion-text-center">
+          <IonLabel>
+            <IonText class="xx-large" color={selectColor(remainingToday)}>
+              {remainingToday.toFixed(2)}
+            </IonText>
+            <IonText class="small" color={selectColor(budgetToday)}>
+              {" "}/{budgetToday.toFixed(2)}
+            </IonText>
+          </IonLabel>
+          <IonButtons slot="end">
+            <IonButton onClick={() => {
               setDailyBudget(summary.dailyBudget)
               setShowPopover(true)
             }}>
-              <IonIcon icon={create} />
+              <IonIcon slot="icon-only" icon={create} color="primary" />
             </IonButton>
-          </IonItem>
-        </IonItemGroup>
-        <IonItemGroup color="light">
-          <IonItemDivider color="light">
-            <IonLabel>This Month</IonLabel>
-          </IonItemDivider>
-          <IonItem color="light" class="ion-text-center">
-            <IonLabel>
-              <IonText class="x-large" color={selectColor(remainingMonth)}>
-                {remainingMonth.toFixed()}
-              </IonText>
-              <IonText color={selectColor(budgetMonth)}>
-                {" "}/{budgetMonth.toFixed()}
-              </IonText>
-            </IonLabel>
-          </IonItem>
-        </IonItemGroup>
-        <IonItemGroup>
-          <IonItemDivider color="light">
-            <IonLabel>Overall</IonLabel>
-          </IonItemDivider>
-          <IonItem color="light">
-            <IonCol>Savings:</IonCol>
-            <IonCol class="ion-text-right">
-              <IonText color={selectColor(savings)}>
-                {savings.toFixed(2)}
-              </IonText>
+          </IonButtons>
+        </IonItem>
+        <IonItemDivider color="light">
+          <IonLabel>This Month</IonLabel>
+        </IonItemDivider>
+        <IonItem color="light" class="ion-text-center">
+          <IonLabel>
+            <IonText class="x-large" color={selectColor(remainingMonth)}>
+              {remainingMonth.toFixed()}
+            </IonText>
+            <IonText color={selectColor(budgetMonth)}>
+              {" "}/{budgetMonth.toFixed()}
+            </IonText>
+          </IonLabel>
+        </IonItem>
+        <IonItemDivider color="light">
+          <IonLabel>Overall</IonLabel>
+        </IonItemDivider>
+        <IonItem color="light">
+          <IonCol>Savings:</IonCol>
+          <IonCol class="ion-text-right">
+            <IonText color={selectColor(savings)}>
+              {savings.toFixed(2)}
+            </IonText>
+          </IonCol>
+        </IonItem>
+        <IonItem color="light">
+          <IonCol>
+            Monthly {monthlyIncome >= 0 ? "Income" : "Payment"}:
             </IonCol>
-          </IonItem>
-          <IonItem color="light">
-            <IonCol>
-              Monthly {monthlyIncome >= 0 ? "Income" : "Payment"}:
-            </IonCol>
-            <IonCol class="ion-text-right">
-              {monthlyIncome < 0
-                ? (-monthlyIncome).toFixed(2)
-                : monthlyIncome.toFixed(2)}
-            </IonCol>
-          </IonItem>
-          <IonItem color="light">
-            <IonCol>Allowance:</IonCol>
-            <IonCol class="ion-text-right">
-              <IonText color={selectColor(allowance)}>
-                {allowance.toFixed(2)}
-              </IonText>
-            </IonCol>
-          </IonItem>
-        </IonItemGroup>
+          <IonCol class="ion-text-right">
+            {monthlyIncome < 0
+              ? (-monthlyIncome).toFixed(2)
+              : monthlyIncome.toFixed(2)}
+          </IonCol>
+        </IonItem>
+        <IonItem color="light">
+          <IonCol>Allowance:</IonCol>
+          <IonCol class="ion-text-right">
+            <IonText color={selectColor(allowance)}>
+              {allowance.toFixed(2)}
+            </IonText>
+          </IonCol>
+        </IonItem>
       </IonContent>
       <IonPopover
         isOpen={showPopover}
@@ -133,14 +129,20 @@ const Summary = () => {
         class="popover">
         <IonCard>
           <IonItem>
-            <IonItem>
-              <IonLabel position="floating">Daily Budget</IonLabel>
-              <IonInput
-                value={dailyBudget}
-                placeholder="Set your daily budget."
-                onIonChange={e => setDailyBudget(e.detail.value)} />
-            </IonItem>
-            <IonButton slot="end" onClick={handleClick}>SAVE</IonButton>
+            <IonLabel position="floating">Daily Budget</IonLabel>
+            <IonInput
+              value={dailyBudget}
+              placeholder="Set your daily budget."
+              autofocus
+              onIonChange={e => setDailyBudget(e.detail.value)} />
+          </IonItem>
+          <IonItem>
+            <IonButtons slot="end">
+              <IonButton onClick={e => setShowPopover(false)}>
+                CANCEL
+              </IonButton>
+              <IonButton onClick={handleClick}>SAVE</IonButton>
+            </IonButtons>
           </IonItem>
         </IonCard>
       </IonPopover>

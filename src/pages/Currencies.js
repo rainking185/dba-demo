@@ -89,13 +89,13 @@ const Currencies = (props) => {
         <IonToolbar color="tertiary">
           <IonButtons slot="start">
             <IonButton onClick={handleBack2Summary}>
-              <IonIcon icon={arrowBack} />
+              <IonIcon slot="icon-only" icon={arrowBack} />
             </IonButton>
           </IonButtons>
           <IonTitle>Currencies</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditing(!editing)}>
-              <IonIcon icon={editing ? checkmark : create} />
+              <IonIcon slot="icon-only" icon={editing ? checkmark : create} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -133,17 +133,17 @@ const Currencies = (props) => {
                     {currency.savings}
                   </IonText>
                   {editing
-                    ? <IonButton slot="end" onClick={() => {
-                      setShowPopover(true)
-                      setCurrencySelected(currency.name)
-                    }}>
-                      <IonIcon icon={trash} />
-                    </IonButton>
-                    : null}
-                  {editing
-                    ? <IonReorder slot="end">
-                      <IonIcon icon={menu} />
-                    </IonReorder>
+                    ? <>
+                      <IonButton color="danger" slot="end" onClick={() => {
+                        setShowPopover(true)
+                        setCurrencySelected(currency.name)
+                      }}>
+                        <IonIcon slot="icon-only" icon={trash} />
+                      </IonButton>
+                      <IonReorder slot="end">
+                        <IonIcon slot="icon-only" icon={menu} />
+                      </IonReorder>
+                    </>
                     : null}
                 </IonItem>
               )

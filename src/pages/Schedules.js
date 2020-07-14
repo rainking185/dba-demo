@@ -8,6 +8,7 @@ import {
 } from '@ionic/react'
 import ScheduleForm from '../components/ScheduleForm'
 import { deleteSchedule } from "../features/profile"
+import { showToast } from '../features/app'
 
 const Schedules = (props) => {
   const { closeHandler } = props
@@ -26,13 +27,13 @@ const Schedules = (props) => {
         <IonToolbar color="tertiary">
           <IonButtons slot="start">
             <IonButton onClick={closeHandler}>
-              <IonIcon icon={arrowBack} />
+              <IonIcon slot="icon-only" icon={arrowBack} />
             </IonButton>
           </IonButtons>
           <IonTitle>Schedules for {currency} </IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditing(!editing)}>
-              <IonIcon icon={editing ? checkmark : create} />
+              <IonIcon slot="icon-only" icon={editing ? checkmark : create} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -65,12 +66,15 @@ const Schedules = (props) => {
                   {schedule.amount.toFixed(2)}
                 </IonCol>
                 {editing
-                  ? <IonCol size="2" class="ion-text-center">
-                    <IonButton onClick={() => dispatch(deleteSchedule(
-                      schedule, data, fullSchedules
-                    ))}>
-                      <IonIcon icon={trash} />
-                    </IonButton>
+                  ? <IonCol size="1.5">
+                    <IonButtons>
+                      <IonButton onClick={() => {
+                        dispatch(deleteSchedule(schedule, data, fullSchedules))
+                        dispatch(showToast("Schedule deleted"))
+                      }}>
+                        <IonIcon slot="icon-only" icon={trash} color="danger" />
+                      </IonButton>
+                    </IonButtons>
                   </IonCol>
                   : null}
               </IonItem>

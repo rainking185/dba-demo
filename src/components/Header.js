@@ -81,6 +81,7 @@ const Header = () => {
           </IonButtons>
           <IonTitle>{currency}</IonTitle>
         </IonToolbar>
+
         <IonContent color="light">
           <IonList>
             <IonMenuToggle menu="menu" >
@@ -93,7 +94,7 @@ const Header = () => {
                     () => setModal({ shown: false })
                   } />
                 })}>
-                <IonIcon slot="start" icon={logoUsd} />
+                <IonIcon slot="start" icon={logoUsd} color="warning" />
                 Currencies
               </IonItem>
             </IonMenuToggle>
@@ -107,7 +108,7 @@ const Header = () => {
                     () => setModal({ shown: false })
                   } />
                 })}>
-                <IonIcon slot="start" icon={book} />
+                <IonIcon slot="start" icon={book} color="primary" />
                 Journal
               </IonItem>
             </IonMenuToggle>
@@ -121,7 +122,7 @@ const Header = () => {
                     () => setModal({ shown: false })
                   } />
                 })}>
-                <IonIcon slot="start" icon={calendar} />
+                <IonIcon slot="start" icon={calendar} color="secondary" />
                 Schedules
               </IonItem>
             </IonMenuToggle>
@@ -135,7 +136,11 @@ const Header = () => {
                     () => setModal({ shown: false })
                   } />
                 })}>
-                <IonIcon slot="start" icon={informationCircle} />
+                <IonIcon
+                  slot="start"
+                  icon={informationCircle}
+                  color="danger"
+                />
                 Help
               </IonItem>
             </IonMenuToggle>

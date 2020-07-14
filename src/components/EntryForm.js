@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   IonFab, IonFabButton, IonIcon, IonToolbar,
@@ -14,6 +14,9 @@ const EntryForm = () => {
   const journal = useSelector(state => state.profile.journal)
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()
+
+  const amountRef = useRef(null)
+  const descriptionRef = useRef(null)
 
   const defaultFormValue = {
     isEarning: false,
@@ -37,6 +40,7 @@ const EntryForm = () => {
       ...formValue,
       amount: ''
     })
+    amountRef.current.setFocus()
   }
 
   const handleSubmit = () => {
@@ -106,16 +110,25 @@ const EntryForm = () => {
           <IonItem color="inherit">
             <IonLabel position="floating">Amount</IonLabel>
             <IonInput
+              ref={amountRef}
               type="number"
               value={formValue.amount}
+              autofocus
               placeholder="How Much"
+              onKeyPress={e => {
+                if (e.key === "Enter") descriptionRef.current.setFocus()
+              }}
               onIonChange={e => handleChange("amount", e.detail.value)} />
           </IonItem>
           <IonItem color="inherit">
             <IonLabel position="floating">Description</IonLabel>
             <IonInput
+              ref={descriptionRef}
               value={formValue.description}
               placeholder="For What"
+              onKeyPress={e => {
+                if (e.key === "Enter") handleSubmit()
+              }}
               onIonChange={e => handleChange("description", e.detail.value)}
               autoCorrect={true} />
           </IonItem>

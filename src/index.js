@@ -6,12 +6,7 @@ import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import rootReducer from './features/index'
 
-const DEV_MODE = true
-const store = configureStore({
-  reducer: rootReducer,
-  devTools: DEV_MODE,
-})
-
+const store = configureStore({ reducer: rootReducer })
 const Main = () => {
 
   // Use matchMedia to check the user preference
