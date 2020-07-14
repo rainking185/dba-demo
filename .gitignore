@@ -7,11 +7,10 @@
 
 # testing
 /coverage
-/android
-/ios
 
 # production
 /build
+/android
 
 # resources
 /resources/android/icon
