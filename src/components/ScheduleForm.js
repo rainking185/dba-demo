@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import {
   IonFab, IonFabButton, IonIcon, IonToolbar, IonSelect,
   IonButton, IonItem, IonInput, IonModal, IonLabel,
-  IonSelectOption, IonToggle, IonContent
+  IonSelectOption, IonToggle, IonContent, IonTitle
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
 import { addSchedule } from '../features/profile'
@@ -107,7 +107,10 @@ const ScheduleForm = () => {
             slot="start"
             onClick={clearForm}>
             CLEAR
-            </IonButton>
+          </IonButton>
+          <IonTitle>
+            Create Schedule
+          </IonTitle>
           <IonButton
             class="ion-padding-end"
             slot="end"
@@ -166,7 +169,7 @@ const ScheduleForm = () => {
                 placeholder="When"
                 onIonChange={e => {
                   handleChange("index", e.detail.value)
-                  if(e.detail.value !== null) descriptionRef.current.setFocus()
+                  if (e.detail.value !== null) descriptionRef.current.setFocus()
                 }}>
                 {formValue.type === "Monthly"
                   ? monthlyIndices.map(index =>
@@ -185,6 +188,7 @@ const ScheduleForm = () => {
             <IonInput
               ref={descriptionRef}
               value={formValue.description}
+              autocapitalize
               placeholder="For What"
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()

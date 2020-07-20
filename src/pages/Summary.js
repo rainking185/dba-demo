@@ -17,7 +17,7 @@ const Summary = () => {
   const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const summary = useSelector(
-    state => state.profile.data.profile.currencies[currency]
+    state => state.profile.data.currencies[currency]
   )
   const {
     remainingToday = 0,
@@ -106,8 +106,8 @@ const Summary = () => {
         </IonItem>
         <IonItem color="light">
           <IonCol>
-            Monthly {monthlyIncome >= 0 ? "Income" : "Payment"}:
-            </IonCol>
+            Monthly {monthlyIncome > 0 ? "Income" : "Payment"}:
+          </IonCol>
           <IonCol class="ion-text-right">
             {monthlyIncome < 0
               ? (-monthlyIncome).toFixed(2)

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import {
   IonFab, IonFabButton, IonIcon, IonToolbar,
   IonButton, IonItem, IonInput, IonModal,
-  IonContent, IonLabel
+  IonContent, IonLabel, IonTitle
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
 import { useSelector, useDispatch } from 'react-redux'
@@ -46,7 +46,7 @@ const CurrencyForm = () => {
     else if (formValue.currency.length !== 3
       || !areLetters(formValue.currency))
       err += "Currency with 3 letters only. "
-    else if (Object.keys(data.profile.currencies).includes(formValue.currency))
+    else if (Object.keys(data.currencies).includes(formValue.currency))
       err += "You already have this currency. "
     if (formValue.savings === '') err += "Please add your savings. "
     if (formValue.dailyBudget === '') err += "Please set your daily budget. "
@@ -92,7 +92,10 @@ const CurrencyForm = () => {
             slot="start"
             onClick={clearForm}>
             CLEAR
-            </IonButton>
+          </IonButton>
+          <IonTitle>
+            Create Currency
+          </IonTitle>
           <IonButton
             class="ion-padding-end"
             slot="end"
@@ -108,7 +111,6 @@ const CurrencyForm = () => {
               type="text"
               maxlength={3}
               minlength={3}
-              autofocus
               value={formValue.currency}
               ref={currencyRef}
               onKeyPress={e => {

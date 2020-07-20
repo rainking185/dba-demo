@@ -1,5 +1,3 @@
-import { setData, setJournal } from './storage'
-
 export const monthlyIndices = [
   '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14',
   '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27',
@@ -42,36 +40,29 @@ export const getCurrenciesSummary = (currencies) => {
   }, [])
 }
 
-export const getUnregisteredCurrencies = (data) => {
-  let registeredCurrencies = Object.keys(data.profile.currencies)
-  return data.currencies.filter(currency => {
-    return !registeredCurrencies.includes(currency)
-  })
-}
-
 export const update = (data, journal, schedules) => {
 
   let today = new Date().toDateString()
-  if (today === data.profile.lastEdited) return {
+  if (today === data.lastEdited) return {
     data: data,
     journal: journal
   }
 
   let todayDate = new Date(today)
-  let diff = new Date(todayDate - new Date(data.profile.lastEdited)).getDate() - 1
+  let diff = new Date(todayDate - new Date(data.lastEdited)).getDate() - 1
 
   let newJournal = [...journal]
   let newSchedules = [...schedules]
   let newData = { ...data }
-  let currencies = { ...newData.profile.currencies }
+  let currencies = { ...newData.currencies }
 
-  let lastEdited = new Date(data.profile.lastEdited)
+  let lastEdited = new Date(data.lastEdited)
   let lastlastEdited = lastEdited
   lastEdited.setDate(lastEdited.getDate() + 1)
 
-  if (newData.profile.currencyInUse !== newData.profile.currencyToUse) {
-    let currencyInUse = newData.profile.currencyInUse
-    let currencyToUse = newData.profile.currencyToUse
+  if (newData.currencyInUse !== newData.currencyToUse) {
+    let currencyInUse = newData.currencyInUse
+    let currencyToUse = newData.currencyToUse
 
     if (currencies[currencyInUse].budgetToday
       !== currencies[currencyInUse].dailyBudget) {
@@ -114,14 +105,11 @@ export const update = (data, journal, schedules) => {
     }
     newData = {
       ...newData,
-      profile: {
-        ...newData.profile,
-        currencyInUse: currencyToUse
-      }
+      currencyInUse: currencyToUse
     }
   }
 
-  let currencyInUse = newData.profile.currencyInUse
+  let currencyInUse = newData.currencyInUse
   if (currencies[currencyInUse].budgetToday
     !== currencies[currencyInUse].dailyBudget) {
     let diffAmount = getDaysRemaining(lastEdited) * (
@@ -198,14 +186,9 @@ export const update = (data, journal, schedules) => {
   }
   newData = {
     ...newData,
-    profile: {
-      ...newData.profile,
-      lastEdited: new Date().toDateString(),
-      currencies: currencies
-    }
+    lastEdited: new Date().toDateString(),
+    currencies: currencies
   }
-  setData(newData)
-  setJournal(newJournal)
   return {
     data: newData,
     journal: newJournal
@@ -214,8 +197,8 @@ export const update = (data, journal, schedules) => {
 
 
 export const audit = (data, journal, schedules) => {
-  let currencies = { ...data.profile.currencies }
-  let currencyInUse = data.profile.currencyInUse
+  let currencies = { ...data.currencies }
+  let currencyInUse = data.currencyInUse
   const todayDate = new Date()
   const today = todayDate.toDateString()
   Object.keys(currencies).forEach(currency => {
@@ -296,12 +279,8 @@ export const audit = (data, journal, schedules) => {
   })
   let newData = {
     ...data,
-    profile: {
-      ...data.profile,
-      lastEdited: new Date().toDateString(),
-      currencies: currencies
-    }
+    lastEdited: new Date().toDateString(),
+    currencies: currencies
   }
-  setData(newData)
   return newData
 }

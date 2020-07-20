@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   IonFab, IonFabButton, IonIcon, IonToolbar,
-  IonButton, IonItem, IonLabel, IonToggle, IonInput, IonModal, IonContent
+  IonButton, IonItem, IonLabel, IonToggle, IonInput, IonModal, IonContent, IonTitle
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
 import { addEntry } from '../features/profile'
@@ -90,7 +90,8 @@ const EntryForm = () => {
             slot="start"
             onClick={clearForm}>
             CLEAR
-              </IonButton>
+          </IonButton>
+          <IonTitle>Log Entry</IonTitle>
           <IonButton
             class="ion-padding-end"
             slot="end"
@@ -113,7 +114,6 @@ const EntryForm = () => {
               ref={amountRef}
               type="number"
               value={formValue.amount}
-              autofocus
               placeholder="How Much"
               onKeyPress={e => {
                 if (e.key === "Enter") descriptionRef.current.setFocus()
@@ -125,6 +125,7 @@ const EntryForm = () => {
             <IonInput
               ref={descriptionRef}
               value={formValue.description}
+              autocapitalize
               placeholder="For What"
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()

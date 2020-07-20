@@ -1,10 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { fetchAll } from './thunks'
-import {
-  setData as setData2Storage,
-  setJournal as setJournal2Storage,
-  setSchedules as setSchedules2Storage
-} from './storage'
 import { getAllowance, getBudgetMonth, update as updateAsync, audit as auditAsync } from './utils'
 
 const profileSlice = createSlice({
@@ -16,40 +11,22 @@ const profileSlice = createSlice({
     schedules: []
   },
   reducers: {
-    setJournal: {
-      reducer(state, action) {
-        return {
-          ...state,
-          journal: action.payload
-        }
-      },
-      prepare(journal) {
-        setJournal2Storage(journal)
-        return { payload: journal }
+    setJournal(state, action) {
+      return {
+        ...state,
+        journal: action.payload
       }
     },
-    setSchedules: {
-      reducer(state, action) {
-        return {
-          ...state,
-          schedules: action.payload
-        }
-      },
-      prepare(schedules) {
-        setSchedules2Storage(schedules)
-        return { payload: schedules }
+    setSchedules(state, action) {
+      return {
+        ...state,
+        schedules: action.payload
       }
     },
-    setData: {
-      reducer(state, action) {
-        return {
-          ...state,
-          data: action.payload
-        }
-      },
-      prepare(data) {
-        setData2Storage(data)
-        return { payload: data }
+    setData(state, action) {
+      return {
+        ...state,
+        data: action.payload
       }
     },
     setLoaded(state, action) {
@@ -68,13 +45,9 @@ const profileSlice = createSlice({
       prepare(currency, data) {
         let newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencyToUse: currency
-          }
+          lastEdited: new Date().toDateString(),
+          currencyToUse: currency
         }
-        setData2Storage(newData)
         return {
           payload: newData
         }
@@ -85,15 +58,12 @@ const profileSlice = createSlice({
         return action.payload
       },
       prepare(currency, profile) {
-        let newCurrencies = { ...profile.data.profile.currencies }
+        let newCurrencies = { ...profile.data.currencies }
         delete newCurrencies[currency]
         let newData = {
           ...profile.data,
-          profile: {
-            ...profile.data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: newCurrencies
-          }
+          lastEdited: new Date().toDateString(),
+          currencies: newCurrencies
         }
         let newSchedules = [...profile.schedules].filter(schedule => {
           return schedule.currency !== currency
@@ -101,9 +71,6 @@ const profileSlice = createSlice({
         let newJournal = [...profile.journal].filter(entry => {
           return entry.currency !== currency
         })
-        setData2Storage(newData)
-        setJournal2Storage(newJournal)
-        setSchedules2Storage(newSchedules)
         return {
           payload: {
             ...profile,
@@ -125,19 +92,15 @@ const profileSlice = createSlice({
         const { currency, amount } = form
         let newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: {
-              ...data.profile.currencies,
-              [currency]: {
-                ...data.profile.currencies[currency],
-                dailyBudget: amount
-              }
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...data.currencies,
+            [currency]: {
+              ...data.currencies[currency],
+              dailyBudget: amount
             }
           }
         }
-        setData2Storage(newData)
         return {
           payload: newData
         }
@@ -158,35 +121,30 @@ const profileSlice = createSlice({
           currency: currency,
           date: new Date().toDateString(),
           amount: amount,
-          description: description
+          description: description,
         }])
 
         let remainingToday =
-          data.profile.currencies[currency].remainingToday + amount
+          data.currencies[currency].remainingToday + amount
         let remainingMonth =
-          data.profile.currencies[currency].remainingMonth + amount
+          data.currencies[currency].remainingMonth + amount
         let savings =
-          data.profile.currencies[currency].savings + amount
+          data.currencies[currency].savings + amount
 
         let newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: {
-              ...data.profile.currencies,
-              [currency]: {
-                ...data.profile.currencies[currency],
-                remainingToday: remainingToday,
-                remainingMonth: remainingMonth,
-                savings: savings,
-                allowance: getAllowance(savings)
-              }
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...data.currencies,
+            [currency]: {
+              ...data.currencies[currency],
+              remainingToday: remainingToday,
+              remainingMonth: remainingMonth,
+              savings: savings,
+              allowance: getAllowance(savings)
             }
           }
         }
-        setData2Storage(newData)
-        setJournal2Storage(newJournal)
         return {
           payload: {
             data: newData,
@@ -207,43 +165,38 @@ const profileSlice = createSlice({
       prepare(entry, data, journal) {
         const { currency, amount, date, description } = entry
         let remainingToday =
-          data.profile.currencies[currency].remainingToday
+          data.currencies[currency].remainingToday
         let budgetToday =
-          data.profile.currencies[currency].budgetToday
+          data.currencies[currency].budgetToday
         if (date === new Date().toDateString()) {
           remainingToday -= amount
           if (description === "Daily Budget") budgetToday -= amount
         }
-        let remainingMonth = data.profile.currencies[currency].remainingMonth
-        let budgetMonth = data.profile.currencies[currency].budgetMonth
+        let remainingMonth = data.currencies[currency].remainingMonth
+        let budgetMonth = data.currencies[currency].budgetMonth
         if (new Date(date).getMonth() === new Date().getMonth()) {
           remainingMonth -= amount
           if (description === "Daily Budget") budgetMonth -= amount
         }
-        let savings = data.profile.currencies[currency].savings - amount
+        let savings = data.currencies[currency].savings - amount
         let newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: {
-              ...data.profile.currencies,
-              [currency]: {
-                ...data.profile.currencies[currency],
-                budgetToday: budgetToday,
-                remainingToday: remainingToday,
-                budgetMonth: budgetMonth,
-                remainingMonth: remainingMonth,
-                savings: savings,
-                allowance: getAllowance(savings)
-              }
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...data.currencies,
+            [currency]: {
+              ...data.currencies[currency],
+              budgetToday: budgetToday,
+              remainingToday: remainingToday,
+              budgetMonth: budgetMonth,
+              remainingMonth: remainingMonth,
+              savings: savings,
+              allowance: getAllowance(savings)
             }
           }
         }
         let newJournal = [...journal]
         newJournal.splice(newJournal.indexOf(entry), 1)
-        setData2Storage(newData)
-        setJournal2Storage(newJournal)
         return {
           payload: {
             data: newData,
@@ -274,24 +227,19 @@ const profileSlice = createSlice({
         let monthlyAmount = amount
         if (type === "Weekly") monthlyAmount *= 4
         let monthlyIncome =
-          data.profile.currencies[currency].monthlyIncome + monthlyAmount
+          data.currencies[currency].monthlyIncome + monthlyAmount
 
         let newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: {
-              ...data.profile.currencies,
-              [currency]: {
-                ...data.profile.currencies[currency],
-                monthlyIncome: monthlyIncome
-              }
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...data.currencies,
+            [currency]: {
+              ...data.currencies[currency],
+              monthlyIncome: monthlyIncome
             }
           }
         }
-        setData2Storage(newData)
-        setSchedules2Storage(newSchedules)
         return {
           payload: {
             data: newData,
@@ -314,25 +262,20 @@ const profileSlice = createSlice({
         let monthlyAmount = amount
         if (type === "Weekly") monthlyAmount *= 4
         let monthlyIncome =
-          data.profile.currencies[currency].monthlyIncome - monthlyAmount
+          data.currencies[currency].monthlyIncome - monthlyAmount
         let newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: {
-              ...data.profile.currencies,
-              [currency]: {
-                ...data.profile.currencies[currency],
-                monthlyIncome: monthlyIncome
-              }
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...data.currencies,
+            [currency]: {
+              ...data.currencies[currency],
+              monthlyIncome: monthlyIncome
             }
           }
         }
         let newSchedules = [...schedules]
         newSchedules.splice(newSchedules.indexOf(schedule), 1)
-        setData2Storage(newData)
-        setSchedules2Storage(newSchedules)
         return {
           payload: {
             data: newData,
@@ -354,23 +297,20 @@ const profileSlice = createSlice({
         const { currency, savings, dailyBudget } = form
         const newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: {
-              ...data.profile.currencies,
-              [currency]: {
-                profileCreated: new Date().toDateString(),
-                initSavings: savings,
-                dailyBudget: dailyBudget,
-                budgetToday: 0,
-                budgetMonth: 0,
-                remainingToday: 0,
-                remainingMonth: 0,
-                savings: savings,
-                monthlyIncome: 0,
-                allowance: getAllowance(savings)
-              }
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...data.currencies,
+            [currency]: {
+              profileCreated: new Date().toDateString(),
+              initSavings: savings,
+              dailyBudget: dailyBudget,
+              budgetToday: 0,
+              budgetMonth: 0,
+              remainingToday: 0,
+              remainingMonth: 0,
+              savings: savings,
+              monthlyIncome: 0,
+              allowance: getAllowance(savings)
             }
           }
         }
@@ -383,8 +323,6 @@ const profileSlice = createSlice({
             description: "Initial Savings"
           }
         ]
-        setData2Storage(newData)
-        setJournal2Storage(newJournal)
         return {
           payload: {
             journal: newJournal,
@@ -408,40 +346,21 @@ const profileSlice = createSlice({
         const { currency, savings, dailyBudget } = form
         const budgetMonth = getBudgetMonth(dailyBudget)
         const data = {
-          currencies: ["JPY", "CNY", "AUD", "SGD", "USD"],
-          amountTypes: [
-            "Others",
-            "Food",
-            "Monthly Payment",
-            "Transport",
-            "Entertainment",
-            "Lost",
-            "Cloud Storage",
-            "VPN",
-            "Gift",
-            "Trip",
-            "Trip Bonus",
-            "Grocery",
-            "Health",
-            "Repair"
-          ],
-          profile: {
-            lastEdited: new Date().toDateString(),
-            currencyInUse: currency,
-            currencyToUse: currency,
-            currencies: {
-              [currency]: {
-                profileCreated: new Date().toDateString(),
-                initSavings: savings,
-                dailyBudget: dailyBudget,
-                budgetToday: dailyBudget,
-                budgetMonth: budgetMonth,
-                remainingToday: dailyBudget,
-                remainingMonth: budgetMonth,
-                savings: savings + dailyBudget,
-                monthlyIncome: 0,
-                allowance: getAllowance(savings)
-              }
+          lastEdited: new Date().toDateString(),
+          currencyInUse: currency,
+          currencyToUse: currency,
+          currencies: {
+            [currency]: {
+              profileCreated: new Date().toDateString(),
+              initSavings: savings,
+              dailyBudget: dailyBudget,
+              budgetToday: dailyBudget,
+              budgetMonth: budgetMonth,
+              remainingToday: dailyBudget,
+              remainingMonth: budgetMonth,
+              savings: savings + dailyBudget,
+              monthlyIncome: 0,
+              allowance: getAllowance(savings)
             }
           }
         }
@@ -459,9 +378,6 @@ const profileSlice = createSlice({
             description: "Daily Budget"
           }
         ]
-        setData2Storage(data)
-        setJournal2Storage(journal)
-        setSchedules2Storage([])
         return {
           payload: {
             data: data,
@@ -489,20 +405,12 @@ const profileSlice = createSlice({
         }
       }
     },
-    reset: {
-      reducer(state) {
-        return {
-          ...state,
-          data: null,
-          journal: [],
-          schedules: []
-        }
-      },
-      prepare() {
-        setData2Storage()
-        setJournal2Storage([])
-        setSchedules2Storage([])
-        return { payload: null }
+    reset(state) {
+      return {
+        ...state,
+        data: null,
+        journal: [],
+        schedules: []
       }
     },
     audit: {
@@ -527,9 +435,9 @@ const profileSlice = createSlice({
         }
       },
       prepare(from, to, data) {
-        let currencies = { ...data.profile.currencies }
+        let currencies = { ...data.currencies }
         let newCurrencies = {}
-        let currencyNames = Object.keys(data.profile.currencies)
+        let currencyNames = Object.keys(data.currencies)
         let movingCurrencyName = currencyNames[from]
         let movingCurrency = { ...currencies[movingCurrencyName] }
         if (from > to) {
@@ -555,13 +463,9 @@ const profileSlice = createSlice({
         }
         let newData = {
           ...data,
-          profile: {
-            ...data.profile,
-            lastEdited: new Date().toDateString(),
-            currencies: newCurrencies
-          }
+          lastEdited: new Date().toDateString(),
+          currencies: newCurrencies
         }
-        setData2Storage(newData)
         return { payload: newData }
       }
     }

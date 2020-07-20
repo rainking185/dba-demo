@@ -24,6 +24,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import { updateData, updateJournal, updateSchedules } from './features/profile/thunks';
 
 const App = () => {
 
@@ -42,17 +43,39 @@ const App = () => {
 
   useEffect(() => {
     if (loaded && data !== null) {
-      if (data.profile.lastEdited !== new Date().toDateString())
+      if (data.lastEdited !== new Date().toDateString()) {
+        console.log("Updating daily")
         dispatch(update(data, journal, schedules))
+      }
+      else {
+        console.log("Updating data")
+        dispatch(updateData(data))
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
+
+  useEffect(() => {
+    if (loaded && data !== null) {
+      console.log("Updating journal")
+      dispatch(updateJournal(journal))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [journal]);
+
+  useEffect(() => {
+    if (loaded && data !== null) {
+      console.log("Updating schedules")
+      dispatch(updateSchedules(schedules))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [schedules]);
 
   let main = null
   if (!loaded) main = <IonLoading message={'Loading your profile...'} />
   else if (data === null) main = <FirstForm />
   else if (data !== null && loaded && currency === "") {
-    dispatch(setCurrency(data.profile.currencyToUse))
+    dispatch(setCurrency(data.currencyToUse))
     main = <IonLoading message={'Loading your profile...'} />
   } else main = <Summary />
 

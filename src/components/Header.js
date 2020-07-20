@@ -17,10 +17,10 @@ import Help from '../pages/Help';
 const Header = () => {
   const data = useSelector(state => state.profile.data)
   const currencyInUse = useSelector(
-    state => state.profile.data.profile.currencyInUse
+    state => state.profile.data.currencyInUse
   )
   const currencyToUse = useSelector(
-    state => state.profile.data.profile.currencyToUse
+    state => state.profile.data.currencyToUse
   )
   const currency = useSelector(state => state.app.currency)
 

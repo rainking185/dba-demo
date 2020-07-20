@@ -29,10 +29,10 @@ const Currencies = (props) => {
   const [currencySelected, setCurrencySelected] = useState("");
   const currencyDisplaying = useSelector(state => state.app.currency)
   const currenciesInProfile = useSelector(
-    state => state.profile.data.profile.currencies
+    state => state.profile.data.currencies
   )
   const currencyToUse = useSelector(
-    state => state.profile.data.profile.currencyToUse
+    state => state.profile.data.currencyToUse
   )
   const currencies = getCurrenciesSummary(currenciesInProfile)
 
@@ -44,7 +44,7 @@ const Currencies = (props) => {
   const handleDeleteCurrency = () => {
     if (Object.keys(currencies).length <= 1) {
       dispatch(showToast("You cannot delete the last currency you have."))
-    } else if (currencySelected === profile.data.profile.currencyToUse) {
+    } else if (currencySelected === profile.data.currencyToUse) {
       dispatch(showToast("You cannot delete the currency you are using."))
     } else {
       dispatch(setCurrency(currencyToUse))
@@ -56,7 +56,7 @@ const Currencies = (props) => {
 
   const handleBack2Summary = () => {
     if (!Object.keys(currenciesInProfile).includes(currencyDisplaying)) {
-      dispatch(setCurrency(profile.data.profile.currencyToUse))
+      dispatch(setCurrency(profile.data.currencyToUse))
     }
     closeHandler()
   }
@@ -66,12 +66,12 @@ const Currencies = (props) => {
 
     var icon = undefined
 
-    if (profile.data.profile.currencyInUse
-      === profile.data.profile.currencyToUse) {
-      if (currency === profile.data.profile.currencyInUse) icon = checkmark
+    if (profile.data.currencyInUse
+      === profile.data.currencyToUse) {
+      if (currency === profile.data.currencyInUse) icon = checkmark
     } else {
-      if (currency === profile.data.profile.currencyInUse) icon = time
-      else if (currency === profile.data.profile.currencyToUse)
+      if (currency === profile.data.currencyInUse) icon = time
+      else if (currency === profile.data.currencyToUse)
         icon = checkmark
     }
 
