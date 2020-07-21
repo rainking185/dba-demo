@@ -9,9 +9,13 @@ import { reset, audit } from '../features/profile'
 
 const Help = (props) => {
   const dispatch = useDispatch()
-  const data = useSelector(state => state.profile.data)
-  const journal = useSelector(state => state.profile.journal)
-  const schedules = useSelector(state => state.profile.schedules)
+  const profile = useSelector(state => state.profile)
+  const {
+    data,
+    journal,
+    schedules,
+    income
+  } = profile
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (count === 38) dispatch(reset())
@@ -67,7 +71,10 @@ const Help = (props) => {
           <IonText>
             <h1>How to use DBA?</h1>
             <p>
-              This is the first version of DBA application. It focuses purely on spending and not earning.
+              The primary version of DBA application focuses purely on spending and not earning.
+              To incorporate income into DBA for each currency, use "I'M EARNING" checkbox on Income page.
+              See other features for details.
+              <br /><br />
               DBA Application is a fully offline application. So you don't have to worry about leakage of data.
             </p>
             <h3>First Account</h3>
@@ -116,6 +123,15 @@ const Help = (props) => {
               You can setup monthly or weekly payments and DBA Application will deduct the amount for your automatically.
               Deleting of existing schedules is also possible from the page.
             </p>
+            <h5>Income</h5>
+            <p>
+              This feature is for those who are earning only.
+              To use this feature, tick the "I'M EARNING" in Income page.
+              You can do this independently for each currency.
+              In the income earning mode, you will have to update your income NOT from the home page but from this Income page.
+              Your daily budget will be deducted from your remaining income.
+              DBA application will also nominate the amount to set for your daily budget based on your average income.
+            </p>
           </IonText>
         </IonItem>
         <IonItem>
@@ -132,7 +148,7 @@ const Help = (props) => {
             <IonButton onClick={() => setCount(999)}>
               <IonIcon slot="icon-only" icon={walk} />
             </IonButton>
-            <IonButton onClick={() => dispatch(audit(data, journal, schedules))}>
+            <IonButton onClick={() => dispatch(audit(data, journal, schedules, income))}>
               <IonIcon slot="icon-only" icon={walk} />
             </IonButton>
             <IonButton onClick={() => setCount(count + 1)}>

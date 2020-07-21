@@ -24,15 +24,21 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import { updateData, updateJournal, updateSchedules } from './features/profile/thunks';
+import {
+  updateData, updateJournal, updateSchedules, updateIncome
+} from './features/profile/thunks';
 
 const App = () => {
 
   const dispatch = useDispatch()
-  const loaded = useSelector(state => state.profile.loaded)
-  const data = useSelector(state => state.profile.data)
-  const journal = useSelector(state => state.profile.journal)
-  const schedules = useSelector(state => state.profile.schedules)
+  const profile = useSelector(state => state.profile)
+  const {
+    loaded,
+    data,
+    income,
+    journal,
+    schedules
+  } = profile
   const currency = useSelector(state => state.app.currency)
   const toast = useSelector(state => state.app.toast)
 
@@ -45,7 +51,7 @@ const App = () => {
     if (loaded && data !== null) {
       if (data.lastEdited !== new Date().toDateString()) {
         console.log("Updating daily")
-        dispatch(update(data, journal, schedules))
+        dispatch(update(data, journal, schedules, income))
       }
       else {
         console.log("Updating data")
@@ -70,6 +76,14 @@ const App = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schedules]);
+
+  useEffect(() => {
+    if (loaded && data !== null) {
+      console.log("Updating income")
+      dispatch(updateIncome(income))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [income]);
 
   let main = null
   if (!loaded) main = <IonLoading message={'Loading your profile...'} />

@@ -57,7 +57,7 @@ const ScheduleForm = () => {
 
   const handleSubmit = () => {
     let err = ""
-    if (formValue.amount === '') err += "Please select currency. "
+    if (formValue.amount === '') err += "What's the amount? "
     else if (Number(formValue.amount) <= 0)
       err += "Positive amount only please. "
     if (formValue.type === null) err += "Please select a type. "

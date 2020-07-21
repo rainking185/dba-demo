@@ -1,53 +1,37 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
-  IonPage, IonPopover, IonText, IonIcon, IonInput, IonContent,
-  IonItemDivider, IonLabel, IonItem, IonButton, IonCol, IonCard, IonButtons
+  IonPage, IonText, IonContent,
+  IonItemDivider, IonLabel, IonItem, IonCol, IonButtons
 } from '@ionic/react';
 import EntryForm from '../components/EntryForm'
 import Header from '../components/Header'
-import { useSelector, useDispatch } from 'react-redux'
-import { create } from "ionicons/icons"
-import { changeDailyBudget } from "../features/profile"
+import { useSelector } from 'react-redux'
 import "./Styles.css"
-import { showToast } from '../features/app';
+import BudgetForm from '../components/BudgetForm';
+import { getAllowance, budgetGauge, currencyFilter } from '../features/profile/utils';
 
 const Summary = () => {
 
-  const dispatch = useDispatch()
   const currency = useSelector(state => state.app.currency)
-  const data = useSelector(state => state.profile.data)
   const summary = useSelector(
     state => state.profile.data.currencies[currency]
   )
+  const income = currencyFilter(useSelector(
+    state => state.profile.income
+  ), currency)
   const {
     remainingToday = 0,
     remainingMonth = 0,
     savings = 0,
     budgetMonth = 0,
     budgetToday = 0,
-    allowance = 0,
-    monthlyIncome = 0
+    monthlyIncome = 0,
+    remainingIncome = 0,
+    imEarning = false,
+    dailyBudget = 0
   } = summary
-  const [showPopover, setShowPopover] = useState(false);
-  const [dailyBudget, setDailyBudget] = useState(summary.dailyBudget);
 
-  const handleClick = () => {
-    let err = ""
-    if (dailyBudget === "") err += "Please enter your daily budget. "
-    else if (Number(dailyBudget) < 0)
-      err += "Daily budget cannot be negative. "
-
-    if (err !== "") dispatch(showToast(err))
-    else {
-      let newBudget = Number(dailyBudget)
-      dispatch(changeDailyBudget({
-        currency: currency,
-        amount: newBudget
-      }, data))
-      dispatch(showToast("New budget will start tomorrow."))
-      setShowPopover(false)
-    }
-  }
+  const allowance = getAllowance(savings)
 
   const selectColor = (number) => {
     if (number === 0) return "medium"
@@ -55,35 +39,69 @@ const Summary = () => {
     else return undefined
   }
 
+  const selectBudgetColor = budget => {
+    if (!imEarning) return undefined
+    const budgetRef = budgetGauge(income)
+    if (budget > budgetRef) return "danger"
+    else return undefined
+  }
+
+  let warningColor = "light"
+  let warningMessage = ""
+
+  if (imEarning) {
+    if (remainingIncome + savings <= 0 || remainingIncome <= 0) {
+      warningColor = "danger"
+      warningMessage = "Go and earn some money. This page is useless now."
+    } else if (savings <= 0) {
+      warningColor = "warning"
+      warningMessage = "You are spending way ahead of budget. Please control your spending."
+    } else {
+      let days = Math.floor(remainingIncome / dailyBudget)
+      if (days <= 7) {
+        warningColor = "warning"
+        warningMessage = "You are running out of budget."
+      }
+    }
+  }
+
   return (
-    <IonPage color="light">
+    <IonPage color={warningColor}>
       <Header />
-      <IonContent color="light">
-        <IonItemDivider color="light" >
+      <IonContent color={warningColor}>
+        {warningMessage !== ""
+          ? <>
+            <IonItemDivider color={warningColor === "warning" ? "danger" : "dark"}>
+              <IonText>Warning:</IonText>
+            </IonItemDivider>
+            <IonItem color={warningColor === "warning" ? "danger" : "dark"}>
+              <IonText>{warningMessage}</IonText>
+            </IonItem>
+          </>
+          : null}
+        <IonItemDivider color={warningColor} >
           <IonLabel>Today</IonLabel>
         </IonItemDivider>
-        <IonItem color="light" class="ion-text-center">
+        <IonItem color={warningColor} class="ion-text-center">
           <IonLabel>
             <IonText class="xx-large" color={selectColor(remainingToday)}>
               {remainingToday.toFixed(2)}
             </IonText>
-            <IonText class="small" color={selectColor(budgetToday)}>
-              {" "}/{budgetToday.toFixed(2)}
+            <IonText class="small">
+              {" "}/
+            </IonText>
+            <IonText class="small" color={selectBudgetColor(budgetToday)}>
+              {budgetToday.toFixed(2)}
             </IonText>
           </IonLabel>
           <IonButtons slot="end">
-            <IonButton onClick={() => {
-              setDailyBudget(summary.dailyBudget)
-              setShowPopover(true)
-            }}>
-              <IonIcon slot="icon-only" icon={create} color="primary" />
-            </IonButton>
+            <BudgetForm />
           </IonButtons>
         </IonItem>
-        <IonItemDivider color="light">
+        <IonItemDivider color={warningColor}>
           <IonLabel>This Month</IonLabel>
         </IonItemDivider>
-        <IonItem color="light" class="ion-text-center">
+        <IonItem color={warningColor} class="ion-text-center">
           <IonLabel>
             <IonText class="x-large" color={selectColor(remainingMonth)}>
               {remainingMonth.toFixed()}
@@ -93,10 +111,10 @@ const Summary = () => {
             </IonText>
           </IonLabel>
         </IonItem>
-        <IonItemDivider color="light">
+        <IonItemDivider color={warningColor}>
           <IonLabel>Overall</IonLabel>
         </IonItemDivider>
-        <IonItem color="light">
+        <IonItem color={warningColor}>
           <IonCol>Savings:</IonCol>
           <IonCol class="ion-text-right">
             <IonText color={selectColor(savings)}>
@@ -104,17 +122,15 @@ const Summary = () => {
             </IonText>
           </IonCol>
         </IonItem>
-        <IonItem color="light">
+        <IonItem color={warningColor}>
           <IonCol>
             Monthly {monthlyIncome > 0 ? "Income" : "Payment"}:
           </IonCol>
           <IonCol class="ion-text-right">
-            {monthlyIncome < 0
-              ? (-monthlyIncome).toFixed(2)
-              : monthlyIncome.toFixed(2)}
+            {Math.abs(monthlyIncome).toFixed(2)}
           </IonCol>
         </IonItem>
-        <IonItem color="light">
+        <IonItem color={warningColor}>
           <IonCol>Allowance:</IonCol>
           <IonCol class="ion-text-right">
             <IonText color={selectColor(allowance)}>
@@ -122,30 +138,8 @@ const Summary = () => {
             </IonText>
           </IonCol>
         </IonItem>
+
       </IonContent>
-      <IonPopover
-        isOpen={showPopover}
-        onDidDismiss={e => setShowPopover(false)}
-        class="popover">
-        <IonCard>
-          <IonItem>
-            <IonLabel position="floating">Daily Budget</IonLabel>
-            <IonInput
-              value={dailyBudget}
-              placeholder="Set your daily budget."
-              autofocus
-              onIonChange={e => setDailyBudget(e.detail.value)} />
-          </IonItem>
-          <IonItem>
-            <IonButtons slot="end">
-              <IonButton onClick={e => setShowPopover(false)}>
-                CANCEL
-              </IonButton>
-              <IonButton onClick={handleClick}>SAVE</IonButton>
-            </IonButtons>
-          </IonItem>
-        </IonCard>
-      </IonPopover>
       <EntryForm currency={currency} />
     </IonPage>
   )

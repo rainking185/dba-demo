@@ -40,7 +40,7 @@ export const getCurrenciesSummary = (currencies) => {
   }, [])
 }
 
-export const update = (data, journal, schedules) => {
+export const update = (data, journal, schedules, income) => {
 
   let today = new Date().toDateString()
   if (today === data.lastEdited) return {
@@ -54,6 +54,7 @@ export const update = (data, journal, schedules) => {
   let newJournal = [...journal]
   let newSchedules = [...schedules]
   let newData = { ...data }
+  let newIncome = [...income]
   let currencies = { ...newData.currencies }
 
   let lastEdited = new Date(data.lastEdited)
@@ -127,7 +128,6 @@ export const update = (data, journal, schedules) => {
     }
   }
 
-
   for (let i = 0; i < diff; i++) {
     if (lastlastEdited.getMonth() !== lastEdited.getMonth()) {
       Object.keys(currencies).forEach(currency => {
@@ -146,17 +146,27 @@ export const update = (data, journal, schedules) => {
       date: lastEdited.toDateString(),
       description: "Daily Budget"
     })
+    if (currencies[currencyInUse].imEarning)
+      newIncome.push({
+        currency: currencyInUse,
+        amount: -currencies[currencyInUse].budgetToday,
+        date: lastEdited.toDateString(),
+        description: "Daily Budget"
+      })
 
     Object.keys(currencies).forEach(currency => {
       let remainingToday = currencies[currency].budgetToday
       let savings = currencies[currency].savings
         + currencies[currency].budgetToday
-      let allowance = getAllowance(savings)
+
+      let remainingIncome = currencies[currency].remainingIncome
+      if (currencies[currency].imEarning)
+        remainingIncome -= currencies[currency].budgetToday
       currencies[currency] = {
         ...currencies[currency],
         remainingToday: remainingToday,
-        savings: savings,
-        allowance: allowance
+        remainingIncome: remainingIncome,
+        savings: savings
       }
     })
 
@@ -191,12 +201,13 @@ export const update = (data, journal, schedules) => {
   }
   return {
     data: newData,
-    journal: newJournal
+    journal: newJournal,
+    income: newIncome
   }
 }
 
 
-export const audit = (data, journal, schedules) => {
+export const audit = (data, journal, schedules, income) => {
   let currencies = { ...data.currencies }
   let currencyInUse = data.currencyInUse
   const todayDate = new Date()
@@ -208,6 +219,9 @@ export const audit = (data, journal, schedules) => {
     })
     let schedulesExtract = [...schedules].filter(schedule => {
       return schedule.currency === currency
+    })
+    let incomeExtract = [...income].filter(entry => {
+      return entry.currency === currency
     })
 
     let remainingToday = journalExtract.filter(entry => {
@@ -229,8 +243,6 @@ export const audit = (data, journal, schedules) => {
     }).reduce((prev, cur) => {
       return prev + cur.amount
     }, 0)
-
-    let allownce = getAllowance(savings)
 
     let monthlyIncome = schedulesExtract.reduce((prev, cur) => {
       if (cur.type === "Weekly") return prev + cur.amount * 4
@@ -254,15 +266,25 @@ export const audit = (data, journal, schedules) => {
     }, (getDaysRemaining() - 1)
     * (currencyInUse === currency ? summary.dailyBudget : 0))
 
+    let totalIncome = incomeExtract.reduce((prev, cur) => {
+      if (cur.description === "Income") return prev + cur.amount
+      else return prev
+    }, 0)
+
+    let remainingIncome = incomeExtract.reduce(
+      (prev, cur) => prev + cur.amount, 0
+    )
+
     let newSummary = {
       ...summary,
       remainingToday: remainingToday,
       savings: savings,
       budgetToday: budgetToday,
-      allowance: allownce,
       monthlyIncome: monthlyIncome,
       budgetMonth: budgetMonth,
-      remainingMonth: remainingMonth
+      remainingMonth: remainingMonth,
+      totalIncome: totalIncome,
+      remainingIncome: remainingIncome
     }
 
     Object.keys(newSummary).forEach(key => {
@@ -283,4 +305,11 @@ export const audit = (data, journal, schedules) => {
     currencies: currencies
   }
   return newData
+}
+
+export const budgetGauge = (income, marginalRate = 0.05) => {
+  let totalIncome = income.reduce((prev, cur) => cur.description === "Income" ? prev + cur.amount : prev, 0)
+  let days = income.filter(entry => entry.description === "Daily Budget").length
+  if (days < 30) days = 30
+  return totalIncome * (1 - marginalRate) / days
 }

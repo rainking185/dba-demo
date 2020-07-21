@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { fetchAll } from './thunks'
-import { getAllowance, getBudgetMonth, update as updateAsync, audit as auditAsync } from './utils'
+import { fetchAll, updateJournal, updateData, updateSchedules, updateIncome } from './thunks'
+import { getBudgetMonth, update as updateAsync, audit as auditAsync } from './utils'
 
 const profileSlice = createSlice({
   name: 'profile',
@@ -8,7 +8,8 @@ const profileSlice = createSlice({
     loaded: false,
     data: {},
     journal: [],
-    schedules: []
+    schedules: [],
+    income: []
   },
   reducers: {
     setJournal(state, action) {
@@ -140,8 +141,7 @@ const profileSlice = createSlice({
               ...data.currencies[currency],
               remainingToday: remainingToday,
               remainingMonth: remainingMonth,
-              savings: savings,
-              allowance: getAllowance(savings)
+              savings: savings
             }
           }
         }
@@ -190,8 +190,7 @@ const profileSlice = createSlice({
               remainingToday: remainingToday,
               budgetMonth: budgetMonth,
               remainingMonth: remainingMonth,
-              savings: savings,
-              allowance: getAllowance(savings)
+              savings: savings
             }
           }
         }
@@ -310,7 +309,9 @@ const profileSlice = createSlice({
               remainingMonth: 0,
               savings: savings,
               monthlyIncome: 0,
-              allowance: getAllowance(savings)
+              imEarning: false,
+              totalIncome: 0,
+              remainingIncome: 0
             }
           }
         }
@@ -327,6 +328,49 @@ const profileSlice = createSlice({
           payload: {
             journal: newJournal,
             data: newData
+          }
+        }
+      }
+    },
+    addIncome: {
+      reducer(state, action) {
+        const { income, data } = action.payload
+        return {
+          ...state,
+          data: data,
+          income: income
+        }
+      },
+      prepare(form, data, income) {
+        const { amount, currency } = form
+        let newIncome = income.concat([{
+          currency: currency,
+          date: new Date().toDateString(),
+          amount: amount,
+          description: "Income"
+        }])
+
+        let remainingIncome =
+          data.currencies[currency].remainingIncome + amount
+        let totalIncome =
+          data.currencies[currency].totalIncome + amount
+
+        let newData = {
+          ...data,
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...data.currencies,
+            [currency]: {
+              ...data.currencies[currency],
+              remainingIncome: remainingIncome,
+              totalIncome: totalIncome
+            }
+          }
+        }
+        return {
+          payload: {
+            data: newData,
+            income: newIncome
           }
         }
       }
@@ -360,7 +404,9 @@ const profileSlice = createSlice({
               remainingMonth: budgetMonth,
               savings: savings + dailyBudget,
               monthlyIncome: 0,
-              allowance: getAllowance(savings)
+              imEarning: false,
+              totalIncome: 0,
+              remainingIncome: 0
             }
           }
         }
@@ -388,19 +434,23 @@ const profileSlice = createSlice({
     },
     update: {
       reducer(state, action) {
-        const { data, journal } = action.payload
+        const { data, journal, income } = action.payload
         return {
           ...state,
           data: data,
-          journal: journal
+          journal: journal,
+          income: income
         }
       },
-      prepare(oldData, oldJournal, schedules) {
-        let { data, journal } = updateAsync(oldData, oldJournal, schedules)
+      prepare(oldData, oldJournal, schedules, oldIncome) {
+        let { data, journal, income } = updateAsync(
+          oldData, oldJournal, schedules, oldIncome
+        )
         return {
           payload: {
             data: data,
-            journal: journal
+            journal: journal,
+            income: income
           }
         }
       }
@@ -420,8 +470,8 @@ const profileSlice = createSlice({
           data: action.payload
         }
       },
-      prepare(oldData, journal, schedules) {
-        let data = auditAsync(oldData, journal, schedules)
+      prepare(oldData, journal, schedules, income) {
+        let data = auditAsync(oldData, journal, schedules, income)
         return {
           payload: data
         }
@@ -468,6 +518,23 @@ const profileSlice = createSlice({
         }
         return { payload: newData }
       }
+    },
+    toggleImEarning(state, action) {
+      const currency = action.payload
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          lastEdited: new Date().toDateString(),
+          currencies: {
+            ...state.data.currencies,
+            [currency]: {
+              ...state.data.currencies[currency],
+              imEarning: !state.data.currencies[currency].imEarning
+            }
+          }
+        }
+      }
     }
   },
   extraReducers: {
@@ -477,18 +544,20 @@ const profileSlice = createSlice({
         journal: action.payload.journal,
         schedules: action.payload.schedules,
         data: action.payload.data,
+        income: action.payload.income,
         loaded: true
       }
     }
   }
 })
 
-export { fetchAll }
+export { fetchAll, updateJournal, updateData, updateSchedules, updateIncome }
 
 export const {
   addEntry, deleteEntry, addSchedule, addCurrency, setData, setJournal,
   setSchedules, setLoaded, initProfile, changeCurrency, deleteCurrency,
-  changeDailyBudget, deleteSchedule, update, reset, reorderCurrency, audit
+  changeDailyBudget, deleteSchedule, update, reset, reorderCurrency, audit,
+  toggleImEarning, addIncome
 } = profileSlice.actions
 
 export default profileSlice.reducer
