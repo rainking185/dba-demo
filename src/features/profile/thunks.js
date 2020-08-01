@@ -66,7 +66,9 @@ export const fetchAll = createAsyncThunk(
     let res = await Device.getLanguageCode()
     let language = "en"
     let systemLanguage = res.value
-    if (systemLanguage.toLowerCase().includes("cn")) language = "cn"
+    if (systemLanguage.toLowerCase().includes("cn")
+      || systemLanguage.toLowerCase().includes("zh"))
+      language = "cn"
     try {
       // await Filesystem.rmdir({
       //   path: 'Sylon/DBA',
@@ -103,7 +105,6 @@ export const fetchAll = createAsyncThunk(
         data: data,
         income: income,
         language: language,
-        systemLanguage: systemLanguage
       }
     } catch (err) {
       return {
@@ -112,7 +113,6 @@ export const fetchAll = createAsyncThunk(
         income: [],
         data: null,
         language: language,
-        systemLanguage: systemLanguage
       }
     }
   }
