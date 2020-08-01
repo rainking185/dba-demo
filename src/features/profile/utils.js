@@ -58,7 +58,7 @@ export const update = (data, journal, schedules, income) => {
   let currencies = { ...newData.currencies }
 
   let lastEdited = new Date(data.lastEdited)
-  let lastlastEdited = lastEdited
+  let lastlastEdited = new Date(data.lastEdited)
   lastEdited.setDate(lastEdited.getDate() + 1)
 
   if (newData.currencyInUse !== newData.currencyToUse) {
@@ -131,7 +131,7 @@ export const update = (data, journal, schedules, income) => {
   for (let i = 0; i < diff; i++) {
     if (lastlastEdited.getMonth() !== lastEdited.getMonth()) {
       Object.keys(currencies).forEach(currency => {
-        let budgetMonth = currencies[currencyInUse].budgetToday
+        let budgetMonth = currencies[currency].budgetToday
           * getDaysInCurrentMonth(lastEdited)
         currencies[currency] = {
           ...currencies[currency],
@@ -191,7 +191,7 @@ export const update = (data, journal, schedules, income) => {
         }
       }
     })
-    lastlastEdited = lastEdited
+    lastlastEdited = new Date(lastEdited)
     lastEdited.setDate(lastEdited.getDate() + 1)
   }
   newData = {

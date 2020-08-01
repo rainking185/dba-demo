@@ -130,7 +130,7 @@ const Currencies = (props) => {
                   <IonText slot="end" color={currency.savings < 0
                     ? "danger"
                     : undefined}>
-                    {currency.savings}
+                    {currency.savings.toFixed(2)}
                   </IonText>
                   {editing
                     ? <>

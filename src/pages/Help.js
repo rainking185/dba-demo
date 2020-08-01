@@ -19,6 +19,7 @@ const Help = (props) => {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (count === 38) dispatch(reset())
+    else if (count === 13) dispatch(audit(data, journal, schedules, income))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
   const { closeHandler } = props
@@ -142,13 +143,13 @@ const Help = (props) => {
             <IonButton onClick={() => setCount(count - 1)}>
               <IonIcon slot="icon-only" icon={walk} />
             </IonButton>
+            <IonButton onClick={() => setCount(999)}>
+              <IonIcon slot="icon-only" icon={walk} />
+            </IonButton>
             <IonButton onClick={() => setCount(count * 2)}>
               <IonIcon slot="icon-only" icon={walk} />
             </IonButton>
             <IonButton onClick={() => setCount(999)}>
-              <IonIcon slot="icon-only" icon={walk} />
-            </IonButton>
-            <IonButton onClick={() => dispatch(audit(data, journal, schedules, income))}>
               <IonIcon slot="icon-only" icon={walk} />
             </IonButton>
             <IonButton onClick={() => setCount(count + 1)}>
