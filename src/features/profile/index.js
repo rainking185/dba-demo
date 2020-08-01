@@ -10,7 +10,8 @@ const profileSlice = createSlice({
     journal: [],
     schedules: [],
     income: [],
-    language: "en"
+    language: "en",
+    systemLanguage: ""
   },
   reducers: {
     setJournal(state, action) {
@@ -536,6 +537,12 @@ const profileSlice = createSlice({
           }
         }
       }
+    },
+    toggleLanguage(state) {
+      return {
+        ...state,
+        language: state.language === "cn" ? "en" : "cn"
+      }
     }
   },
   extraReducers: {
@@ -545,7 +552,8 @@ const profileSlice = createSlice({
         schedules,
         data,
         income,
-        language
+        language,
+        systemLanguage
       } = action.payload
       return {
         ...state,
@@ -554,6 +562,7 @@ const profileSlice = createSlice({
         data: data,
         income: income,
         language: language,
+        systemLanguage: systemLanguage,
         loaded: true
       }
     }
@@ -566,7 +575,7 @@ export const {
   addEntry, deleteEntry, addSchedule, addCurrency, setData, setJournal,
   setSchedules, setLoaded, initProfile, changeCurrency, deleteCurrency,
   changeDailyBudget, deleteSchedule, update, reset, reorderCurrency, audit,
-  toggleImEarning, addIncome
+  toggleImEarning, addIncome, toggleLanguage
 } = profileSlice.actions
 
 export default profileSlice.reducer

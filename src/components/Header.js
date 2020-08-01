@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   IonMenu, IonTitle, IonToolbar, IonContent, IonList,
   IonItem, IonMenuButton, IonButtons, IonIcon,
-  IonMenuToggle, IonRouterOutlet, IonButton, IonModal, IonHeader
+  IonMenuToggle, IonRouterOutlet, IonButton, IonModal, IonHeader, IonNote
 } from '@ionic/react';
-import { changeCurrency } from '../features/profile'
+import { changeCurrency, toggleLanguage } from '../features/profile'
 import {
-  logoUsd, book, calendar, informationCircle, cash
+  logoUsd, book, calendar, informationCircle, cash, language
 } from 'ionicons/icons'
 import "./Styles.css"
 import Currencies from '../pages/Currencies';
@@ -28,6 +28,7 @@ const Header = () => {
   )
   const currency = useSelector(state => state.app.currency)
   const l = useSelector(state => state.profile.language)
+  const systemLanguage = useSelector(state => state.profile.systemLanguage)
 
   const [checked, setChecked] = useState(
     (currency === currencyToUse && currencyInUse !== currencyToUse)
@@ -163,6 +164,18 @@ const Header = () => {
                 {L("Help", l)}
               </IonItem>
             </IonMenuToggle>
+            <IonItem
+              color="light"
+              button
+              onClick={() => dispatch(toggleLanguage())}
+            >
+              <IonIcon
+                slot="start"
+                icon={language}
+              />
+              {l === "en" ? "切换语言" : "Toggle Language"}
+              <IonNote slot="end">{systemLanguage}</IonNote>
+            </IonItem>
           </IonList>
         </IonContent>
       </IonMenu>
