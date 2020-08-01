@@ -2,11 +2,12 @@ import React, { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   IonFab, IonFabButton, IonIcon, IonToolbar,
-  IonButton, IonItem, IonLabel, IonToggle, IonInput, IonModal, IonContent, IonTitle
+  IonButton, IonItem, IonLabel, IonToggle, IonInput, IonModal, IonContent, IonTitle, IonChip
 } from '@ionic/react'
 import { add, close } from 'ionicons/icons'
 import { addEntry } from '../features/profile'
 import { showToast } from '../features/app'
+import { getDescriptions } from '../features/profile/utils'
 
 const EntryForm = () => {
 
@@ -14,6 +15,7 @@ const EntryForm = () => {
   const journal = useSelector(state => state.profile.journal)
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()
+  const descriptions = getDescriptions(journal)
 
   const amountRef = useRef(null)
   const descriptionRef = useRef(null)
@@ -33,6 +35,14 @@ const EntryForm = () => {
       ...formValue,
       [name]: value
     })
+  }
+
+  const clearAmount = () => {
+    setFormValue({
+      ...formValue,
+      amount: ''
+    })
+    amountRef.current.setFocus()
   }
 
   const clearForm = () => {
@@ -58,7 +68,7 @@ const EntryForm = () => {
         amount: amount,
         description: formValue.description
       }, data, journal))
-      clearForm()
+      clearAmount()
       dispatch(showToast("Entry added."))
     }
   }
@@ -123,6 +133,7 @@ const EntryForm = () => {
               ref={descriptionRef}
               value={formValue.description}
               autocapitalize
+              clearInput
               placeholder="For What"
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()
@@ -130,6 +141,16 @@ const EntryForm = () => {
               onIonChange={e => handleChange("description", e.detail.value)}
               autoCorrect={true} />
           </IonItem>
+          <p>
+            {descriptions.map((description) => {
+              return <IonChip key={description} onClick={() => setFormValue({
+                ...formValue,
+                description: description
+              })}>
+                <IonLabel>{description}</IonLabel>
+              </IonChip>
+            })}
+          </p>
         </IonContent>
       </IonModal>
     </>

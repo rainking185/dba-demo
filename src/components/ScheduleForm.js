@@ -189,6 +189,7 @@ const ScheduleForm = () => {
               ref={descriptionRef}
               value={formValue.description}
               autocapitalize
+              clearInput
               placeholder="For What"
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()

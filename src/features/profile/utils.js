@@ -7,6 +7,10 @@ export const weeklyIndices = [
   'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 ]
 
+export const reservedKeywords = [
+  'Daily Budget', 'Initial Savings'
+]
+
 export const getAllowance = (savings, percentage = 0.03) => {
   if (savings > 0) return savings * percentage
   else return 0
@@ -21,7 +25,7 @@ const getDaysRemaining = (date = new Date()) => {
   return getDaysInCurrentMonth() - date.getDate() + 1
 }
 
-export const getBudgetMonth = (dailyBudget) => {
+export const getBudgetMonth = dailyBudget => {
   return dailyBudget * getDaysRemaining()
 }
 
@@ -31,13 +35,29 @@ export const currencyFilter = (array, currency) => {
   })
 }
 
-export const getCurrenciesSummary = (currencies) => {
+export const getCurrenciesSummary = currencies => {
   return Object.keys(currencies).reduce((prev, cur) => {
     return prev.concat({
       name: cur,
       savings: currencies[cur].savings
     })
   }, [])
+}
+
+export const getDescriptions = journal => {
+  let allDescriptions = journal.reduce((prev, cur) => {
+    if (Object.keys(prev).includes(cur.description)) {
+      prev[cur.description]++
+    } else if (!reservedKeywords.includes(cur.description)
+      && !cur.description.startsWith("Scheduled ")) {
+      prev[cur.description] = 1
+    }
+    return prev
+  }, {})
+  allDescriptions = Object.keys(allDescriptions)
+    .sort((a, b) => allDescriptions[b] - allDescriptions[a])
+  console.log(allDescriptions)
+  return allDescriptions.slice(0, 5)
 }
 
 export const update = (data, journal, schedules, income) => {
