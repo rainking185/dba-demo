@@ -8,6 +8,7 @@ import { add, close } from 'ionicons/icons'
 import { addSchedule } from '../features/profile'
 import { useSelector, useDispatch } from 'react-redux'
 import { showToast } from '../features/app'
+import { L } from '../utils/language'
 
 const types = ["Monthly", "Weekly"]
 const monthlyIndices = [
@@ -25,6 +26,7 @@ const ScheduleForm = () => {
   const schedules = useSelector(state => state.profile.schedules)
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()
+  const l = useSelector(state => state.profile.language)
 
   const amountRef = useRef(null)
   const typeRef = useRef(null)
@@ -57,12 +59,12 @@ const ScheduleForm = () => {
 
   const handleSubmit = () => {
     let err = ""
-    if (formValue.amount === '') err += "What's the amount? "
+    if (formValue.amount === '') err += L("What's the amount? ", l)
     else if (Number(formValue.amount) <= 0)
-      err += "Positive amount only please. "
-    if (formValue.type === null) err += "Please select a type. "
-    else if (formValue.index === null) err += "Please select a day. "
-    if (formValue.description === '') err += "What did you use this for? "
+      err += L("Positive amount only please. ", l)
+    if (formValue.type === null) err += L("Please select a type. ", l)
+    else if (formValue.index === null) err += L("Please select a day. ", l)
+    if (formValue.description === '') err += L("What did you use this for? ", l)
 
     if (err !== "") dispatch(showToast(err))
     else {
@@ -78,7 +80,7 @@ const ScheduleForm = () => {
         description: formValue.description
       }, data, schedules))
       clearForm()
-      dispatch(showToast("Schedule added."))
+      dispatch(showToast(L("Schedule added.", l)))
       setShown(false)
     }
   }
@@ -106,29 +108,29 @@ const ScheduleForm = () => {
             class="ion-padding-start"
             slot="start"
             onClick={clearForm}>
-            CLEAR
+            {L("CLEAR", l)}
           </IonButton>
           <IonTitle>
-            Create Schedule
+            {L("Create Schedule", l)}
           </IonTitle>
           <IonButton
             class="ion-padding-end"
             slot="end"
             onClick={handleSubmit}>
-            ADD
-            </IonButton>
+            {L("ADD", l)}
+          </IonButton>
         </IonToolbar>
 
         <IonContent color="light">
           <IonItem color="inherit">
-            Payment
+            {L("Payment", l)}
             <IonToggle
               checked={formValue.isIncome}
               onIonChange={e => handleChange("isIncome", e.detail.checked)} />
-            Income
+            {L("Income", l)}
           </IonItem>
           <IonItem color="inherit">
-            <IonLabel position="floating">Amount</IonLabel>
+            <IonLabel position="floating">{L("Amount", l)}</IonLabel>
             <IonInput
               type="number"
               value={formValue.amount}
@@ -136,37 +138,37 @@ const ScheduleForm = () => {
               onKeyPress={e => {
                 if (e.key === "Enter") typeRef.current.open()
               }}
-              placeholder="How Much"
+              placeholder={L("How Much", l)}
               onIonChange={e => handleChange("amount", e.detail.value)} />
           </IonItem>
           <IonItem color="inherit">
-            <IonLabel position="floating">Type</IonLabel>
+            <IonLabel position="floating">{L("Type", l)}</IonLabel>
             <IonSelect
               ref={typeRef}
               interface="action-sheet"
-              cancelText="Select Monthly or Weekly"
+              cancelText={L("Select Monthly or Weekly", l)}
               value={formValue.type}
-              placeholder="Monthly or Weekly"
+              placeholder={L("Monthly or Weekly", l)}
               onIonChange={e => {
                 handleChange("type", e.detail.value)
                 if (e.detail.value !== null) indexRef.current.open()
               }}>
               {types.map((type, index) =>
                 <IonSelectOption key={index} value={type}>
-                  {type}
+                  {L(type, l)}
                 </IonSelectOption>
               )}
             </IonSelect>
           </IonItem>
           {formValue.type !== null
             ? <IonItem color="inherit">
-              <IonLabel position="floating">Day/Date</IonLabel>
+              <IonLabel position="floating">{L("Day/Date", l)}</IonLabel>
               <IonSelect
                 ref={indexRef}
                 interface="action-sheet"
-                cancelText="Select the day/date"
+                cancelText={L("Select the day/date", l)}
                 value={formValue.index}
-                placeholder="When"
+                placeholder={L("When", l)}
                 onIonChange={e => {
                   handleChange("index", e.detail.value)
                   if (e.detail.value !== null) descriptionRef.current.setFocus()
@@ -178,19 +180,19 @@ const ScheduleForm = () => {
                     </IonSelectOption>)
                   : weeklyIndices.map(index =>
                     <IonSelectOption key={index} value={index}>
-                      {index}
+                      {L(index, l)}
                     </IonSelectOption>)}
               </IonSelect>
             </IonItem>
             : null}
           <IonItem color="inherit">
-            <IonLabel position="floating">Description</IonLabel>
+            <IonLabel position="floating">{L("Description", l)}</IonLabel>
             <IonInput
               ref={descriptionRef}
               value={formValue.description}
               autocapitalize
               clearInput
-              placeholder="For What"
+              placeholder={L("For What", l)}
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()
               }}

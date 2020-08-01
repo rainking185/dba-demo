@@ -6,7 +6,9 @@ import {
   IonMenuToggle, IonRouterOutlet, IonButton, IonModal, IonHeader
 } from '@ionic/react';
 import { changeCurrency } from '../features/profile'
-import { logoUsd, book, calendar, informationCircle, cash } from 'ionicons/icons'
+import {
+  logoUsd, book, calendar, informationCircle, cash
+} from 'ionicons/icons'
 import "./Styles.css"
 import Currencies from '../pages/Currencies';
 import Journal from '../pages/Journal';
@@ -14,6 +16,7 @@ import Schedules from '../pages/Schedules';
 import { showToast } from '../features/app';
 import Help from '../pages/Help';
 import Income from '../pages/Income';
+import { L } from '../utils/language'
 
 const Header = () => {
   const data = useSelector(state => state.profile.data)
@@ -24,6 +27,7 @@ const Header = () => {
     state => state.profile.data.currencyToUse
   )
   const currency = useSelector(state => state.app.currency)
+  const l = useSelector(state => state.profile.language)
 
   const [checked, setChecked] = useState(
     (currency === currencyToUse && currencyInUse !== currencyToUse)
@@ -37,16 +41,16 @@ const Header = () => {
     )
   }, [currency, currencyInUse, currencyToUse])
 
-  let message = "Use this currency"
+  let message = L("Use this currency", l)
   if (checked) {
-    if (currencyToUse === currencyInUse) message = "Using this currency"
-    else message = "Will use this currency"
+    if (currencyToUse === currencyInUse) message = L("Using this currency", l)
+    else message = L("Will use this currency", l)
   }
 
   const handleChangeCurrency = () => {
     setChecked(true)
     dispatch(changeCurrency(currency, data))
-    dispatch(showToast("You will be using this currency tomorrow."))
+    dispatch(showToast(L("You will be using this currency tomorrow.", l)))
   }
 
   const dispatch = useDispatch()
@@ -96,7 +100,7 @@ const Header = () => {
                   } />
                 })}>
                 <IonIcon slot="start" icon={logoUsd} color="warning" />
-                Currencies
+                {L("Currencies", l)}
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
@@ -110,7 +114,7 @@ const Header = () => {
                   } />
                 })}>
                 <IonIcon slot="start" icon={book} color="primary" />
-                Journal
+                {L("Journal", l)}
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
@@ -124,7 +128,7 @@ const Header = () => {
                   } />
                 })}>
                 <IonIcon slot="start" icon={calendar} color="secondary" />
-                Schedules
+                {L("Schedules", l)}
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
@@ -138,7 +142,7 @@ const Header = () => {
                   } />
                 })}>
                 <IonIcon slot="start" icon={cash} color="success" />
-                Income
+                {L("Income", l)}
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
@@ -156,7 +160,7 @@ const Header = () => {
                   icon={informationCircle}
                   color="danger"
                 />
-                Help
+                {L("Help", l)}
               </IonItem>
             </IonMenuToggle>
           </IonList>

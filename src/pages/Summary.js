@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import "./Styles.css"
 import BudgetForm from '../components/BudgetForm';
 import { getAllowance, budgetGauge, currencyFilter } from '../features/profile/utils';
+import { L } from '../utils/language'
 
 const Summary = () => {
 
@@ -19,6 +20,7 @@ const Summary = () => {
   const income = currencyFilter(useSelector(
     state => state.profile.income
   ), currency)
+  const l = useSelector(state => state.profile.language)
   const {
     remainingToday = 0,
     remainingMonth = 0,
@@ -52,15 +54,15 @@ const Summary = () => {
   if (imEarning) {
     if (remainingIncome + savings <= 0 || remainingIncome <= 0) {
       warningColor = "danger"
-      warningMessage = "Go and earn some money. This page is useless now."
+      warningMessage = L("Go and earn some money. This page is useless now.", l)
     } else if (savings <= 0) {
       warningColor = "warning"
-      warningMessage = "You are spending way ahead of budget. Please control your spending."
+      warningMessage = L("You are spending way ahead of budget. Please control your spending.", l)
     } else {
       let days = Math.floor(remainingIncome / dailyBudget)
       if (days <= 7) {
         warningColor = "warning"
-        warningMessage = "You are running out of budget."
+        warningMessage = L("You are running out of budget.", l)
       }
     }
   }
@@ -72,7 +74,7 @@ const Summary = () => {
         {warningMessage !== ""
           ? <>
             <IonItemDivider color={warningColor === "warning" ? "danger" : "dark"}>
-              <IonText>Warning:</IonText>
+              <IonText>{L("Warning", l)}:</IonText>
             </IonItemDivider>
             <IonItem color={warningColor === "warning" ? "danger" : "dark"}>
               <IonText>{warningMessage}</IonText>
@@ -80,7 +82,7 @@ const Summary = () => {
           </>
           : null}
         <IonItemDivider color={warningColor} >
-          <IonLabel>Today</IonLabel>
+          <IonLabel>{L("Today", l)}</IonLabel>
         </IonItemDivider>
         <IonItem color={warningColor} class="ion-text-center">
           <IonLabel>
@@ -99,7 +101,7 @@ const Summary = () => {
           </IonButtons>
         </IonItem>
         <IonItemDivider color={warningColor}>
-          <IonLabel>This Month</IonLabel>
+          <IonLabel>{L("This Month", l)}</IonLabel>
         </IonItemDivider>
         <IonItem color={warningColor} class="ion-text-center">
           <IonLabel>
@@ -112,10 +114,10 @@ const Summary = () => {
           </IonLabel>
         </IonItem>
         <IonItemDivider color={warningColor}>
-          <IonLabel>Overall</IonLabel>
+          <IonLabel>{L("Overall", l)}</IonLabel>
         </IonItemDivider>
         <IonItem color={warningColor}>
-          <IonCol>Savings:</IonCol>
+          <IonCol>{L("Savings", l)}:</IonCol>
           <IonCol class="ion-text-right">
             <IonText color={selectColor(savings)}>
               {savings.toFixed(2)}
@@ -124,14 +126,14 @@ const Summary = () => {
         </IonItem>
         <IonItem color={warningColor}>
           <IonCol>
-            Monthly {monthlyIncome > 0 ? "Income" : "Payment"}:
+            {L("Monthly", l)} {monthlyIncome > 0 ? L("Income", l) : L("Payment", l)}:
           </IonCol>
           <IonCol class="ion-text-right">
             {Math.abs(monthlyIncome).toFixed(2)}
           </IonCol>
         </IonItem>
         <IonItem color={warningColor}>
-          <IonCol>Allowance:</IonCol>
+          <IonCol>{L("Allowance", l)}:</IonCol>
           <IonCol class="ion-text-right">
             <IonText color={selectColor(allowance)}>
               {allowance.toFixed(2)}

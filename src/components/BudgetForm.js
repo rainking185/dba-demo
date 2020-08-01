@@ -5,12 +5,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { showToast } from '../features/app'
 import { changeDailyBudget } from '../features/profile'
 import { budgetGauge, currencyFilter } from '../features/profile/utils'
+import { L } from '../utils/language'
 
 const BudgetForm = () => {
   const dispatch = useDispatch()
   const currency = useSelector(state => state.app.currency)
   const income = currencyFilter(useSelector(state => state.profile.income), currency)
   const data = useSelector(state => state.profile.data)
+  const l = useSelector(state => state.profile.language)
   const summary = useSelector(
     state => state.profile.data.currencies[currency]
   )
@@ -20,9 +22,9 @@ const BudgetForm = () => {
 
   const handleClick = () => {
     let err = ""
-    if (dailyBudget === "") err += "Please enter your daily budget. "
+    if (dailyBudget === "") err += L("Please enter your daily budget. ", l)
     else if (Number(dailyBudget) < 0)
-      err += "Daily budget cannot be negative. "
+      err += L("Daily budget cannot be negative. ", l)
 
     if (err !== "") dispatch(showToast(err))
     else {
@@ -31,7 +33,7 @@ const BudgetForm = () => {
         currency: currency,
         amount: newBudget
       }, data))
-      dispatch(showToast("New budget will start tomorrow."))
+      dispatch(showToast(L("New budget will start tomorrow.", l)))
       setShowPopover(false)
     }
   }
@@ -53,7 +55,7 @@ const BudgetForm = () => {
         {summary.imEarning
           ? <IonItem>
             <IonCol>
-              Reference:
+              {L("Reference", l)}:
             </IonCol>
             <IonCol class="ion-text-right">
               {budgetRef.toFixed()}
@@ -61,20 +63,20 @@ const BudgetForm = () => {
           </IonItem>
           : null}
         <IonItem>
-          <IonLabel position="floating">Daily Budget</IonLabel>
+          <IonLabel position="floating">{L("Daily Budget", l)}</IonLabel>
           <IonInput
             value={dailyBudget}
             type="number"
-            placeholder="Set your daily budget."
+            placeholder={L("Set your daily budget.", l)}
             autofocus
             onIonChange={e => setDailyBudget(e.detail.value)} />
         </IonItem>
         <IonItem>
           <IonButtons slot="end">
             <IonButton onClick={e => setShowPopover(false)}>
-              CANCEL
-              </IonButton>
-            <IonButton onClick={handleClick}>SAVE</IonButton>
+              {L("CANCEL", l)}
+            </IonButton>
+            <IonButton onClick={handleClick}>{L("SAVE", l)}</IonButton>
           </IonButtons>
         </IonItem>
       </IonCard>

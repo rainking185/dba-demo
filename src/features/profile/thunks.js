@@ -4,7 +4,7 @@ import {
   Plugins, FilesystemDirectory, FilesystemEncoding
 } from '@capacitor/core';
 // import { clearStorage } from "./storage"
-const { Filesystem } = Plugins;
+const { Device, Filesystem } = Plugins;
 
 export const updateJournal = createAsyncThunk(
   'app/updateJournal',
@@ -65,6 +65,9 @@ export const updateIncome = createAsyncThunk(
 export const fetchAll = createAsyncThunk(
   'profile/fetchAll',
   async (arg, thunkAPI) => {
+    let res = await Device.getLanguageCode()
+    let language = "en"
+    if (res.value.toLowerCase().includes("cn")) language = "cn"
     try {
       // await Filesystem.rmdir({
       //   path: 'Sylon/DBA',
@@ -99,7 +102,8 @@ export const fetchAll = createAsyncThunk(
         journal: journal,
         schedules: schedules,
         data: data,
-        income: income
+        income: income,
+        language: language
       }
     } catch (err) {
       console.log(err)
@@ -157,7 +161,8 @@ export const fetchAll = createAsyncThunk(
           journal: journal,
           schedules: schedules,
           data: data,
-          income: []
+          income: [],
+          language: language
         }
       } catch (err) {
         console.log(err)
@@ -165,7 +170,8 @@ export const fetchAll = createAsyncThunk(
           journal: [],
           schedules: [],
           income: [],
-          data: null
+          data: null,
+          language: language
         }
       }
     }

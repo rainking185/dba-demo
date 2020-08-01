@@ -18,6 +18,7 @@ import { setCurrency, showToast } from "../features/app"
 import { deleteCurrency, reorderCurrency } from "../features/profile"
 import { getCurrenciesSummary } from "../features/profile/utils"
 import CurrencyForm from '../components/CurrencyForm'
+import { L } from '../utils/language'
 
 const Currencies = (props) => {
   const { closeHandler } = props
@@ -35,6 +36,7 @@ const Currencies = (props) => {
     state => state.profile.data.currencyToUse
   )
   const currencies = getCurrenciesSummary(currenciesInProfile)
+  const l = useSelector(state => state.profile.language)
 
   const handleChangeCurrency = (currency) => {
     dispatch(setCurrency(currency))
@@ -92,7 +94,7 @@ const Currencies = (props) => {
               <IonIcon slot="icon-only" icon={arrowBack} />
             </IonButton>
           </IonButtons>
-          <IonTitle>Currencies</IonTitle>
+          <IonTitle>{L("Currencies", l)}</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditing(!editing)}>
               <IonIcon slot="icon-only" icon={editing ? checkmark : create} />
@@ -158,20 +160,20 @@ const Currencies = (props) => {
       >
         <IonCard class="ion-padding">
           <IonText>
-            Are you sure you want to delete {currencySelected}?
+            {L("Are you sure you want to delete ", l)}{currencySelected}?
           <br />
-          This action is not reversible.
+            {L("This action is not reversible.", l)}
           </IonText>
           <IonItem lines="none">
             <IonButton
               slot="end"
               onClick={handleDeleteCurrency}>
-              Yes
-             </IonButton>
+              {L("Yes", l)}
+            </IonButton>
             <IonButton
               slot="end"
               onClick={() => setShowPopover(false)}>
-              No
+              {L("No", l)}
             </IonButton>
           </IonItem>
         </IonCard>

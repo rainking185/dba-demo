@@ -9,12 +9,14 @@ import {
 import ScheduleForm from '../components/ScheduleForm'
 import { deleteSchedule } from "../features/profile"
 import { showToast } from '../features/app'
+import { L } from '../utils/language'
 
 const Schedules = (props) => {
   const { closeHandler } = props
   const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const fullSchedules = useSelector(state => state.profile.schedules)
+  const l = useSelector(state => state.profile.language)
   const schedules = currencyFilter(fullSchedules, currency)
   schedules.reverse()
   const dispatch = useDispatch()
@@ -30,7 +32,7 @@ const Schedules = (props) => {
               <IonIcon slot="icon-only" icon={arrowBack} />
             </IonButton>
           </IonButtons>
-          <IonTitle>Schedules for {currency} </IonTitle>
+          <IonTitle>{currency} {L("Schedules", l)}</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditing(!editing)}>
               <IonIcon slot="icon-only" icon={editing ? checkmark : create} />
@@ -42,25 +44,27 @@ const Schedules = (props) => {
       <IonContent color="light">
         <IonList>
           {schedules.length === 0
-            ? <IonText>No schedules.</IonText>
+            ? <IonText>{L("No schedules.", l)}</IonText>
             : <IonListHeader color="light">
-              <IonCol>Description</IonCol>
-              <IonCol size="2.4">Type</IonCol>
+              <IonCol>{L("Description", l)}</IonCol>
+              <IonCol size="2.4">{L("Type", l)}</IonCol>
               <IonCol size="1" />
-              <IonCol size="1.7">Day</IonCol>
-              <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
+              <IonCol size="1.7">{L("Day", l)}</IonCol>
+              <IonCol class="ion-text-right ion-padding-end">{L("Amount", l)}</IonCol>
               {editing ? <IonCol size="2" /> : null}
             </IonListHeader>}
           {schedules.map((schedule, index) => {
             return (
               <IonItem key={index} color="light">
                 <IonCol>{schedule.description}</IonCol>
-                <IonCol size="2.4">{schedule.type}</IonCol>
-                <IonCol size="1">on</IonCol>
+                <IonCol size="2.4">{L(schedule.type, l)}</IonCol>
+                <IonCol size="1">{L("on", l)}</IonCol>
                 <IonCol size="1.7">
                   {schedule.index.length > 3
-                    ? schedule.index.slice(0, 3) :
-                    schedule.index}
+                    ? l === "en"
+                      ? schedule.index.slice(0, 3)
+                      : L(schedule.index, l).slice(2, 3)
+                    : schedule.index}
                 </IonCol>
                 <IonCol class="ion-text-right">
                   {schedule.amount.toFixed(2)}
@@ -70,7 +74,7 @@ const Schedules = (props) => {
                     <IonButtons>
                       <IonButton onClick={() => {
                         dispatch(deleteSchedule(schedule, data, fullSchedules))
-                        dispatch(showToast("Schedule deleted"))
+                        dispatch(showToast(L("Schedule deleted", l)))
                       }}>
                         <IonIcon slot="icon-only" icon={trash} color="danger" />
                       </IonButton>
@@ -83,7 +87,7 @@ const Schedules = (props) => {
         </IonList>
       </IonContent>
       <ScheduleForm currency={currency} />
-    </IonPage>
+    </IonPage >
   )
 }
 

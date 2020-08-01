@@ -10,12 +10,14 @@ import {
   IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader
 } from '@ionic/react'
 import { showToast } from '../features/app'
+import { L } from '../utils/language'
 
 const Journal = (props) => {
   const { closeHandler } = props
   const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const fullJournal = useSelector(state => state.profile.journal)
+  const l = useSelector(state => state.profile.language)
   const journal = currencyFilter(
     fullJournal,
     currency
@@ -34,7 +36,7 @@ const Journal = (props) => {
               <IonIcon slot="icon-only" icon={arrowBack} />
             </IonButton>
           </IonButtons>
-          <IonTitle>Journal for {currency}</IonTitle>
+          <IonTitle>{currency} {L("Journal", l)}</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => setEditing(!editing)}>
               <IonIcon slot="icon-only" icon={editing ? checkmark : create} />
@@ -46,9 +48,9 @@ const Journal = (props) => {
       <IonContent color="light">
         <IonList>
           <IonListHeader color="light">
-            <IonCol size="4.5">Date</IonCol>
-            <IonCol>Description</IonCol>
-            <IonCol class="ion-text-right ion-padding-end">Amount</IonCol>
+            <IonCol size="4.5">{L("Date", l)}</IonCol>
+            <IonCol>{L("Description", l)}</IonCol>
+            <IonCol class="ion-text-right ion-padding-end">{L("Amount", l)}</IonCol>
             {editing ? <IonCol size="1.7" /> : null}
           </IonListHeader>
           {journal.map((entry, index) => {

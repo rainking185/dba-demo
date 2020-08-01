@@ -10,6 +10,7 @@ import { showToast } from '../features/app'
 import BudgetForm from '../components/BudgetForm'
 import { toggleImEarning, addIncome } from '../features/profile'
 import { budgetGauge, currencyFilter } from '../features/profile/utils'
+import { L } from '../utils/language'
 
 const Income = (props) => {
   const { closeHandler } = props
@@ -20,6 +21,7 @@ const Income = (props) => {
   const summary = useSelector(
     state => state.profile.data.currencies[currency]
   )
+  const l = useSelector(state => state.profile.language)
   const {
     dailyBudget,
     remainingIncome = 0,
@@ -34,7 +36,7 @@ const Income = (props) => {
 
   const handleSubmit = () => {
     let err = ""
-    if (amount === '') err += "What's the amount? "
+    if (amount === '') err += L("What's the amount? ", l)
 
     if (err !== "") dispatch(showToast(err))
     else {
@@ -42,7 +44,7 @@ const Income = (props) => {
         { amount: Number(amount), currency: currency },
         data, fullIncome
       ))
-      dispatch(showToast("Income added."))
+      dispatch(showToast(L("Income added.", l)))
       setAmount('')
       setShown(false)
     }
@@ -84,9 +86,9 @@ const Income = (props) => {
               <IonIcon slot="icon-only" icon={arrowBack} />
             </IonButton>
           </IonButtons>
-          <IonTitle>{currency} Income</IonTitle>
+          <IonTitle>{currency} {L("Income", l)}</IonTitle>
           <IonItem slot="end" color={imEarning ? "danger" : "tertiary"}>
-            <IonLabel>I'M EARNING</IonLabel>
+            <IonLabel>{L("I'M EARNING", l)}</IonLabel>
             <IonCheckbox
               slot="start"
               checked={imEarning}
@@ -97,7 +99,7 @@ const Income = (props) => {
 
       <IonContent color="light">
         <IonItem color="light">
-          <IonCol>Total Income:</IonCol>
+          <IonCol>{L("Total Income", l)}:</IonCol>
           <IonCol class="ion-text-right">
             <IonText>
               {totalIncome.toFixed(2)}
@@ -106,7 +108,7 @@ const Income = (props) => {
         </IonItem>
         <IonItem color="light">
           <IonCol>
-            Remaining Income:
+            {L("Remaining Income", l)}:
           </IonCol>
           <IonCol class="ion-text-right">
             <IonText
@@ -118,7 +120,7 @@ const Income = (props) => {
           </IonCol>
         </IonItem>
         <IonItem color="light">
-          <IonCol>Daily Budget:</IonCol>
+          <IonCol>{L("Daily Budget", l)}:</IonCol>
           <IonCol>
             <IonButtons>
               <BudgetForm />
@@ -131,7 +133,7 @@ const Income = (props) => {
           </IonCol>
         </IonItem>
         <IonItem color="light">
-          <IonCol>Days covered:</IonCol>
+          <IonCol>{L("Days Covered", l)}:</IonCol>
           <IonCol class="ion-text-right">
             <IonText class="x-large" color={selectDaysColor(days)}>
               {days}
@@ -146,22 +148,22 @@ const Income = (props) => {
         class="default-modal">
         <Fab />
         <IonToolbar color="medium">
-          <IonTitle>Log Entry</IonTitle>
+          <IonTitle>{L("Log Income", l)}</IonTitle>
           <IonButton
             class="ion-padding-end"
             slot="end"
             onClick={handleSubmit}>
-            ADD
+            {L("ADD", l)}
           </IonButton>
         </IonToolbar>
 
         <IonContent color="light">
           <IonItem color="inherit">
-            <IonLabel position="floating">Amount</IonLabel>
+            <IonLabel position="floating">{L("Amount", l)}</IonLabel>
             <IonInput
               type="number"
               value={amount}
-              placeholder="How Much"
+              placeholder={L("How Much", l)}
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()
               }}

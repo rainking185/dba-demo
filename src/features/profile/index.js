@@ -9,7 +9,8 @@ const profileSlice = createSlice({
     data: {},
     journal: [],
     schedules: [],
-    income: []
+    income: [],
+    language: "en"
   },
   reducers: {
     setJournal(state, action) {
@@ -539,12 +540,20 @@ const profileSlice = createSlice({
   },
   extraReducers: {
     [fetchAll.fulfilled]: (state, action) => {
+      const {
+        journal,
+        schedules,
+        data,
+        income,
+        language
+      } = action.payload
       return {
         ...state,
-        journal: action.payload.journal,
-        schedules: action.payload.schedules,
-        data: action.payload.data,
-        income: action.payload.income,
+        journal: journal,
+        schedules: schedules,
+        data: data,
+        income: income,
+        language: language,
         loaded: true
       }
     }

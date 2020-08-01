@@ -8,6 +8,7 @@ import { add, close } from 'ionicons/icons'
 import { addEntry } from '../features/profile'
 import { showToast } from '../features/app'
 import { getDescriptions } from '../features/profile/utils'
+import { L } from '../utils/language'
 
 const EntryForm = () => {
 
@@ -16,6 +17,7 @@ const EntryForm = () => {
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()
   const descriptions = getDescriptions(journal)
+  const l = useSelector(state => state.profile.language)
 
   const amountRef = useRef(null)
   const descriptionRef = useRef(null)
@@ -52,10 +54,10 @@ const EntryForm = () => {
 
   const handleSubmit = () => {
     let err = ""
-    if (formValue.amount === '') err += "How much did you spend? "
+    if (formValue.amount === '') err += L("How much did you spend? ", l)
     else if (Number(formValue.amount) <= 0)
-      err += "Positive amount only please. "
-    if (formValue.description === '') err += "What did you use this for? "
+      err += L("Positive amount only please. ", l)
+    if (formValue.description === '') err += L("What did you use this for? ", l)
 
     if (err !== "") dispatch(showToast(err))
     else {
@@ -69,7 +71,7 @@ const EntryForm = () => {
         description: formValue.description
       }, data, journal))
       clearAmount()
-      dispatch(showToast("Entry added."))
+      dispatch(showToast(L("Entry added.", l)))
     }
   }
 
@@ -96,45 +98,45 @@ const EntryForm = () => {
             class="ion-padding-start"
             slot="start"
             onClick={clearForm}>
-            CLEAR
+            {L("CLEAR", l)}
           </IonButton>
-          <IonTitle>Log Entry</IonTitle>
+          <IonTitle>{L("Log Entry", l)}</IonTitle>
           <IonButton
             class="ion-padding-end"
             slot="end"
             onClick={handleSubmit}>
-            ADD
+            {L("ADD", l)}
           </IonButton>
         </IonToolbar>
 
         <IonContent color="light">
           <IonItem color="inherit">
-            Spending
+            {L("Spending", l)}
             <IonToggle
               checked={formValue.isEarning}
               onIonChange={e => handleChange("isEarning", e.detail.checked)} />
-            Earning
+            {L("Earning", l)}
           </IonItem>
           <IonItem color="inherit">
-            <IonLabel position="floating">Amount</IonLabel>
+            <IonLabel position="floating">{L("Amount", l)}</IonLabel>
             <IonInput
               ref={amountRef}
               type="number"
               value={formValue.amount}
-              placeholder="How Much"
+              placeholder={L("How Much", l)}
               onKeyPress={e => {
                 if (e.key === "Enter") descriptionRef.current.setFocus()
               }}
               onIonChange={e => handleChange("amount", e.detail.value)} />
           </IonItem>
           <IonItem color="inherit">
-            <IonLabel position="floating">Description</IonLabel>
+            <IonLabel position="floating">{L("Description", l)}</IonLabel>
             <IonInput
               ref={descriptionRef}
               value={formValue.description}
               autocapitalize
               clearInput
-              placeholder="For What"
+              placeholder={L("For What", l)}
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()
               }}

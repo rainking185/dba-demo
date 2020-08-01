@@ -9,11 +9,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { addCurrency } from '../features/profile'
 import { showToast } from '../features/app'
 import { areLetters } from '../utils/regex'
+import { L } from '../utils/language'
 
 const CurrencyForm = () => {
   const data = useSelector(state => state.profile.data)
   const journal = useSelector(state => state.profile.journal)
   const dispatch = useDispatch()
+  const l = useSelector(state => state.profile.language)
 
   const currencyRef = useRef(null)
   const savingsRef = useRef(null)
@@ -42,16 +44,16 @@ const CurrencyForm = () => {
 
   const handleSubmit = () => {
     let err = ""
-    if (formValue.currency === null) err += "What is the new currency? "
+    if (formValue.currency === null) err += L("What is the new currency? ", l)
     else if (formValue.currency.length !== 3
       || !areLetters(formValue.currency))
-      err += "Currency with 3 letters only. "
+      err += L("Currency with 3 letters only. ", l)
     else if (Object.keys(data.currencies).includes(formValue.currency))
       err += "You already have this currency. "
-    if (formValue.savings === '') err += "Please add your savings. "
-    if (formValue.dailyBudget === '') err += "Please set your daily budget. "
+    if (formValue.savings === '') err += L("Please add your savings. ", l)
+    if (formValue.dailyBudget === '') err += L("Please enter your daily budget. ", l)
     else if (Number(formValue.dailyBudget) < 0)
-      err += "Daily budget cannot be negative. "
+      err += L("Daily budget cannot be negative. ", l)
 
     if (err !== "") dispatch(showToast(err))
     else {
@@ -62,7 +64,7 @@ const CurrencyForm = () => {
         savings: Number(formValue.savings)
       }, data, journal))
       clearForm()
-      dispatch(showToast("New currency added."))
+      dispatch(showToast(L("New currency added.", l)))
       setShown(false)
     }
   }
@@ -91,22 +93,22 @@ const CurrencyForm = () => {
             class="ion-padding-start"
             slot="start"
             onClick={clearForm}>
-            CLEAR
+            {L("CLEAR", l)}
           </IonButton>
           <IonTitle>
-            Create Currency
+            {L("Create Currency", l)}
           </IonTitle>
           <IonButton
             class="ion-padding-end"
             slot="end"
             onClick={handleSubmit}>
-            ADD
-            </IonButton>
+            {L("ADD", l)}
+          </IonButton>
         </IonToolbar>
 
         <IonContent color="light">
           <IonItem color="inherit">
-            <IonLabel position="floating">Currency</IonLabel>
+            <IonLabel position="floating">{L("Currency", l)}</IonLabel>
             <IonInput
               type="text"
               maxlength={3}
@@ -119,11 +121,11 @@ const CurrencyForm = () => {
               onIonChange={e => handleChange("currency", e.detail.value)} />
           </IonItem>
           <IonItem color="inherit">
-            <IonLabel position="floating">Savings</IonLabel>
+            <IonLabel position="floating">{L("Savings", l)}</IonLabel>
             <IonInput
               type="number"
               value={formValue.savings}
-              placeholder="Savings to Start"
+              placeholder={L("Savings to Start", l)}
               ref={savingsRef}
               onKeyPress={e => {
                 if (e.key === "Enter") budgetRef.current.setFocus()
@@ -131,11 +133,11 @@ const CurrencyForm = () => {
               onIonChange={e => handleChange("savings", e.detail.value)} />
           </IonItem>
           <IonItem color="inherit">
-            <IonLabel position="floating">Daily Budget</IonLabel>
+            <IonLabel position="floating">{L("Daily Budget", l)}</IonLabel>
             <IonInput
               type="number"
               value={formValue.dailyBudget}
-              placeholder="Daily Budget"
+              placeholder={L("Daily Budget", l)}
               ref={budgetRef}
               onKeyPress={e => {
                 if (e.key === "Enter") handleSubmit()

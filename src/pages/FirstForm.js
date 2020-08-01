@@ -5,11 +5,12 @@ import {
 } from '@ionic/react'
 import { initProfile } from "../features/profile"
 import { setCurrency, showToast } from "../features/app"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { informationCircle } from 'ionicons/icons'
 import Help from './Help'
 import { Plugins } from "@capacitor/core"
 import { areLetters } from '../utils/regex'
+import { L } from '../utils/language'
 
 const { Keyboard } = Plugins
 
@@ -19,6 +20,7 @@ const FirstForm = () => {
 
   const savingsRef = useRef(null)
   const budgetRef = useRef(null)
+  const l = useSelector(state => state.profile.language)
 
   const [shown, setShown] = useState(false) // For the help page displayed in Modal
 
@@ -39,13 +41,13 @@ const FirstForm = () => {
 
   const handleSubmit = () => {
     let err = ""
-    if (formValue.currency === null) err += "What is the new currency? "
+    if (formValue.currency === null) err += L("What is the new currency? ", l)
     else if (formValue.currency.length !== 3 || !areLetters(formValue.currency))
-      err += "Currency with 3 letters only. "
-    if (formValue.savings === '') err += "Please add your savings. "
-    if (formValue.dailyBudget === '') err += "Please set your daily budget."
+      err += L("Currency with 3 letters only. ", l)
+    if (formValue.savings === '') err += L("Please add your savings. ", l)
+    if (formValue.dailyBudget === '') err += L("Please set your daily budget.", l)
     else if (Number(formValue.dailyBudget) < 0)
-      err += "Daily budget cannot be negative."
+      err += L("Daily budget cannot be negative.", l)
 
     if (err !== "") dispatch(showToast(err))
     else {
@@ -67,16 +69,16 @@ const FirstForm = () => {
               <IonIcon slot="icon-only" icon={informationCircle} />
             </IonButton>
           </IonButtons>
-          <IonTitle>Welcome to DBA!</IonTitle>
+          <IonTitle>{L("Welcome to DBA!", l)}</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={handleSubmit}>Start DBA</IonButton>
+            <IonButton onClick={handleSubmit}>{L("Start DBA", l)}</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
 
       <IonContent color="light">
         <IonItem color="light">
-          <IonLabel position="floating">Currency</IonLabel>
+          <IonLabel position="floating">{L("Currency", l)}</IonLabel>
           <IonInput
             type="text"
             maxlength={3}
@@ -90,11 +92,11 @@ const FirstForm = () => {
             onIonChange={e => handleChange("currency", e.detail.value)} />
         </IonItem>
         <IonItem color="light">
-          <IonLabel position="floating">Savings</IonLabel>
+          <IonLabel position="floating">{L("Savings", l)}</IonLabel>
           <IonInput
             type="number"
             value={formValue.savings}
-            placeholder="Savings to Start"
+            placeholder={L("Savings to Start", l)}
             ref={savingsRef}
             onKeyPress={e => {
               if (e.key === "Enter") budgetRef.current.setFocus()
@@ -102,11 +104,11 @@ const FirstForm = () => {
             onIonChange={e => handleChange("savings", e.detail.value)} />
         </IonItem>
         <IonItem color="light">
-          <IonLabel position="floating">Daily Budget</IonLabel>
+          <IonLabel position="floating">{L("Daily Budget", l)}</IonLabel>
           <IonInput
             type="number"
             value={formValue.dailyBudget}
-            placeholder="Daily Budget"
+            placeholder={L("Daily Budget", l)}
             ref={budgetRef}
             onKeyPress={e => {
               if (e.key === "Enter") handleSubmit()
