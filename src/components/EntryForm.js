@@ -89,7 +89,7 @@ const EntryForm = () => {
       <IonModal
         isOpen={shown}
         onDidDismiss={() => setShown(false)}
-        class="default-modal">
+        class="entry-modal">
         <Fab />
         <IonToolbar color="medium">
           <IonButton
@@ -104,7 +104,7 @@ const EntryForm = () => {
             slot="end"
             onClick={handleSubmit}>
             ADD
-            </IonButton>
+          </IonButton>
         </IonToolbar>
 
         <IonContent color="light">

@@ -4,6 +4,12 @@
   bottom: 0px;
 }
 
+.entry-modal .modal-wrapper {
+  max-height: 60%;
+  position: absolute;
+  bottom: 0px;
+}
+
 .schedule-modal .modal-wrapper {
   max-height: 70%;
   position: absolute;
