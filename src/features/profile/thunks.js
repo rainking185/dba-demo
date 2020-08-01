@@ -1,10 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { getData, getJournal, getSchedules } from './storage'
 import {
   Plugins, FilesystemDirectory, FilesystemEncoding
 } from '@capacitor/core';
-// import { clearStorage } from "./storage"
-const { Device, Filesystem } = Plugins;
+const { Device, Filesystem, } = Plugins;
 
 export const updateJournal = createAsyncThunk(
   'app/updateJournal',
@@ -106,73 +104,12 @@ export const fetchAll = createAsyncThunk(
         language: language
       }
     } catch (err) {
-      console.log(err)
-      try {
-        // For old version using Storage
-        let data = await getData()
-        let journal = await getJournal()
-        let schedules = await getSchedules()
-        let newCurrencies = data.profile.currencies
-        Object.keys(newCurrencies).forEach(currency => {
-          newCurrencies = {
-            ...newCurrencies,
-            [currency]: {
-              ...newCurrencies[currency],
-              imEarning: false,
-              totalIncome: 0,
-              remainingIncome: 0
-            }
-          }
-        })
-        data = {
-          ...data.profile,
-          currencies: newCurrencies
-        }
-        await Filesystem.writeFile({
-          path: 'Sylon/DBA/data.dba',
-          data: JSON.stringify(data, null, 2),
-          directory: FilesystemDirectory.Documents,
-          encoding: FilesystemEncoding.UTF8,
-          recursive: true
-        })
-        await Filesystem.writeFile({
-          path: 'Sylon/DBA/journal.dba',
-          data: JSON.stringify(journal, null, 2),
-          directory: FilesystemDirectory.Documents,
-          encoding: FilesystemEncoding.UTF8,
-          recursive: true
-        })
-        await Filesystem.writeFile({
-          path: 'Sylon/DBA/schedules.dba',
-          data: JSON.stringify(schedules, null, 2),
-          directory: FilesystemDirectory.Documents,
-          encoding: FilesystemEncoding.UTF8,
-          recursive: true
-        })
-        await Filesystem.writeFile({
-          path: 'Sylon/DBA/income.dba',
-          data: JSON.stringify([], null, 2),
-          directory: FilesystemDirectory.Documents,
-          encoding: FilesystemEncoding.UTF8,
-          recursive: true
-        })
-        // await clearStorage()
-        return {
-          journal: journal,
-          schedules: schedules,
-          data: data,
-          income: [],
-          language: language
-        }
-      } catch (err) {
-        console.log(err)
-        return {
-          journal: [],
-          schedules: [],
-          income: [],
-          data: null,
-          language: language
-        }
+      return {
+        journal: [],
+        schedules: [],
+        income: [],
+        data: null,
+        language: language
       }
     }
   }
