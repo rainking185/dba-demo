@@ -36,10 +36,7 @@ const EntryForm = () => {
   }
 
   const clearForm = () => {
-    setFormValue({
-      ...formValue,
-      amount: ''
-    })
+    setFormValue(defaultFormValue)
     amountRef.current.setFocus()
   }
 

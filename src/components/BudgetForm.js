@@ -64,6 +64,7 @@ const BudgetForm = () => {
           <IonLabel position="floating">Daily Budget</IonLabel>
           <IonInput
             value={dailyBudget}
+            type="number"
             placeholder="Set your daily budget."
             autofocus
             onIonChange={e => setDailyBudget(e.detail.value)} />
