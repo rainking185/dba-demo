@@ -56,7 +56,6 @@ export const getDescriptions = journal => {
   }, {})
   allDescriptions = Object.keys(allDescriptions)
     .sort((a, b) => allDescriptions[b] - allDescriptions[a])
-  console.log(allDescriptions)
   return allDescriptions.slice(0, 5)
 }
 
