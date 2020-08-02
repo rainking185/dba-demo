@@ -88,6 +88,7 @@ const LIBRARY = {
   "this month": { cn: "本月" },
   overall: { cn: "总结" },
   allowance: { cn: "放心消费额" },
+  family: { cn: "家庭" }
 }
 export const L = (word, language) => {
   if (language === "en") {

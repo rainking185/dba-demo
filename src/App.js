@@ -25,8 +25,8 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import {
-  updateData, updateJournal, updateSchedules, updateIncome
-} from './features/profile/thunks';
+  updateData, updateJournal, updateSchedules, updateIncome, updateFamily
+} from './features/profile';
 
 const App = () => {
 
@@ -37,7 +37,8 @@ const App = () => {
     data,
     income,
     journal,
-    schedules
+    schedules,
+    family
   } = profile
   const currency = useSelector(state => state.app.currency)
   const toast = useSelector(state => state.app.toast)
@@ -84,6 +85,14 @@ const App = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [income]);
+
+  useEffect(() => {
+    if (loaded && data !== null) {
+      console.log("Updating family")
+      dispatch(updateFamily(family))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [family]);
 
   let main = null
   if (!loaded) main = <IonLoading message={'Loading your profile...'} />

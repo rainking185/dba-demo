@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { fetchAll, updateJournal, updateData, updateSchedules, updateIncome } from './thunks'
-import { getBudgetMonth, update as updateAsync, audit as auditAsync } from './utils'
+import {
+  fetchAll, updateJournal, updateData, updateSchedules, updateIncome,
+  updateFamily
+} from './thunks'
+import {
+  getBudgetMonth, update as updateAsync, audit as auditAsync
+} from './utils'
 
 const profileSlice = createSlice({
   name: 'profile',
@@ -11,7 +16,10 @@ const profileSlice = createSlice({
     schedules: [],
     income: [],
     language: "en",
-    systemLanguage: ""
+    family: {
+      journal: [],
+      data: {}
+    }
   },
   reducers: {
     setJournal(state, action) {
@@ -74,12 +82,22 @@ const profileSlice = createSlice({
         let newJournal = [...profile.journal].filter(entry => {
           return entry.currency !== currency
         })
+        let newFamilyJournal = [...profile.family.journal].filter(entry => {
+          return entry.currency !== currency
+        })
+        let newFamilyData = { ...profile.family.data }
+        delete newFamilyData[currency]
+        let newFamily = {
+          data: newFamilyData,
+          journal: newFamilyJournal
+        }
         return {
           payload: {
             ...profile,
             data: newData,
             schedules: newSchedules,
-            journal: newJournal
+            journal: newJournal,
+            family: newFamily
           }
         }
       }
@@ -287,11 +305,23 @@ const profileSlice = createSlice({
     },
     addCurrency: {
       reducer(state, action) {
-        const { journal, data } = action.payload
+        const { journal, data, currency } = action.payload
         return {
           ...state,
           data: data,
-          journal: journal
+          journal: journal,
+          family: {
+            ...state.family,
+            data: {
+              ...state.family.data,
+              [currency]: {
+                using: false,
+                remainingMonth: 0,
+                incomeMonth: 0,
+                savings: 0
+              }
+            }
+          }
         }
       },
       prepare(form, data, journal) {
@@ -329,7 +359,8 @@ const profileSlice = createSlice({
         return {
           payload: {
             journal: newJournal,
-            data: newData
+            data: newData,
+            currency: currency
           }
         }
       }
@@ -543,6 +574,95 @@ const profileSlice = createSlice({
         ...state,
         language: state.language === "cn" ? "en" : "cn"
       }
+    },
+    addFamilyEntry: {
+      reducer(state, action) {
+        const { family } = action.payload
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            lastEdited: new Date().toDateString()
+          },
+          family: family
+        }
+      },
+      prepare(form, data, journal) {
+        const { amount, description, currency, isIncome } = form
+        let newJournal = journal.concat([{
+          isIncome: isIncome,
+          currency: currency,
+          date: new Date().toDateString(),
+          amount: amount,
+          description: description,
+        }])
+        let incomeMonth = data[currency].incomeMonth
+        if (isIncome) incomeMonth += amount
+        let remainingMonth =
+          data[currency].remainingMonth + amount
+        let savings =
+          data[currency].savings + amount
+
+        let newData = {
+          ...data,
+          [currency]: {
+            ...data[currency],
+            incomeMonth: incomeMonth,
+            remainingMonth: remainingMonth,
+            savings: savings
+          }
+        }
+        return {
+          payload: {
+            family: {
+              data: newData,
+              journal: newJournal
+            }
+          }
+        }
+      }
+    },
+    deleteFamilyEntry: {
+      reducer(state, action) {
+        const { family } = action.payload
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            lastEdited: new Date().toDateString()
+          },
+          family: family
+        }
+      },
+      prepare(entry, data, journal) {
+        const { isIncome, currency, amount, date } = entry
+        let remainingMonth = data[currency].remainingMonth
+        let incomeMonth = data[currency].incomeMonth
+        if (new Date(date).getMonth() === new Date().getMonth()) {
+          remainingMonth -= amount
+          if (isIncome) incomeMonth -= amount
+        }
+        let savings = data[currency].savings - amount
+        let newData = {
+          ...data,
+          [currency]: {
+            ...data[currency],
+            incomeMonth: incomeMonth,
+            remainingMonth: remainingMonth,
+            savings: savings
+          }
+        }
+        let newJournal = [...journal]
+        newJournal.splice(newJournal.indexOf(entry), 1)
+        return {
+          payload: {
+            family: {
+              data: newData,
+              journal: newJournal
+            }
+          }
+        }
+      }
     }
   },
   extraReducers: {
@@ -553,7 +673,7 @@ const profileSlice = createSlice({
         data,
         income,
         language,
-        systemLanguage
+        family
       } = action.payload
       return {
         ...state,
@@ -562,20 +682,23 @@ const profileSlice = createSlice({
         data: data,
         income: income,
         language: language,
-        systemLanguage: systemLanguage,
+        family: family,
         loaded: true
       }
     }
   }
 })
 
-export { fetchAll, updateJournal, updateData, updateSchedules, updateIncome }
+export {
+  fetchAll, updateJournal, updateData, updateSchedules, updateIncome,
+  updateFamily
+}
 
 export const {
   addEntry, deleteEntry, addSchedule, addCurrency, setData, setJournal,
   setSchedules, setLoaded, initProfile, changeCurrency, deleteCurrency,
   changeDailyBudget, deleteSchedule, update, reset, reorderCurrency, audit,
-  toggleImEarning, addIncome, toggleLanguage
+  toggleImEarning, addIncome, toggleLanguage, deleteFamilyEntry, addFamilyEntry
 } = profileSlice.actions
 
 export default profileSlice.reducer

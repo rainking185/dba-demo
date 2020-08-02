@@ -7,7 +7,7 @@ import {
 } from '@ionic/react';
 import { changeCurrency, toggleLanguage } from '../features/profile'
 import {
-  logoUsd, book, calendar, informationCircle, cash, language
+  logoUsd, book, calendar, informationCircle, cash, language, people
 } from 'ionicons/icons'
 import "./Styles.css"
 import Currencies from '../pages/Currencies';
@@ -17,6 +17,7 @@ import { showToast } from '../features/app';
 import Help from '../pages/Help';
 import Income from '../pages/Income';
 import { L } from '../utils/language'
+import Family from '../pages/Family';
 
 const Header = () => {
   const data = useSelector(state => state.profile.data)
@@ -161,6 +162,24 @@ const Header = () => {
                   color="danger"
                 />
                 {L("Help", l)}
+              </IonItem>
+            </IonMenuToggle>
+            <IonMenuToggle menu="menu" >
+              <IonItem
+                color="light"
+                button
+                onClick={() => setModal({
+                  shown: true,
+                  content: <Family closeHandler={
+                    () => setModal({ shown: false })
+                  } />
+                })}>
+                <IonIcon
+                  slot="start"
+                  icon={people}
+                  color="tertiary"
+                />
+                {L("Family", l)}
               </IonItem>
             </IonMenuToggle>
             <IonItem

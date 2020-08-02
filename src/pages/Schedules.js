@@ -87,7 +87,7 @@ const Schedules = (props) => {
         </IonList>
       </IonContent>
       <ScheduleForm currency={currency} />
-    </IonPage >
+    </IonPage>
   )
 }
 
