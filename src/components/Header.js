@@ -7,7 +7,7 @@ import {
 } from '@ionic/react';
 import { changeCurrency, toggleLanguage } from '../features/profile'
 import {
-  logoUsd, book, calendar, informationCircle, cash, language, people
+  logoUsd, book, calendar, informationCircle, cash, language, people, statsChart
 } from 'ionicons/icons'
 import "./Styles.css"
 import Currencies from '../pages/Currencies';
@@ -18,6 +18,7 @@ import Help from '../pages/Help';
 import Income from '../pages/Income';
 import { L } from '../utils/language'
 import Family from '../pages/Family';
+import Report from '../pages/Report';
 
 const Header = () => {
   const data = useSelector(state => state.profile.data)
@@ -88,11 +89,10 @@ const Header = () => {
           <IonTitle>{currency}</IonTitle>
         </IonToolbar>
 
-        <IonContent color="light">
+        <IonContent>
           <IonList>
             <IonMenuToggle menu="menu" >
               <IonItem
-                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -106,7 +106,6 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
-                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -120,7 +119,6 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
-                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -134,7 +132,6 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
-                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -148,7 +145,6 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
-                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -166,7 +162,6 @@ const Header = () => {
             </IonMenuToggle>
             <IonMenuToggle menu="menu" >
               <IonItem
-                color="light"
                 button
                 onClick={() => setModal({
                   shown: true,
@@ -182,14 +177,30 @@ const Header = () => {
                 {L("Family", l)}
               </IonItem>
             </IonMenuToggle>
+            <IonMenuToggle menu="menu" >
+              <IonItem
+                button
+                onClick={() => setModal({
+                  shown: true,
+                  content: <Report closeHandler={
+                    () => setModal({ shown: false })
+                  } />
+                })}>
+                <IonIcon
+                  slot="start"
+                  icon={statsChart}
+                />
+                {L("Report", l)}
+              </IonItem>
+            </IonMenuToggle>
             <IonItem
-              color="light"
               button
               onClick={() => dispatch(toggleLanguage())}
             >
               <IonIcon
                 slot="start"
                 icon={language}
+                color="dark"
               />
               {l === "en" ? "切换语言" : "Toggle Language"}
             </IonItem>
