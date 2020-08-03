@@ -13,6 +13,7 @@ import { L } from '../utils/language'
 const EntryForm = () => {
 
   const currency = useSelector(state => state.app.currency)
+  const showAd = useSelector(state => state.app.showAd)
   const journal = useSelector(state => state.profile.journal)
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()
@@ -77,7 +78,12 @@ const EntryForm = () => {
 
   const Fab = () => {
     return (
-      <IonFab vertical="bottom" horizontal="end" slot="fixed">
+      <IonFab
+        slot="fixed"
+        class={showAd ? "fab" : undefined}
+        vertical="bottom"
+        horizontal="end"
+      >
         <IonFabButton onClick={() => setShown(!shown)}>
           <IonIcon icon={shown ? close : add} />
         </IonFabButton>

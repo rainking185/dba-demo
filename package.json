@@ -1,6 +1,6 @@
 {
   "name": "dba",
-  "version": "2.0",
+  "version": "2.1",
   "private": true,
   "dependencies": {
     "@capacitor/android": "^2.2.0",
@@ -19,6 +19,7 @@
     "@types/react-router": "^5.1.4",
     "@types/react-router-dom": "^5.1.3",
     "aws-sdk": "^2.709.0",
+    "capacitor-admob": "^0.1.0",
     "ionicons": "^5.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",

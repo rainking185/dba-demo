@@ -7,7 +7,8 @@ const appSlice = createSlice({
     toast: {
       shown: false,
       message: ""
-    }
+    },
+    showAd: false
   },
   reducers: {
     setCurrency(state, action) {
@@ -33,10 +34,24 @@ const appSlice = createSlice({
           message: action.payload
         }
       }
+    },
+    hideAd(state) {
+      return {
+        ...state,
+        showAd: false
+      }
+    },
+    setShowAd(state) {
+      return {
+        ...state,
+        showAd: true
+      }
     }
   }
 })
 
-export const { hideToast, showToast, setCurrency } = appSlice.actions
+export const {
+  hideToast, showToast, setCurrency, hideAd, setShowAd
+} = appSlice.actions
 
 export default appSlice.reducer

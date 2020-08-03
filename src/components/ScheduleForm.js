@@ -27,6 +27,7 @@ const ScheduleForm = () => {
   const data = useSelector(state => state.profile.data)
   const dispatch = useDispatch()
   const l = useSelector(state => state.profile.language)
+  const showAd = useSelector(state => state.app.showAd)
 
   const amountRef = useRef(null)
   const typeRef = useRef(null)
@@ -87,7 +88,12 @@ const ScheduleForm = () => {
 
   const Fab = () => {
     return (
-      <IonFab vertical="bottom" horizontal="end" slot="fixed">
+      <IonFab
+        slot="fixed"
+        class={showAd ? "fab" : undefined}
+        vertical="bottom"
+        horizontal="end"
+      >
         <IonFabButton onClick={() => setShown(!shown)}>
           <IonIcon icon={shown ? close : add} />
         </IonFabButton>

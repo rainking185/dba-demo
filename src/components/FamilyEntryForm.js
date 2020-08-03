@@ -18,6 +18,7 @@ const FamilyEntryForm = () => {
   const dispatch = useDispatch()
   const descriptions = getDescriptions(journal)
   const l = useSelector(state => state.profile.language)
+  const showAd = useSelector(state => state.app.showAd)
 
   const amountRef = useRef(null)
   const descriptionRef = useRef(null)
@@ -79,7 +80,12 @@ const FamilyEntryForm = () => {
 
   const Fab = () => {
     return (
-      <IonFab vertical="bottom" horizontal="end" slot="fixed">
+      <IonFab
+        slot="fixed"
+        class={showAd ? "fab" : undefined}
+        vertical="bottom"
+        horizontal="end"
+      >
         <IonFabButton onClick={() => setShown(!shown)}>
           <IonIcon icon={shown ? close : add} />
         </IonFabButton>

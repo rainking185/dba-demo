@@ -94,7 +94,8 @@ const LIBRARY = {
   report: { cn: "结算" },
   exclude: { cn: "除去" },
   daily: { cn: "按日" },
-  "monthly ": { cn: "按月" }
+  "monthly ": { cn: "按月" },
+  "close ad": { cn: "关闭广告" }
 }
 export const L = (word, language) => {
   if (language === "en") {

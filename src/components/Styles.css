@@ -11,7 +11,13 @@
 }
 
 .schedule-modal .modal-wrapper {
-  max-height: 70%;
+  max-height: 75%;
   position: absolute;
   bottom: 0px;
+}
+
+.fab {
+  position: fixed;
+  bottom: 110px;
+  right: 10px;
 }

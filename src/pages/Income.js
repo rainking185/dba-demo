@@ -22,6 +22,8 @@ const Income = (props) => {
     state => state.profile.data.currencies[currency]
   )
   const l = useSelector(state => state.profile.language)
+  const showAd = useSelector(state => state.app.showAd)
+
   const {
     dailyBudget,
     remainingIncome = 0,
@@ -52,7 +54,12 @@ const Income = (props) => {
 
   const Fab = () => {
     return (
-      <IonFab vertical="bottom" horizontal="end" slot="fixed">
+      <IonFab
+        slot="fixed"
+        class={showAd ? "fab" : undefined}
+        vertical="bottom"
+        horizontal="end"
+      >
         <IonFabButton onClick={() => setShown(!shown)} disabled={!imEarning}>
           <IonIcon icon={shown ? close : add} />
         </IonFabButton>

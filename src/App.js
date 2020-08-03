@@ -3,7 +3,7 @@ import { IonLoading, IonToast, IonApp } from '@ionic/react';
 import Summary from './pages/Summary';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAll, update } from './features/profile'
-import { setCurrency, hideToast } from './features/app'
+import { setCurrency, hideToast, hideAd, setShowAd } from './features/app'
 import FirstForm from './pages/FirstForm'
 
 /* Core CSS required for Ionic components to work properly */
@@ -27,6 +27,8 @@ import './theme/variables.css';
 import {
   updateData, updateJournal, updateSchedules, updateIncome, updateFamily
 } from './features/profile';
+import { showBannerAd, removeBannerAd, hideBannerAd } from './utils/adMob';
+import { L } from './utils/language';
 
 const App = () => {
 
@@ -42,9 +44,12 @@ const App = () => {
   } = profile
   const currency = useSelector(state => state.app.currency)
   const toast = useSelector(state => state.app.toast)
+  const l = useSelector(state => state.profile.language)
 
   useEffect(() => {
     dispatch(fetchAll())
+    showBannerAd().then(() => dispatch(setShowAd()))
+    return removeBannerAd
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -102,16 +107,31 @@ const App = () => {
     main = <IonLoading message={'Loading your profile...'} />
   } else main = <Summary />
 
+  const showAd = useSelector(state => state.app.showAd)
+
+  const hideBanner = () => {
+    hideBannerAd()
+    dispatch(hideAd())
+  }
+
   return (
-    <IonApp color="light">
-      {main}
-      <IonToast
-        color="dark"
-        isOpen={toast.shown}
-        onDidDismiss={() => dispatch(hideToast())}
-        message={toast.message}
-        duration={1000} />
-    </IonApp>
+    <>
+      <IonApp color="light">
+        {main}
+        <IonToast
+          color="dark"
+          isOpen={toast.shown}
+          onDidDismiss={() => dispatch(hideToast())}
+          message={toast.message}
+          duration={1000} />
+
+      </IonApp>
+      {showAd
+        ? <button class="ad-close" onClick={hideBanner}>
+          X {L("Close Ad", l)}
+        </button>
+        : null}
+    </>
   )
 }
 
