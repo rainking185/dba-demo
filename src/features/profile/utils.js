@@ -193,7 +193,7 @@ export const update = (data, journal, schedules, income) => {
       if ((schedule.type === "Monthly"
         && Number(schedule.index) === lastEdited.getDate())
         || (schedule.type === "Weekly" &&
-          weeklyIndices.indexOf(schedule.index) === todayDate.getDay())) {
+          weeklyIndices.indexOf(schedule.index) === lastEdited.getDay())) {
         newJournal.push({
           currency: schedule.currency,
           amount: schedule.amount,

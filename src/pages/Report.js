@@ -6,18 +6,19 @@ import './Styles.css'
 
 import {
   IonPage, IonItem, IonToolbar, IonContent, IonListHeader, IonCol,
-  IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader, IonToggle, IonCheckbox, IonLabel
+  IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader, IonToggle, IonCheckbox, IonLabel, IonDatetime, IonText, IonItemGroup
 } from '@ionic/react'
 import { L } from '../utils/language'
+import { getMonthPickerValue, getYearMonthString, MMM2M } from '../utils/dateFunctions'
 
-const getYearMonthString = dateString => {
-  let words = dateString.split(" ")
-  return words[3] + " " + words[1]
-}
+
 
 const Report = (props) => {
   const { closeHandler } = props
   const currency = useSelector(state => state.app.currency)
+  const profileCreated = useSelector(
+    state => state.profile.data.currencies[currency].profileCreated
+  )
   const fullJournal = useSelector(state => state.profile.journal)
   const fullFamilyJournal = useSelector(state => state.profile.family.journal)
   const l = useSelector(state => state.profile.language)
@@ -38,7 +39,20 @@ const Report = (props) => {
 
   const useJournal = state.isFamily ? familyJournal : journal
 
-  const mix = useJournal.reduce((prev, cur) => {
+  const [filter, setFilter] = useState({
+    year: new Date().toDateString().split(" ")[3],
+    month: new Date().toDateString().split(" ")[1],
+    reverse: true
+  });
+
+  const filteredJournal = useJournal.filter(
+    entry =>
+      entry.date.split(" ")[3] === filter.year
+      && entry.date.split(" ")[1] === filter.month
+  )
+  if (filter.reverse) filteredJournal.reverse()
+
+  const mix = filteredJournal.reduce((prev, cur) => {
     if (state.excludeBudget && (
       (!state.isFamily
         && ["Daily Budget", "Initial Savings"].includes(cur.description))
@@ -75,7 +89,15 @@ const Report = (props) => {
     }
   })
 
-  content.reverse()
+
+  const setSelectedMonth = string => {
+    const dateArray = new Date(string).toDateString().split(" ")
+    setFilter({
+      ...filter,
+      year: dateArray[3],
+      month: dateArray[1]
+    })
+  }
 
   return (
     <IonPage>
@@ -89,9 +111,8 @@ const Report = (props) => {
           <IonTitle>{currency} {L(state.isFamily ? "Family" : "Personal", l)} {L("Report", l)}</IonTitle>
         </IonToolbar>
       </IonHeader>
-
-      <IonContent color="light">
-        <IonItem color="inherit">
+      <IonItemGroup>
+        <IonItem color="light">
           {L("Personal", l)}
           <IonToggle
             checked={state.isFamily}
@@ -101,10 +122,9 @@ const Report = (props) => {
             })} />
           {L("Family", l)}
         </IonItem>
-        <IonItem color="inherit">
+        <IonItem color="light">
           {L("Daily", l)}
           <IonToggle
-            disabled={state.isFamily}
             checked={state.isMonthly}
             onIonChange={e => setState({
               ...state,
@@ -112,7 +132,7 @@ const Report = (props) => {
             })} />
           {L("Monthly ", l)}
         </IonItem>
-        <IonItem color="inherit">
+        <IonItem color="light">
           <IonLabel>
             {L("Exclude", l)} {state.isFamily
               ? L("Income", l)
@@ -126,14 +146,61 @@ const Report = (props) => {
               excludeBudget: e.detail.checked
             })} />
         </IonItem>
+        <IonItem color="light">
+          <IonCol>
+            <IonItem color="light">
+              <IonLabel position="floating">
+                {L(state.isMonthly ? "Select Year" : "Select Month", l)}
+              </IonLabel>
+              <IonDatetime
+                displayFormat={state.isMonthly ? "YYYY" : "YYYY-MM"}
+                placeholder={L(state.isMonthly ? "Select Year" : "Select Month", l)}
+                min={new Date(profileCreated).toISOString().slice(0, 10)}
+                max={new Date().toISOString().slice(0, 7)}
+                value={getMonthPickerValue(filter)}
+                onIonChange={e => setSelectedMonth(e.detail.value)}
+                doneText={L("DONE", l)}
+                cancelText={L("CANCEL", l)}
+              />
+            </IonItem>
+          </IonCol>
+          <IonCol />
+          <IonCol>
+            <IonItem color="light">
+              <IonLabel>{L("Descending", l)}</IonLabel>
+              <IonCheckbox
+                slot="start"
+                checked={filter.reverse}
+                onIonChange={e => setFilter({
+                  ...filter,
+                  reverse: e.detail.checked
+                })} />
+            </IonItem>
+          </IonCol>
+        </IonItem>
+      </IonItemGroup>
+
+      <IonContent color="light">
         <IonList>
-          <IonListHeader color="light">
-            <IonCol size="4.5">{L("Date", l)}</IonCol>
-            <IonCol class="ion-text-right ion-padding-end">{L("Amount", l)}</IonCol>
-          </IonListHeader>
+          {content.length === 0
+            ? <IonText>{L("No records.", l)}</IonText>
+            : <IonListHeader color="light">
+              {state.isMonthly
+                ? <IonCol size="2">{L("Month", l)}</IonCol>
+                : <>
+                  <IonCol size="1.5">{L("Date", l)}</IonCol>
+                  <IonCol size="1.5">{L("Day", l)}</IonCol>
+                </>}
+              <IonCol class="ion-text-right ion-padding-end">{L("Amount", l)}</IonCol>
+            </IonListHeader>}
           {content.map((entry, index) => {
             return <IonItem color="light" key={index}>
-              <IonCol size="4.5">{entry.date}</IonCol>
+              {state.isMonthly
+                ? <IonCol size="2">{MMM2M(entry.date.split(" ")[1])}</IonCol>
+                : <>
+                  <IonCol size="1.5">{entry.date.split(" ")[2]}</IonCol>
+                  <IonCol size="1.5">{entry.date.split(" ")[0]}</IonCol>
+                </>}
               <IonCol class="ion-text-right">
                 {entry.amount.toFixed(2)}
               </IonCol>

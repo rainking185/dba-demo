@@ -72,7 +72,9 @@ const LIBRARY = {
   "log income": { cn: "记录收入" },
   "income added.": { cn: "收入已添加。" },
   "date": { cn: "日期" },
-  "no schedules.": { cn: "空" },
+  "no schedules.": { cn: "未录入定期项。" },
+  "no entries.": { cn: "未找到条目。" },
+  "no records.": { cn: "无。" },
   day: { cn: "日" },
   on: { cn: "" },
   "schedule deleted": { cn: "定期项已删除。" },
@@ -95,7 +97,12 @@ const LIBRARY = {
   exclude: { cn: "除去" },
   daily: { cn: "按日" },
   "monthly ": { cn: "按月" },
-  "close ad": { cn: "关闭广告" }
+  "close ad": { cn: "关闭广告" },
+  descending: { cn: "降序" },
+  "select month": { cn: "选择月份" },
+  done: { cn: "确定" },
+  "select year": { cn: "选择年份" },
+  month: { cn: "月" }
 }
 export const L = (word, language) => {
   if (language === "en") {

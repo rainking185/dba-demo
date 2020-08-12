@@ -8,11 +8,13 @@ import './Styles.css'
 import {
   IonPage, IonItem, IonToolbar, IonContent, IonListHeader, IonCol,
   IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader, IonItemDivider,
-  IonItemGroup, IonLabel, IonText
+  IonItemGroup, IonLabel, IonText, IonDatetime, IonCheckbox
 } from '@ionic/react'
 import { showToast } from '../features/app'
 import { L } from '../utils/language'
 import FamilyEntryForm from '../components/FamilyEntryForm'
+import { getMonthPickerValue } from '../utils/dateFunctions'
+import DailyList from '../components/DailyList'
 
 const Family = (props) => {
   const { closeHandler } = props
@@ -21,6 +23,9 @@ const Family = (props) => {
   const l = useSelector(state => state.profile.language)
   const fullJournal = family.journal
   const data = family.data[currency]
+  const profileCreated = useSelector(
+    state => state.profile.data.currencies[currency].profileCreated
+  )
   const {
     remainingMonth,
     incomeMonth,
@@ -30,15 +35,45 @@ const Family = (props) => {
     fullJournal,
     currency
   )
-  journal.reverse()
   const dispatch = useDispatch()
 
   const [editing, setEditing] = useState(false);
+
+  const [filter, setFilter] = useState({
+    year: new Date().toDateString().split(" ")[3],
+    month: new Date().toDateString().split(" ")[1],
+    reverse: true
+  });
+
+  const filteredJournal = journal.filter(
+    entry =>
+      entry.date.split(" ")[3] === filter.year
+      && entry.date.split(" ")[1] === filter.month
+  )
+  if (filter.reverse) filteredJournal.reverse()
+
+  const setSelectedMonth = string => {
+    const dateArray = new Date(string).toDateString().split(" ")
+    setFilter({
+      ...filter,
+      year: dateArray[3],
+      month: dateArray[1]
+    })
+  }
 
   const selectColor = (number) => {
     if (number === 0) return "medium"
     else if (number < 0) return "danger"
     else return undefined
+  }
+
+  const deleteHandler = entry => {
+    dispatch(deleteFamilyEntry(
+      entry,
+      family.data,
+      fullJournal
+    ))
+    dispatch(showToast("Entry deleted"))
   }
 
   return (
@@ -87,49 +122,43 @@ const Family = (props) => {
           {L("Journal", l)}
         </IonItemDivider>
       </IonItemGroup>
-      <IonContent color="light">
-        <IonList>
-          <IonListHeader color="light">
-            <IonCol size="4.5">{L("Date", l)}</IonCol>
-            <IonCol>{L("Description", l)}</IonCol>
-            <IonCol class="ion-text-right ion-padding-end">
-              {L("Amount", l)}
-            </IonCol>
-            {editing ? <IonCol size="1.7" /> : null}
-          </IonListHeader>
-          {journal.map((entry, index) => {
-            return <IonItem color="light" key={index}>
-              <IonCol size="4.5">{entry.date}</IonCol>
-              <IonCol>{entry.description}</IonCol>
-              <IonCol class="ion-text-right">
-                {entry.amount.toFixed(2)}
-              </IonCol>
-              {editing
-                ? <IonCol size="1.5" class="ion-text-center">
-                  {editing && entry.description !== "Initial Savings"
-                    ? <IonButtons>
-                      <IonButton onClick={() => {
-                        dispatch(deleteFamilyEntry(
-                          entry,
-                          family.data,
-                          fullJournal
-                        ))
-                        dispatch(showToast("Entry deleted"))
-                      }} >
-                        <IonIcon
-                          slot="icon-only"
-                          color="danger"
-                          icon={trash}
-                        />
-                      </IonButton>
-                    </IonButtons>
-                    : null}
-                </IonCol>
-                : null}
-            </IonItem>
-          })}
-        </IonList>
-      </IonContent>
+      <IonItem color="light">
+        <IonCol>
+          <IonItem color="light">
+            <IonLabel position="floating">{L("Select Month", l)}</IonLabel>
+            <IonDatetime
+              displayFormat="YYYY-MM"
+              placeholder={L("Select Month", l)}
+              min={new Date(profileCreated).toISOString().slice(0, 10)}
+              max={new Date().toISOString().slice(0, 7)}
+              value={getMonthPickerValue(filter)}
+              onIonChange={e => setSelectedMonth(e.detail.value)}
+              doneText={L("DONE", l)}
+              cancelText={L("CANCEL", l)}
+            />
+          </IonItem>
+        </IonCol>
+        <IonCol />
+        <IonCol>
+          <IonItem color="light">
+            <IonLabel>{L("Descending", l)}</IonLabel>
+            <IonCheckbox
+              slot="start"
+              checked={filter.reverse}
+              onIonChange={e => setFilter({
+                ...filter,
+                reverse: e.detail.checked
+              })} />
+          </IonItem>
+        </IonCol>
+      </IonItem>
+      
+      <DailyList
+        list={filteredJournal}
+        editing={editing}
+        deleteHandler={deleteHandler}
+      />
+
       <FamilyEntryForm currency={currency} />
     </IonPage>
   )

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import rootReducer from './features/index'
-import { prepareAndShowInterstitialAd } from './utils/adMob';
 
 const store = configureStore({ reducer: rootReducer })
 const Main = () => {
@@ -21,10 +20,6 @@ const Main = () => {
   toggleDarkTheme(dark);
 
   prefersDark.addListener((mediaQuery) => setDark(mediaQuery.matches));
-
-  useEffect(() => {
-    prepareAndShowInterstitialAd()
-  }, []);
 
   return (
     <Provider store={store}>

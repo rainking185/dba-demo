@@ -1,6 +1,6 @@
 {
   "name": "dba",
-  "version": "2.1",
+  "version": "2.2",
   "private": true,
   "dependencies": {
     "@capacitor/android": "^2.2.0",
