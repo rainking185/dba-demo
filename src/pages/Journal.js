@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { arrowBack, trash, checkmark, create } from "ionicons/icons"
+import { arrowBack, checkmark, create } from "ionicons/icons"
 import { currencyFilter } from "../features/profile/utils"
 import { deleteEntry } from "../features/profile"
 import './Styles.css'
 
 import {
-  IonPage, IonItem, IonToolbar, IonContent, IonListHeader, IonCol,
-  IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader,
-  IonDatetime, IonLabel, IonCheckbox, IonText
+  IonPage, IonItem, IonToolbar, IonCol,
+  IonButtons, IonButton, IonIcon, IonTitle, IonHeader,
+  IonDatetime, IonLabel, IonCheckbox
 } from '@ionic/react'
 import { showToast } from '../features/app'
 import { L } from '../utils/language'

@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { arrowBack, trash, checkmark, create } from "ionicons/icons"
+import { arrowBack, checkmark, create } from "ionicons/icons"
 import { currencyFilter } from "../features/profile/utils"
 import { deleteFamilyEntry } from "../features/profile"
 import './Styles.css'
 
 import {
-  IonPage, IonItem, IonToolbar, IonContent, IonListHeader, IonCol,
-  IonButtons, IonButton, IonIcon, IonTitle, IonList, IonHeader, IonItemDivider,
+  IonPage, IonItem, IonToolbar, IonCol,
+  IonButtons, IonButton, IonIcon, IonTitle, IonHeader, IonItemDivider,
   IonItemGroup, IonLabel, IonText, IonDatetime, IonCheckbox
 } from '@ionic/react'
 import { showToast } from '../features/app'
@@ -152,7 +152,7 @@ const Family = (props) => {
           </IonItem>
         </IonCol>
       </IonItem>
-      
+
       <DailyList
         list={filteredJournal}
         editing={editing}
