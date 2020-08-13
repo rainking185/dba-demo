@@ -75,7 +75,7 @@ const LIBRARY = {
   "no schedules.": { cn: "未录入定期项。" },
   "no entries.": { cn: "未找到条目。" },
   "no records.": { cn: "无。" },
-  day: { cn: "日" },
+  day: { cn: "周" },
   on: { cn: "" },
   "schedule deleted": { cn: "定期项已删除。" },
   "use this currency": { cn: "使用此货币" },
@@ -104,7 +104,15 @@ const LIBRARY = {
   "select year": { cn: "选择年份" },
   month: { cn: "月" },
   'please enable dba to access your storage and restart dba.': { cn: "请打开空间存储权限并重启DBA。" },
-  "Loading your profile...": { cn: "正在加载您的账户信息。。。" }
+  "Loading your profile...": { cn: "正在加载您的账户信息。。。" },
+  ok: { cn: "好的" },
+  mon: { cn: "一" },
+  tue: { cn: "二" },
+  wed: { cn: "三" },
+  thu: { cn: "四" },
+  fri: { cn: "五" },
+  sat: { cn: "六" },
+  sun: { cn: "日" },
 }
 export const L = (word, language) => {
   if (language === "en") {

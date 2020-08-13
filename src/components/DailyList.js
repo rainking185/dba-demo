@@ -29,7 +29,7 @@ const DailyList = props => {
       {list.map((entry, index) => {
         return <IonItem color="light" key={index}>
           <IonCol size="1.5">{entry.date.split(" ")[2]}</IonCol>
-          <IonCol size="1.5">{entry.date.split(" ")[0]}</IonCol>
+          <IonCol size="1.5">{L(entry.date.split(" ")[0], l)}</IonCol>
           <IonCol>{entry.description}</IonCol>
           <IonCol class="ion-text-right">
             {entry.amount.toFixed(2)}

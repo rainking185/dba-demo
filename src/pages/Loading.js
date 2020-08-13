@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import { IonPage, IonLoading, IonText, IonContent, IonGrid, IonRow, IonCol, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonModal, IonItem, IonItemGroup } from '@ionic/react'
+import {
+  IonPage, IonLoading, IonText, IonContent, IonGrid, IonRow, IonCol, IonHeader, IonToolbar,
+  IonButtons, IonButton, IonIcon, IonTitle, IonModal, IonCard, IonCardContent, IonCardTitle
+} from '@ionic/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { L } from '../utils/language'
 import { informationCircle } from 'ionicons/icons'
@@ -27,23 +30,23 @@ const Loading = props => {
       </IonToolbar>
     </IonHeader>
 
-    <IonContent color={failed ? "danger" : undefined}>
+    <IonContent>
       <IonGrid style={{ height: "100%" }}>
         <IonRow style={{ height: "100%" }} class="ion-text-center ion-justify-content-center ion-align-items-center">
           <IonCol>
             {failed
-              ? <IonItemGroup>
-                <IonItem>
+              ? <IonCard>
+                <IonCardTitle>
                   <IonText>
                     <h2>{L('Please enable DBA to access your storage.', l)}</h2>
                   </IonText>
-                </IonItem>
-                <IonItem>
-                  <IonButton onClick={() => dispatch(requestPermissions())}>
-                    request
+                </IonCardTitle>
+                <IonCardContent>
+                  <IonButton style={{ width: "100%" }} onClick={() => dispatch(requestPermissions())}>
+                    {L("OK", l)}
                   </IonButton>
-                </IonItem>
-              </IonItemGroup>
+                </IonCardContent>
+              </IonCard>
               : <></>}
           </IonCol>
         </IonRow>
