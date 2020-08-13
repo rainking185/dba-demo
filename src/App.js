@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { IonLoading, IonToast, IonApp } from '@ionic/react';
+import { IonToast, IonApp } from '@ionic/react';
 import Summary from './pages/Summary';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAll, update } from './features/profile'
@@ -29,12 +29,14 @@ import {
 } from './features/profile';
 import { showBannerAd, removeBannerAd, hideBannerAd } from './utils/adMob';
 import { L } from './utils/language';
+import Loading from './pages/Loading';
 
 const App = () => {
 
   const dispatch = useDispatch()
   const profile = useSelector(state => state.profile)
   const {
+    permissionDenied,
     loaded,
     data,
     income,
@@ -47,11 +49,15 @@ const App = () => {
   const l = useSelector(state => state.profile.language)
 
   useEffect(() => {
-    dispatch(fetchAll())
     showBannerAd().then(() => dispatch(setShowAd()))
     return removeBannerAd
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!permissionDenied && !loaded) dispatch(fetchAll())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [permissionDenied]);
 
   useEffect(() => {
     if (loaded && data !== null) {
@@ -100,12 +106,17 @@ const App = () => {
   }, [family]);
 
   let main = null
-  if (!loaded) main = <IonLoading message={'Loading your profile...'} />
-  else if (data === null) main = <FirstForm />
-  else if (data !== null && loaded && currency === "") {
-    dispatch(setCurrency(data.currencyToUse))
-    main = <IonLoading message={'Loading your profile...'} />
-  } else main = <Summary />
+  if (permissionDenied) {
+    main = <Loading failed={true} />
+  }
+  else {
+    if (!loaded) main = <Loading />
+    else if (data === null) main = <FirstForm />
+    else if (data !== null && loaded && currency === "") {
+      dispatch(setCurrency(data.currencyToUse))
+      main = <Loading />
+    } else main = <Summary />
+  }
 
   const showAd = useSelector(state => state.app.showAd)
 
@@ -127,7 +138,7 @@ const App = () => {
 
       </IonApp>
       {showAd
-        ? <button class="ad-close" onClick={hideBanner}>
+        ? <button className="ad-close" onClick={hideBanner}>
           X {L("Close Ad", l)}
         </button>
         : null}

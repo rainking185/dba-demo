@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import {
   fetchAll, updateJournal, updateData, updateSchedules, updateIncome,
-  updateFamily
+  updateFamily, requestPermissions
 } from './thunks'
 import {
   getBudgetMonth, update as updateAsync, audit as auditAsync
@@ -10,6 +10,7 @@ import {
 const profileSlice = createSlice({
   name: 'profile',
   initialState: {
+    permissionDenied: false,
     loaded: false,
     data: {},
     journal: [],
@@ -416,7 +417,8 @@ const profileSlice = createSlice({
           loaded: true,
           data: data,
           journal: journal,
-          schedules: []
+          schedules: [],
+          income: []
         }
       },
       prepare(form) {
@@ -668,6 +670,7 @@ const profileSlice = createSlice({
   extraReducers: {
     [fetchAll.fulfilled]: (state, action) => {
       const {
+        permissionDenied,
         journal,
         schedules,
         data,
@@ -677,13 +680,20 @@ const profileSlice = createSlice({
       } = action.payload
       return {
         ...state,
+        permissionDenied: permissionDenied,
         journal: journal,
         schedules: schedules,
         data: data,
         income: income,
         language: language,
         family: family,
-        loaded: true
+        loaded: !permissionDenied
+      }
+    },
+    [requestPermissions.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        permissionDenied: !action.payload
       }
     }
   }
@@ -691,7 +701,7 @@ const profileSlice = createSlice({
 
 export {
   fetchAll, updateJournal, updateData, updateSchedules, updateIncome,
-  updateFamily
+  updateFamily, requestPermissions
 }
 
 export const {

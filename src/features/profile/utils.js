@@ -46,12 +46,11 @@ export const getCurrenciesSummary = currencies => {
 
 export const getDescriptions = journal => {
   let allDescriptions = journal.reduce((prev, cur) => {
-    if (Object.keys(prev).includes(cur.description)) {
+    if (Object.keys(prev).includes(cur.description))
       prev[cur.description]++
-    } else if (!reservedKeywords.includes(cur.description)
-      && !cur.description.startsWith("Scheduled ")) {
+    else if (!reservedKeywords.includes(cur.description)
+      && !cur.description.startsWith("Scheduled "))
       prev[cur.description] = 1
-    }
     return prev
   }, {})
   allDescriptions = Object.keys(allDescriptions)

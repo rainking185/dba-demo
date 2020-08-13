@@ -102,7 +102,9 @@ const LIBRARY = {
   "select month": { cn: "选择月份" },
   done: { cn: "确定" },
   "select year": { cn: "选择年份" },
-  month: { cn: "月" }
+  month: { cn: "月" },
+  'please enable dba to access your storage and restart dba.': { cn: "请打开空间存储权限并重启DBA。" },
+  "Loading your profile...": { cn: "正在加载您的账户信息。。。" }
 }
 export const L = (word, language) => {
   if (language === "en") {
@@ -110,6 +112,6 @@ export const L = (word, language) => {
   } else {
     try {
       return LIBRARY[word.toLowerCase()][language]
-    } catch{ return word }
+    } catch (e) { return word }
   }
 }

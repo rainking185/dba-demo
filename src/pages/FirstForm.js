@@ -11,6 +11,7 @@ import Help from './Help'
 import { Plugins } from "@capacitor/core"
 import { areLetters } from '../utils/regex'
 import { L } from '../utils/language'
+import { checkPermissions } from '../utils/permission'
 
 const { Keyboard } = Plugins
 
@@ -39,7 +40,12 @@ const FirstForm = () => {
 
   useEffect(() => { Keyboard.show() }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    let hasPermissions = await checkPermissions()
+    if (!hasPermissions) {
+      dispatch(showToast(L('Please enable DBA to access your storage and restart DBA.', l)))
+      return
+    }
     let err = ""
     if (formValue.currency === null) err += L("What is the new currency? ", l)
     else if (formValue.currency.length !== 3 || !areLetters(formValue.currency))

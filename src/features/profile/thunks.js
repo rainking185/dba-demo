@@ -2,7 +2,25 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import {
   Plugins, FilesystemDirectory, FilesystemEncoding
 } from '@capacitor/core';
-const { Device, Filesystem, } = Plugins;
+import { checkPermissions, requestPermissions as request } from "../../utils/permission";
+const { Device, Filesystem } = Plugins;
+
+export const requestPermissions = createAsyncThunk(
+  'app/requestPermissions',
+  async (arg, thunkAPI) => {
+    try {
+      console.log("capcapreq")
+      await request()
+      console.log("capcapsuc")
+      let res = await checkPermissions()
+      console.log(res)
+      return res
+    } catch (e) {
+      console.log("capcaperr")
+      return false
+    }
+  }
+)
 
 const writeDoc = (name, doc) => {
   return Filesystem.writeFile({
@@ -67,6 +85,26 @@ export const fetchAll = createAsyncThunk(
       || systemLanguage.toLowerCase().includes("zh"))
       language = "cn"
     try {
+      let hasPermissions = await checkPermissions()
+      if (!hasPermissions) {
+        return {
+          permissionDenied: true,
+          journal: [],
+          schedules: [],
+          income: null,
+          data: null,
+          language: language,
+          family: {
+            data: {},
+            journal: []
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+    try {
       let journal = await readDoc("journal")
       let schedules = await readDoc("schedules")
       let data = await readDoc("data")
@@ -80,7 +118,7 @@ export const fetchAll = createAsyncThunk(
       try {
         family = await readDoc("family")
         family = JSON.parse(family.data)
-      } catch{
+      } catch (e) {
         family = {
           data: {},
           journal: []
@@ -95,6 +133,7 @@ export const fetchAll = createAsyncThunk(
         })
       }
       return {
+        permissionDenied: false,
         journal: journal,
         schedules: schedules,
         data: data,
@@ -104,9 +143,10 @@ export const fetchAll = createAsyncThunk(
       }
     } catch (err) {
       return {
+        permissionDenied: false,
         journal: [],
         schedules: [],
-        income: [],
+        income: null,
         data: null,
         language: language,
         family: {
