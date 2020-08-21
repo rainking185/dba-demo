@@ -115,9 +115,9 @@ const LIBRARY = {
   sun: { cn: "日" },
 }
 export const L = (word, language) => {
-  if (language === "en") {
+  if (language === "en")
     return word
-  } else {
+  else {
     try {
       return LIBRARY[word.toLowerCase()][language]
     } catch (e) { return word }

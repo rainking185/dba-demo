@@ -1,11 +1,3 @@
-import React, { useEffect } from 'react';
-import { IonToast, IonApp } from '@ionic/react';
-import Summary from './pages/Summary';
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchAll, update } from './features/profile'
-import { setCurrency, hideToast, hideAd, setShowAd } from './features/app'
-import FirstForm from './pages/FirstForm'
-
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -23,13 +15,23 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 /* Theme variables */
-import './theme/variables.css';
+import './css/variables.css';
+import './css/Styles.css'
+
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
+import { IonToast, IonApp } from '@ionic/react';
+
 import {
-  updateData, updateJournal, updateSchedules, updateIncome, updateFamily
+  updateData, updateJournal, updateSchedules, updateIncome, updateFamily,
+  fetchAll, update
 } from './features/profile';
+import { setCurrency, hideToast, hideAd, setShowAd } from './features/app'
 import { showBannerAd, removeBannerAd, hideBannerAd } from './utils/adMob';
 import { L } from './utils/language';
 import Loading from './pages/Loading';
+import FirstForm from './pages/FirstForm'
+import Summary from './pages/Summary';
 
 const App = () => {
 
@@ -49,7 +51,12 @@ const App = () => {
   const l = useSelector(state => state.profile.language)
 
   useEffect(() => {
-    showBannerAd().then(() => dispatch(setShowAd()))
+    showBannerAd()
+      .then(() => dispatch(setShowAd()))
+      .catch(e => {
+        if (e !== "AdMob does not have web implementation.")
+          console.log(e)
+      })
     return removeBannerAd
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

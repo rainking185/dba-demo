@@ -1,16 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { IonContent, IonList, IonText, IonListHeader, IonCol, IonIcon, IonItem, IonButtons, IonButton } from '@ionic/react'
-import { L } from '../utils/language'
 import { trash } from 'ionicons/icons'
+import { L } from '../utils/language'
 
-const DailyList = props => {
-
-  const {
-    list,
-    editing,
-    deleteHandler
-  } = props
+const DailyList = ({ list, editing, deleteHandler }) => {
 
   const l = useSelector(state => state.profile.language)
 

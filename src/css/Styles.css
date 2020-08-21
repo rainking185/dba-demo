@@ -21,3 +21,26 @@
   bottom: 110px;
   right: 10px;
 }
+
+.xx-large {
+  font-size: 15vw;
+}
+
+.x-large {
+  font-size: 10vw;
+}
+
+.small {
+  font-size: 5vw;
+}
+
+.popover .popover-content {
+  min-width: 60%;
+}
+
+.ad-close {
+  position: fixed;
+  left: 0px;
+  bottom: 100px;
+  z-index: 999;
+}

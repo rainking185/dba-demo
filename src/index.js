@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
+
 import rootReducer from './features/index'
+import * as serviceWorker from './serviceWorker';
+import App from './App';
 
 const store = configureStore({ reducer: rootReducer })
-const Main = () => {
+
+const Main = props => {
 
   // Use matchMedia to check the user preference
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -21,11 +23,9 @@ const Main = () => {
 
   prefersDark.addListener((mediaQuery) => setDark(mediaQuery.matches));
 
-  return (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  )
+  return <Provider store={store}>
+    <App />
+  </Provider>
 }
 
 ReactDOM.render(<Main />, document.getElementById('root'));

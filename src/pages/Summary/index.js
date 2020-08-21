@@ -3,15 +3,14 @@ import {
   IonPage, IonText, IonContent,
   IonItemDivider, IonLabel, IonItem, IonCol, IonButtons
 } from '@ionic/react';
-import EntryForm from '../components/EntryForm'
-import Header from '../components/Header'
+import EntryForm from './EntryForm'
+import Header from '../../common/Header'
 import { useSelector } from 'react-redux'
-import "./Styles.css"
-import BudgetForm from '../components/BudgetForm';
-import { getAllowance, budgetGauge, currencyFilter } from '../features/profile/utils';
-import { L } from '../utils/language'
+import BudgetForm from '../../common/form/BudgetForm';
+import { getAllowance, budgetGauge, currencyFilter } from '../../features/profile/utils';
+import { L } from '../../utils/language'
 
-const Summary = () => {
+const Summary = props => {
 
   const currency = useSelector(state => state.app.currency)
   const summary = useSelector(

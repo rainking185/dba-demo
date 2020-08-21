@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
-import { IonButton, IonIcon, IonPopover, IonCard, IonItem, IonLabel, IonInput, IonButtons, IonCol } from '@ionic/react'
-import { create } from 'ionicons/icons'
 import { useSelector, useDispatch } from 'react-redux'
-import { showToast } from '../features/app'
-import { changeDailyBudget } from '../features/profile'
-import { budgetGauge, currencyFilter } from '../features/profile/utils'
-import { L } from '../utils/language'
+import { 
+  IonButton, IonIcon, IonPopover, IonCard, IonItem, IonLabel, IonInput, IonButtons, IonCol 
+} from '@ionic/react'
+import { create } from 'ionicons/icons'
 
-const BudgetForm = () => {
+import { showToast } from '../../features/app'
+import { changeDailyBudget } from '../../features/profile'
+import { budgetGauge, currencyFilter } from '../../features/profile/utils'
+import { L } from '../../utils/language'
+
+const BudgetForm = props => {
+  
   const dispatch = useDispatch()
   const currency = useSelector(state => state.app.currency)
   const income = currencyFilter(useSelector(state => state.profile.income), currency)

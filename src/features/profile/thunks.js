@@ -3,20 +3,19 @@ import {
   Plugins, FilesystemDirectory, FilesystemEncoding
 } from '@capacitor/core';
 import { checkPermissions, requestPermissions as request } from "../../utils/permission";
+
 const { Device, Filesystem } = Plugins;
 
 export const requestPermissions = createAsyncThunk(
   'app/requestPermissions',
   async (arg, thunkAPI) => {
     try {
-      console.log("capcapreq")
       await request()
-      console.log("capcapsuc")
       let res = await checkPermissions()
       console.log(res)
       return res
     } catch (e) {
-      console.log("capcaperr")
+      console.log(e)
       return false
     }
   }

@@ -1,18 +1,14 @@
 import { Plugins } from '@capacitor/core'
 import { AdSize, AdPosition } from 'capacitor-admob'
+import { IsDebug } from "@ionic-native/is-debug";
 
 const { AdMob, SplashScreen } = Plugins
 
 AdMob.initialize('ca-app-pub-6356796535168392~4464957723')
-
-const bannerOption = {
-  // adId: 'ca-app-pub-3940256099942544/6300978111', // Test
-  adId: 'ca-app-pub-6356796535168392/7829487665',
-  adSize: AdSize.SMART_BANNER,
-  position: AdPosition.BOTTOM_CENTER,
-  hasTabBar: true,
-  tabBarHeight: 0
-};
+  .catch(e => {
+    if (e !== "AdMob does not have web implementation.")
+      console.log(e)
+  })
 
 const interstitialOption = {
   // adId: 'ca-app-pub-3940256099942544/8691691433', // Test Video
@@ -25,27 +21,46 @@ const rewardOption = {
   adId: 'ca-app-pub-3940256099942544/5224354917'//Test
 }
 
-export const showBannerAd = () => {
+const bannerTestID = 'ca-app-pub-3940256099942544/6300978111'
+const bannerProductionID = 'ca-app-pub-6356796535168392/7829487665'
+
+export const showBannerAd = async () => {
+  let isDebug
+  try {
+    isDebug = await IsDebug.getIsDebug()
+  } catch (e) {
+    if (e !== "cordova_not_available") console.log(e)
+    isDebug = true
+  }
+  const bannerOption = {
+    adId: isDebug ? bannerTestID : bannerProductionID,
+    adSize: AdSize.SMART_BANNER,
+    position: AdPosition.BOTTOM_CENTER,
+    hasTabBar: true,
+    tabBarHeight: 0
+  };
   return AdMob.showBanner(bannerOption)
 }
 
 export const hideBannerAd = () => {
-  return AdMob.hideBanner()
+  try {
+    AdMob.hideBanner()
+  } catch (e) { console.log(e) }
 }
 
 export const removeBannerAd = () => {
-  return AdMob.removeBanner()
+  try {
+    AdMob.removeBanner()
+  } catch (e) { console.log(e) }
 }
 
-export const prepareInterstitialAd = () => {
-  return AdMob.prepareInterstitial(interstitialOption)
-}
+export const prepareInterstitialAd = () =>
+  AdMob.prepareInterstitial(interstitialOption)
 
-export const showInterstitialAd = () => {
-  return AdMob.showInterstitial()
-}
+export const showInterstitialAd = () =>
+  AdMob.showInterstitial()
 
-export const prepareAndShowInterstitialAd = () => {
+export const prepareAndShowInterstitialAd = () =>
   prepareInterstitialAd()
     .then(
       () => {
@@ -56,12 +71,10 @@ export const prepareAndShowInterstitialAd = () => {
         SplashScreen.hide()
       }
     )
-}
 
-export const showRewardAd = () => {
+export const showRewardAd = () =>
   AdMob.prepareRewardVideoAd(rewardOption)
     .then(
       () => AdMob.showRewardVideoAd(),
       e => console.error(e)
     )
-}

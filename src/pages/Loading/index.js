@@ -1,22 +1,22 @@
 import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   IonPage, IonLoading, IonText, IonContent, IonGrid, IonRow, IonCol, IonHeader, IonToolbar,
   IonButtons, IonButton, IonIcon, IonTitle, IonModal, IonCard, IonCardContent, IonCardTitle
 } from '@ionic/react'
-import { useSelector, useDispatch } from 'react-redux'
-import { L } from '../utils/language'
 import { informationCircle } from 'ionicons/icons'
-import Help from './Help'
-import { requestPermissions } from '../features/profile'
 
-const Loading = props => {
-  const { failed = false } = props
+import { L } from '../../utils/language'
+import Help from '../Help'
+import { requestPermissions } from '../../features/profile'
+
+const Loading = ({ failed = false }) => {
+
   const l = useSelector(state => state.profile.language)
 
   const dispatch = useDispatch()
 
   const [shown, setShown] = useState(false) // For the help page displayed in Modal
-
 
   return <IonPage>
     <IonHeader>

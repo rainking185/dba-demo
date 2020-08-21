@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { arrowBack, checkmark, create } from "ionicons/icons"
-import { currencyFilter } from "../features/profile/utils"
-import { deleteEntry } from "../features/profile"
-import './Styles.css'
-
 import {
   IonPage, IonItem, IonToolbar, IonCol,
   IonButtons, IonButton, IonIcon, IonTitle, IonHeader,
   IonDatetime, IonLabel, IonCheckbox
 } from '@ionic/react'
-import { showToast } from '../features/app'
-import { L } from '../utils/language'
-import { getMonthPickerValue } from '../utils/dateFunctions'
-import DailyList from '../components/DailyList'
+import { arrowBack, checkmark, create } from "ionicons/icons"
 
-const Journal = (props) => {
-  const { closeHandler } = props
+import { currencyFilter } from "../../features/profile/utils"
+import { deleteEntry } from "../../features/profile"
+import { showToast } from '../../features/app'
+import { L } from '../../utils/language'
+import { getMonthPickerValue } from '../../utils/dateFunctions'
+import DailyList from '../../common/DailyList'
+
+const Journal = ({ closeHandler }) => {
+
   const currency = useSelector(state => state.app.currency)
   const data = useSelector(state => state.profile.data)
   const profileCreated = data.currencies[currency].profileCreated

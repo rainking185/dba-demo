@@ -3,24 +3,20 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   IonPage, IonItem, IonLabel, IonToolbar,
   IonButtons, IonButton, IonIcon, IonTitle, IonText,
-  IonPopover,
-  IonContent,
-  IonList,
-  IonCard,
-  IonReorderGroup,
-  IonReorder,
-  IonHeader
+  IonPopover, IonContent, IonList, IonCard, IonReorderGroup,
+  IonReorder, IonHeader
 } from '@ionic/react'
 import {
   arrowBack, trash, checkmark, create, time, eye, menu
 } from "ionicons/icons"
-import { setCurrency, showToast } from "../features/app"
-import { deleteCurrency, reorderCurrency } from "../features/profile"
-import { getCurrenciesSummary } from "../features/profile/utils"
-import CurrencyForm from '../components/CurrencyForm'
-import { L } from '../utils/language'
 
-const Currencies = (props) => {
+import { setCurrency, showToast } from "../../features/app"
+import { deleteCurrency, reorderCurrency } from "../../features/profile"
+import { getCurrenciesSummary } from "../../features/profile/utils"
+import { L } from '../../utils/language'
+import CurrencyModal from './CurrencyModal'
+
+const Currencies = props => {
   const { closeHandler } = props
   const dispatch = useDispatch()
   const profile = useSelector(state => state.profile)
@@ -178,7 +174,7 @@ const Currencies = (props) => {
           </IonItem>
         </IonCard>
       </IonPopover>
-      <CurrencyForm />
+      <CurrencyModal />
     </IonPage>
   )
 }
